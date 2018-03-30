@@ -59,4 +59,5 @@ navigation: n = next line
 4. push
    1. open menu
    2. press P (push)
-   
+   3. press p (to origin/master)
+   4. enter username and password
