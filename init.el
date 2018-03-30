@@ -146,6 +146,7 @@
   (helm-mode))
 
 
+
 (use-package magit
   ;;magit is magical git
   :bind ("C-x g" . magit-status))
