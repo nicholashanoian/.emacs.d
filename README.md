@@ -1,10 +1,10 @@
-Emacs configuration for running through bash on windows
+#Emacs configuration for running through bash on windows
 
-Dependencies:
-Windows:
+## Dependencies:
+### Windows:
 VcXsrv - Windows X Server - google vcxsrv and use installer
 
-Bash:
+### Bash:
 Update packages: (takes a bit)
 1. sudo apt update
 2. sudo apt upgrade
