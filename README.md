@@ -1,38 +1,69 @@
-#Emacs configuration for running through bash on windows
+# Emacs configuration for running through bash on windows
 
 ## Dependencies:
 ### Windows:
 VcXsrv - Windows X Server - google vcxsrv and use installer
 
-### Bash:
-Update packages: (takes a bit)
-1. sudo apt update
-2. sudo apt upgrade
+### Update Packages:
+(takes a bit)
 
-To install emacs:
-1. sudo add-apt-repository ppa:kelleyk/emacs
-2. sudo apt update
-3. sudo apt install emacs25
-4. edit .bashrc
-   possibly add: export LIBGL_ALWAYS_INDIRECT=1
-   add: export OneDriveBash="/mnt/" + the filepath to OneDrive
-   	i.e. ="/mnt/c/Users/Nick/OneDrive"
+```shell
+sudo apt update
+sudo apt upgrade
+```
 
-xfce4: for running a Desktop of Ubuntu
-1. sudo apt install xfce4
-2. edit .bashrc
-   add: export DISPLAY=:0.0
-   to end of file
+### Installing emacs:
 
-texlive: (this takes a while)
-1. sudo apt-get install texlive-full
+``` shell
+sudo add-apt-repository ppa:kelleyk/emacs
+sudo apt update
+sudo apt install emacs25
+```
 
-Clone this repository to ~/.emacs.d
+#### Emacs Settings
+You need to add the following lines to the end of ~/.bashrc
 
+``` shell
+export LIBGL_ALWAYS_INDIRECT=1
+export DISPLAY=:0.0
+export OneDriveBash="/mnt/PATH_TO_ONEDRIVE_ON_WINDOWS"
+```
+Example for declaring and assigning OneDriveBash:
 
+``` shell-script
+export OneDriveBash="/mnt/c/Users/Nick/OneDrive/"
+```
+
+### xfce4: 
+Used for running a GUI Desktop of Ubuntu
+
+``` shell
+sudo apt install xfce4
+```
+
+### Tex Live
+(this takes a while)
+
+``` shell
+sudo apt-get install texlive-full
+```
+
+### Getting emacs config
+Clone this repository to home directory (i.e. ~/)
+
+``` shell
+cd ~
+git clone https://github.com/nicholashanoian/.emacs.d
+```
+
+### Setting up git
 Set git username and email:
-1. git config --global user.name "Nicholas Hanoian"
-2. git config --global user.email "nicholashanoian@gmail.com"
+
+``` shell
+git config --global user.name "Nicholas Hanoian"
+git config --global user.email "nicholashanoian@gmail.com"
+```
+
 
 
 Quick guide to magit:

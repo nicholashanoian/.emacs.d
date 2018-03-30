@@ -151,6 +151,15 @@
   ;;magit is magical git
   :bind ("C-x g" . magit-status))
 
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+
+
 (use-package tex-site
   ;; AuCTeX is better than the built in tex mode; let's use it.  This
   ;; demand adds almost nothing and ensures that auctex gets to set itself
