@@ -42,11 +42,33 @@ sudo apt install xfce4
 ```
 
 ### Tex Live
-(this takes a while)
+For compiling LaTeX files (this takes a while).
 
 ``` shell
 sudo apt-get install texlive-full
 ```
+
+### Pandoc
+For compiling markdown files.
+
+``` shell
+sudo apt-get install pandoc
+```
+
+### PDF Tools Prerequesites
+
+``` shell
+sudo apt-get install libpng-dev zlib1g-dev
+sudo apt-get install libpoppler-glib-dev
+sudo apt-get install libpoppler-private-dev
+sudo apt-get install imagemagick
+```
+Then open emacs and run
+
+``` shell
+M-x pdf-tools-install
+```
+
 
 ### Getting emacs config
 Clone this repository to home directory (i.e. ~/)
