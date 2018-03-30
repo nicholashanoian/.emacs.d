@@ -18,7 +18,7 @@ To install emacs:
    add: export OneDriveBash="/mnt/" + the filepath to OneDrive
    	i.e. ="/mnt/c/Users/Nick/OneDrive"
 
-xfce4: 
+xfce4: for running a Desktop of Ubuntu
 1. sudo apt install xfce4
 2. edit .bashrc
    add: export DISPLAY=:0.0
@@ -28,3 +28,8 @@ texlive: (this takes a while)
 1. sudo apt-get install texlive-full
 
 Clone this repository to ~/.emacs.d
+
+
+Set git username and email:
+1. git config --global user.name "Nicholas Hanoian"
+2. git config --global user.email "nicholashanoian@gmail.com"
