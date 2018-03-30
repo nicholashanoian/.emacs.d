@@ -1,0 +1,30 @@
+Emacs configuration for running through bash on windows
+
+Dependencies:
+Windows:
+VcXsrv - Windows X Server - google vcxsrv and use installer
+
+Bash:
+Update packages: (takes a bit)
+1. sudo apt update
+2. sudo apt upgrade
+
+To install emacs:
+1. sudo add-apt-repository ppa:kelleyk/emacs
+2. sudo apt update
+3. sudo apt install emacs25
+4. edit .bashrc
+   possibly add: export LIBGL_ALWAYS_INDIRECT=1
+   add: export OneDriveBash="/mnt/" + the filepath to OneDrive
+   	i.e. ="/mnt/c/Users/Nick/OneDrive"
+
+xfce4: 
+1. sudo apt install xfce4
+2. edit .bashrc
+   add: export DISPLAY=:0.0
+   to end of file
+
+texlive: (this takes a while)
+1. sudo apt-get install texlive-full
+
+Clone this repository to ~/.emacs.d
