@@ -67,26 +67,28 @@ git config --global user.email "nicholashanoian@gmail.com"
 
 
 Quick guide to magit:
-open menu: C-x g
-navigation: n = next line
-	    p = previous line
-1. stage or ignore files
-   1. navigate to files with n and p
-   2. hit s to stage (this means you want to commit the changes you made)
-   3. hit i to ignore (don't track changes)
-2. commit
-   1. open menu
-   2. press c (commit)
-   3. press c again (commit)
-   4. enter commit message
+
+* open menu: C-x g
+* navigation: 
+ * n = next line
+ * p = previous line
+1. Stage or Ignore Files
+   1. Navigate to files with n and p
+   2. Hit s to stage (this means you want to commit the changes you made)
+   3. Hit i to ignore (don't track changes)
+2. Commit
+   1. Open menu
+   2. Press c (commit)
+   3. Press c again (commit)
+   4. Enter commit message
    5. C-c C-c
-3. add origin
-   1. open menu
-   2. press M (remote)
-   3. press a (add)
-   4. enter origin (this is the name)
-   5. enter URL
-      i.e. https://github.com/nicholashanoian/.emacs.d
+3. Add Origin
+   1. Open menu
+   2. Press M (remote)
+   3. Press a (add)
+   4. Enter origin (this is the name)
+   5. Enter URL
+     * i.e. https://github.com/nicholashanoian/.emacs.d
 4. push
    1. open menu
    2. press P (push)
