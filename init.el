@@ -48,9 +48,12 @@
 
 
 ;;modes
-(global-linum-mode t)
 (global-visual-line-mode t)
 (set-face-attribute 'default nil :height 110)
+
+;;linum-mode hooks
+(add-hook 'emacs-lisp-mode-hook 'linum-mode)
+(add-hook 'sh-mode-hook 'linum-mode)
 
 ;;set up use-package according to http://cachestocaches.com/2015/8/getting-started-use-package/
 (require 'package)
@@ -154,11 +157,32 @@
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
+  :hook (markdown-mode . linum-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "pandoc"))
 
+(use-package pdf-tools
+  ;; I like emacs, so why not view PDFs in it?  The built-in docview mode
+  ;; can do so, but pdf-tools is better in all sorts of ways.
+
+  ;; NOTE: ~pdf-tools~ only officially supports gnu/linux operating
+  ;; systems. I think that it will work on macs as well, but you may have
+  ;; to finagle it a bit. Regardless, I tell emacs to only use it if the OS
+  ;; is linux based.
+  :if (eq system-type 'gnu/linux)
+  :magic ("%PDF" . pdf-view-mode)
+  :defer 7
+  :custom
+  (pdf-sync-forward-display-pdf-key "<C-return>" "Use C-RET in latex mode to jump to location in pdf file")
+  (pdf-view-display-size 'fit-page "Show full pages by default instead of fitting page width.")
+  (TeX-view-program-selection '((output-pdf "pdf-tools")) "Use pdf-tools to display pdfs from latex runs.")
+  (TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view")))
+  :config
+  ;; The t says to install the server without asking me --- this may take a
+  ;; second
+  (pdf-tools-install t))
 
 (use-package tex-site
   ;; AuCTeX is better than the built in tex mode; let's use it.  This
@@ -178,16 +202,21 @@
   ;; TeX-command-list by default contains a bunch of stuff I'll never
   ;; use. I use latexmk, xelatexmk, and View.  That's pretty much it.
   ;; Maybe one day I'll add "clean" back to the list.
-  (TeX-command-list
-   '(("latexmk" "latexmk -synctex=1 -quiet -pdf %s"
-      TeX-run-compile nil t :help "Process file with latexmk")
-     ("View" "%V" TeX-run-discard-or-function nil t :help "Run Viewer")
-     ("xelatexmk" "latexmk -synctex=1 -quiet -xelatex %s"
-      TeX-run-compile nil t :help "Process file with xelatexmk")))
+  ;; (TeX-command-list
+  ;;  '(("latexmk" "latexmk -synctex=1 -quiet -pdf %s"
+  ;;     TeX-run-compile nil t :help "Process file with latexmk")
+  ;;    ("View" "%V" TeX-run-discard-or-function nil t :help "Run Viewer")
+  ;;    ("xelatexmk" "latexmk -synctex=1 -quiet -xelatex %s"
+  ;;     TeX-run-compile nil t :help "Process file with xelatexmk")))
   :hook
   (LaTeX-mode . LaTeX-math-mode)
   (LaTeX-mode . reftex-mode)
   (LaTeX-mode . TeX-PDF-mode)
+  (LaTeX-mode . (lambda ()
+		  (push
+		   '("Make" "latexmk -outdir=/tmp %t" TeX-run-TeX nil t
+		     :help "Make pdf output using latexmk.")
+		   TeX-command-list)))
   :config
   (setq-default TeX-command-default "latexmk")
   ;; revert pdf from file after compilation finishes
