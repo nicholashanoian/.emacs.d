@@ -1,9 +1,5 @@
-/auto-save-list/.saves-16-Nick~
-/custom.el~
-/init.el~
-/README~
-/README.md~
-/README.MD~
-/auto-save-list/.saves-743-Nick~
-/auto-save-list/.saves-14006-Nick~
-/myinit.org~
+/auto-save-list/
+/elpa/
+*~
+\#*\#
+*.elc
