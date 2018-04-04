@@ -75,8 +75,10 @@
   (eval-when-compile
     (add-to-list 'load-path "~/.emacs.d/elpa/use-package" user-emacs-directory)
     (require 'use-package))
-  (require 'diminish)
-  (require 'bind-key)
+  (use-package diminish
+    :ensure t)
+  (use-package bind-key
+    :ensure t)
 #+END_SRC
 
 * ace-window
@@ -118,7 +120,7 @@
     ;; AuCTeX is better than the built in tex mode; let's use it.  This
     ;; demand adds almost nothing and ensures that auctex gets to set itself
     ;; up properly. That's necessary because of how weirdly it gets loaded.
-    :ensure t
+    :ensure auctex
     :demand t
     :custom
     (TeX-auto-save t)
@@ -266,15 +268,16 @@
     (use-package helm-org
       :bind
       (:map my/map
-	    ("t" . helm-org-agenda-files-headings)))
+            ("t" . helm-org-agenda-files-headings)))
     (helm-mode)
     (use-package helm-swoop
+      :ensure t
       :config
       (progn
-	(global-set-key (kbd "C-s") 'helm-swoop-without-pre-input)
-	;;(setq helm-swoop-pre-input-function  (lambda () ""))
-	(setq helm-swoop-use-fuzzy-match t)
-	)
+        (global-set-key (kbd "C-s") 'helm-swoop-without-pre-input)
+        ;;(setq helm-swoop-pre-input-function  (lambda () ""))
+        (setq helm-swoop-use-fuzzy-match t)
+        )
       ))
 #+END_SRC
 
@@ -312,6 +315,7 @@
     (setq org-src-window-setup 'current-window)
     )
     (use-package org-bullets
+      :ensure t
       :hook (org-mode . (lambda () (org-bullets-mode 1))))
 #+END_SRC
 * pdf-tools

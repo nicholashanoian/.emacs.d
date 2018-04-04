@@ -23,12 +23,13 @@
  '(helm-command-prefix-key "M-,")
  '(helm-display-header-line nil)
  '(helm-echo-input-in-header-line t)
+ '(helm-ff-skip-boring-files t)
  '(helm-net-prefer-curl t)
  '(helm-split-window-default-side (quote below))
  '(helm-split-window-inside-p t)
  '(package-selected-packages
    (quote
-    (helm-swoop color-theme-sanityinc-tomorrow try ace-window auto-org-md org-edna org-bullets company-emacs-eclim eclim pdf-tools markdown-mode magit cdlatex avy-flycheck aggressive-indent auctex company helm flycheck diminish use-package)))
+    (helm-org helm-files tex-site helm-swoop color-theme-sanityinc-tomorrow try ace-window auto-org-md org-edna org-bullets company-emacs-eclim eclim pdf-tools markdown-mode magit cdlatex avy-flycheck aggressive-indent auctex company helm flycheck diminish use-package)))
  '(pdf-sync-forward-display-pdf-key "<C-return>" t)
  '(pdf-view-display-size (quote fit-page))
  '(reftex-plug-into-AUCTeX t t))
