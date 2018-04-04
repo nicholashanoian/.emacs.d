@@ -3,3 +3,6 @@
 *~
 \#*\#
 *.elc
+/eshell/history
+/eshell/lastdir
+*.rel
