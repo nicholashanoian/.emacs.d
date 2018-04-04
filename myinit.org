@@ -7,6 +7,7 @@
 
   ;;disable start screen
   (setq inhibit-startup-screen t)
+  (tool-bar-mode -1)
 
   ;;yes or no prompts to y or n
   (fset 'yes-or-no-p 'y-or-n-p)
@@ -182,62 +183,29 @@
 
 * eclim 
 #+BEGIN_SRC emacs-lisp
-
-
-;; (use-package eclim
-;;   :init (setq help-at-pt-display-when-idle t
-;;               help-at-pt-timer-delay       0.1
-;;               eclimd-executable            "/opt/eclipse/eclimd"
-;;               eclim-executable             "/opt/eclipse/plugins/org.eclim_2.7.2/bin/eclim"
-;;               ;;eclimd-default-workspace     "~/Documents/workspace/"
-;;               eclim-eclipse-dirs           '("/opt/eclipse"))
-
-;;   :config (progn (help-at-pt-set-timer)
-;;                  (mapc #'require '(eclimd company-emacs-eclim))
-;;                  (company-emacs-eclim-setup)
-
-;;                  (defun ers/eclim-run-class ()
-;;                    (interactive)
-;;                    (beginning-of-buffer)
-;;                    (search "class ")
-;;                    (forward-word)
-;;                    (eclim-run-class))
-
-;;                  (bind-keys :map eclim-mode-map
-;;                             ("C-c C-e l m" . eclim-manage-projects)
-;;                             ("C-c C-e l r" . ers/eclim-run-class)
-;;                             ("C-c C-e l c" . garbage-collect)
-;;                             ("C-c C-e l o" . eclim-problems-open)
-;;                             ("C-c C-e l b" . eclim-project-build))
-
-;;                  (dolist (elt '(groovy-mode-hook java-mode-hook))
-;;                    (add-hook elt (lambda ()
-;;                                    (interactive)
-;;                                    (eclim-mode t))))))
-
-(add-hook 'java-mode-hook
-          (lambda ()
-	    (require 'eclim)
-	    (global-eclim-mode)
-	    ;;(require 'eclimd)
-	    (custom-set-variables
-	     '(eclim-eclipse-dirs '("/opt/eclipse"))
-	     '(eclim-executable "/opt/eclipse/plugins/org.eclim_2.7.2/bin/eclim"))
-	    (setq help-at-pt-display-when-idle t)
-	    (setq help-at-pt-timer-delay 0.1)
-	    (help-at-pt-set-timer)
-	    ;;regular auto-complete initialization
-	    ;;(require 'auto-complete-config)
-	    ;;ac-config-default)
-
-	     ;;add the emacs-eclim source
-	     ;;(require 'ac-emacs-eclim-source)
-	     ;;(ac-emacs-eclim-config)
-
-	     ;;(global-set-key (kbd "C-9") 'eclim-project-build)
-	     ;;(global-set-key (kbd "C-6") 'eclim-java-find-declaration)
-	     ))
+  (use-package eclim
+    :ensure t
+    :load-path ("~/.emacs.d/elpa/eclim-20171113.1754/")
+    :init
+    (progn
+      (setq eclimd-autostart t
+	    eclim-executable "/opt/eclipse/plugins/org.eclim_2.7.2/bin/eclim"
+	    eclimd-executable "/opt/eclipse/plugins/org.eclim_2.7.2/bin/eclimd"
+	    ;;eclimd-wait-for-process t
+	    eclimd-default-workspace "~/my-workspace"
+	    eclim-eclipse-dirs "/opt/eclipse"
+	    help-at-pt-display-when-idle t
+	    help-at-pt-timer-delay 1.0
+	    eclim-auto-save nil
+	    )
+      (help-at-pt-set-timer)
+      )
+    :hook (java-mode . eclim-mode)
+    )
 #+END_SRC
+
+#+RESULTS:
+| eclim-mode | eclim |
 
 * flycheck
 #+BEGIN_SRC emacs-lisp
@@ -297,8 +265,8 @@
     (use-package helm-swoop
       :config
       (progn
-	(global-set-key (kbd "C-s") 'helm-swoop)
-	(setq helm-swoop-pre-input-function (lamba () ""))
+	(global-set-key (kbd "C-s") 'helm-swoop-without-pre-input)
+	;;(setq helm-swoop-pre-input-function  (lambda () ""))
 	(setq helm-swoop-use-fuzzy-match t)
 	)
       ))
@@ -331,8 +299,12 @@
 
 * org-mode
 #+BEGIN_SRC emacs-lisp
-  (use-package org-bullets
-    :hook (org-mode . (lambda () (org-bullets-mode 1))))
+  (use-package org
+    :config
+    (setq org-src-window-setup 'current-window)
+    )
+    (use-package org-bullets
+      :hook (org-mode . (lambda () (org-bullets-mode 1))))
 #+END_SRC
 * pdf-tools
 #+BEGIN_SRC emacs-lisp
