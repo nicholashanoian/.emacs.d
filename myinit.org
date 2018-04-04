@@ -99,86 +99,91 @@
 
 * aggressive-indent
 #+BEGIN_SRC emacs-lisp
-(use-package aggressive-indent
-  ;; Keep code indented automatically
-  :defer 10
-  :config
-  (global-aggressive-indent-mode))
-
-(use-package cdlatex
-  :hook (LaTeX-mode . turn-on-cdlatex))
+  (use-package aggressive-indent
+    ;; Keep code indented automatically
+    :ensure t
+    :defer 10
+    :config
+    (global-aggressive-indent-mode))
+#+END_SRC
+* cdlatex
+#+BEGIN_SRC emacs-lisp
+  (use-package cdlatex
+    :hook (LaTeX-mode . turn-on-cdlatex))
 #+END_SRC
 
 * auctex
 #+BEGIN_SRC emacs-lisp
-(use-package tex-site
-  ;; AuCTeX is better than the built in tex mode; let's use it.  This
-  ;; demand adds almost nothing and ensures that auctex gets to set itself
-  ;; up properly. That's necessary because of how weirdly it gets loaded.
-  :demand t
-  :custom
-  (TeX-auto-save t)
-  (TeX-electric-escape t)
-  (TeX-electric-math '("\\(" . "\\)") "Smart $ behavior")
-  (TeX-electric-sub-and-superscript t)
-  (TeX-parse-self t)
-  (reftex-plug-into-AUCTeX t)
-  (TeX-source-correlate-method 'synctex)
-  (TeX-source-correlate-mode t)
-  (TeX-clean-confirm nil)
-  ;; TeX-command-list by default contains a bunch of stuff I'll never
-  ;; use. I use latexmk, xelatexmk, and View.  That's pretty much it.
-  ;; Maybe one day I'll add "clean" back to the list.
-  ;; (TeX-command-list
-  ;;  '(("latexmk" "latexmk -synctex=1 -quiet -pdf %s"
-  ;;     TeX-run-compile nil t :help "Process file with latexmk")
-  ;;    ("View" "%V" TeX-run-discard-or-function nil t :help "Run Viewer")
-  ;;    ("xelatexmk" "latexmk -synctex=1 -quiet -xelatex %s"
-  ;;     TeX-run-compile nil t :help "Process file with xelatexmk")))
-  :hook
-  (LaTeX-mode . LaTeX-math-mode)
-  (LaTeX-mode . reftex-mode)
-  (LaTeX-mode . TeX-PDF-mode)
-  (LaTeX-mode . (lambda ()
-		  (push
-		   '("Make" "latexmk -outdir=/tmp %t" TeX-run-TeX nil t
-		     :help "Make pdf output using latexmk.")
-		   TeX-command-list)))
-  :config
-  (setq-default TeX-command-default "latexmk")
-  ;; revert pdf from file after compilation finishes
-  (use-package tex-buf
+  (use-package tex-site
+    ;; AuCTeX is better than the built in tex mode; let's use it.  This
+    ;; demand adds almost nothing and ensures that auctex gets to set itself
+    ;; up properly. That's necessary because of how weirdly it gets loaded.
+    :ensure t
+    :demand t
+    :custom
+    (TeX-auto-save t)
+    (TeX-electric-escape t)
+    (TeX-electric-math '("\\(" . "\\)") "Smart $ behavior")
+    (TeX-electric-sub-and-superscript t)
+    (TeX-parse-self t)
+    (reftex-plug-into-AUCTeX t)
+    (TeX-source-correlate-method 'synctex)
+    (TeX-source-correlate-mode t)
+    (TeX-clean-confirm nil)
+    ;; TeX-command-list by default contains a bunch of stuff I'll never
+    ;; use. I use latexmk, xelatexmk, and View.  That's pretty much it.
+    ;; Maybe one day I'll add "clean" back to the list.
+    ;; (TeX-command-list
+    ;;  '(("latexmk" "latexmk -synctex=1 -quiet -pdf %s"
+    ;;     TeX-run-compile nil t :help "Process file with latexmk")
+    ;;    ("View" "%V" TeX-run-discard-or-function nil t :help "Run Viewer")
+    ;;    ("xelatexmk" "latexmk -synctex=1 -quiet -xelatex %s"
+    ;;     TeX-run-compile nil t :help "Process file with xelatexmk")))
+    :hook
+    (LaTeX-mode . LaTeX-math-mode)
+    (LaTeX-mode . reftex-mode)
+    (LaTeX-mode . TeX-PDF-mode)
+    (LaTeX-mode . (lambda ()
+		    (push
+		     '("Make" "latexmk -outdir=/tmp %t" TeX-run-TeX nil t
+		       :help "Make pdf output using latexmk.")
+		     TeX-command-list)))
     :config
-    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-  (use-package latex
-    :bind
-    (:map LaTeX-mode-map
-          ("M-p" . outline-previous-visible-heading)
-          ("M-n" . outline-next-visible-heading)
-          ("<backtab>" . org-cycle))
-    :config
-    (push "\\.fdb_latexmk" LaTeX-clean-intermediate-suffixes)
-    (push "\\.fls" LaTeX-clean-intermediate-suffixes)
-    (push "\\.synctex.gz" LaTeX-clean-intermediate-suffixes)))
+    (setq-default TeX-command-default "latexmk")
+    ;; revert pdf from file after compilation finishes
+    (use-package tex-buf
+      :config
+      (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+    (use-package latex
+      :bind
+      (:map LaTeX-mode-map
+	    ("M-p" . outline-previous-visible-heading)
+	    ("M-n" . outline-next-visible-heading)
+	    ("<backtab>" . org-cycle))
+      :config
+      (push "\\.fdb_latexmk" LaTeX-clean-intermediate-suffixes)
+      (push "\\.fls" LaTeX-clean-intermediate-suffixes)
+      (push "\\.synctex.gz" LaTeX-clean-intermediate-suffixes)))
 #+END_SRC
 
 * company
 #+BEGIN_SRC emacs-lisp
-(use-package company
-  ;; Company mode provides autocompletion of text and code.
-  :bind
-  (:map company-active-map
-	("C-s" . company-search-candidates)
-	("<tab>" . company-complete-common-or-cycle)
-	("RET" . company-complete-selection)
-	("C-n" . company-select-next)
-	("C-p" . company-select-previous))
-  :hook
-  ((prog-mode ess-mode) . company-mode)
-  :custom
-  (company-idle-delay 0.25)
-  (company-require-match nil)
-  (company-minimum-prefix-length 2))
+  (use-package company
+    ;; Company mode provides autocompletion of text and code.
+    :ensure t  
+    :bind
+    (:map company-active-map
+	  ("C-s" . company-search-candidates)
+	  ("<tab>" . company-complete-common-or-cycle)
+	  ("RET" . company-complete-selection)
+	  ("C-n" . company-select-next)
+	  ("C-p" . company-select-previous))
+    :hook
+    ((prog-mode ess-mode) . company-mode)
+    :custom
+    (company-idle-delay 0.25)
+    (company-require-match nil)
+    (company-minimum-prefix-length 2))
 #+END_SRC
 
 * eclim 
@@ -226,6 +231,7 @@
   (use-package helm
     ;; A package in a league of its own: https://tuhdo.github.io/helm-intro.html
     ;; load it soon after starting Emacs:
+    :ensure t
     :defer 1
     :bind
     (("M-x" . helm-M-x)
@@ -279,6 +285,7 @@
 #+BEGIN_SRC emacs-lisp
 (use-package magit
   ;;magit is magical git
+  :ensure t
   :bind ("C-x g" . magit-status))
 #+END_SRC
 
@@ -300,6 +307,7 @@
 * org-mode
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :ensure t
     :config
     (setq org-src-window-setup 'current-window)
     )
@@ -317,6 +325,7 @@
   ;; to finagle it a bit. Regardless, I tell emacs to only use it if the OS
   ;; is linux based.
   :if (eq system-type 'gnu/linux)
+  :ensure t
   :magic ("%PDF" . pdf-view-mode)
   :defer 7
   :custom
