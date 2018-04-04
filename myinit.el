@@ -183,7 +183,7 @@
 	    (help-at-pt-set-timer)
 	    ;;regular auto-complete initialization
 	    ;;(require 'auto-complete-config)
-	    (;;ac-config-default)
+	    ;;ac-config-default)
 
 	     ;;add the emacs-eclim source
 	     ;;(require 'ac-emacs-eclim-source)
@@ -191,7 +191,7 @@
 
 	     ;;(global-set-key (kbd "C-9") 'eclim-project-build)
 	     ;;(global-set-key (kbd "C-6") 'eclim-java-find-declaration)
-	     )))
+	     ))
 
 (use-package flycheck
   :ensure t
@@ -238,8 +238,14 @@
   (use-package helm-org
     :bind
     (:map my/map
-          ("t" . helm-org-agenda-files-headings)))
-  (helm-mode))
+	  ("t" . helm-org-agenda-files-headings)))
+  (helm-mode)
+  (use-package helm-swoop
+    :config
+    (progn
+      (global-set-key (kbd "C-s") 'helm-swoop)
+      )
+  ))
 
 (use-package magit
   ;;magit is magical git
