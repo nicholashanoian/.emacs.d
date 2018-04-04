@@ -116,3 +116,57 @@ Quick guide to magit:
    2. press P (push)
    3. press p (to origin/master)
    4. enter username and password
+   
+   
+### Java - Eclim
+
+#### 1. Installing jdk
+Install java:
+``` shell
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java9-set-default
+```
+Check that java is installed properly:
+
+``` shell
+java -version
+javac -version
+```
+
+#### 2. Installing eclipse
+Download installer from windows:
+https://www.eclipse.org/downloads/download.php?file=/oomph/epp/oxygen/R2/eclipse-inst-linux64.tar.gz
+
+Move to home directory on bash:
+
+``` shell
+mv eclipse-inst-linux64.tar.gz ~
+```
+Install eclipse:
+
+``` shell
+tar xf eclipse-inst-linux64.tar.gz
+cd eclipse-installer
+./eclipse-inst
+```
+Now use the installer. First open menu on left side and hit update. Then install and choose Eclipse IDE for Java Developers. Make sure paths are good.
+
+Eclipse should now be installed in your home directory. Now move Eclipse to /opt:
+
+``` shell
+sudo mv -r /home/nick/eclipse /opt
+```
+Now add eclipse to the PATH variable so that it can be run from any location. Edit .bashrc (located in home directory) and add the following line to the end:
+
+``` shell
+export PATH=$PATH:/opt/eclipse/java-oxygen3/eclipse
+```
+
+#### 3. Installing eclim
+Download eclim bin from eclim website:
+
+``` shell
+wget "https://github.com/ervandew/eclim/releases/download/2.7.2/eclim_2.7.2.bin"
+```
+
