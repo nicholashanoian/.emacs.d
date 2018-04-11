@@ -54,14 +54,20 @@
 
 * modes
 #+BEGIN_SRC emacs-lisp
-(global-visual-line-mode t)
-(set-face-attribute 'default nil :height 110)
+  (global-visual-line-mode t)
+  (electric-pair-mode 1)
+  (show-paren-mode 1)
+  (set-face-attribute 'default nil :height 110)
 
-;;linum-mode hooks
-(add-hook 'emacs-lisp-mode-hook 'linum-mode)
-(add-hook 'sh-mode-hook 'linum-mode)
+  ;;linum-mode hooks
+  (add-hook 'emacs-lisp-mode-hook 'linum-mode)
+  (add-hook 'sh-mode-hook 'linum-mode)
 #+END_SRC
 
+#+RESULTS:
+| linum-mode |
+
+  
 * themes
 #+BEGIN_SRC emacs-lisp
   (use-package color-theme-sanityinc-tomorrow
@@ -175,44 +181,65 @@
     :ensure t  
     :bind
     (:map company-active-map
-	  ("C-s" . company-search-candidates)
-	  ("<tab>" . company-complete-common-or-cycle)
-	  ("RET" . company-complete-selection)
-	  ("C-n" . company-select-next)
-	  ("C-p" . company-select-previous))
+          ("C-s" . company-search-candidates)
+          ("<tab>" . company-complete-common-or-cycle)
+          ("RET" . company-complete-selection)
+          ("C-n" . company-select-next)
+          ("C-p" . company-select-previous))
     :hook
     ((prog-mode ess-mode) . company-mode)
+    :config
+    (defun my/python-mode-hook ()
+      (add-to-list 'company-backends 'company-jedi))
+    (add-hook 'python-mode-hook 'my/python-mode-hook)
     :custom
     (company-idle-delay 0.25)
     (company-require-match nil)
     (company-minimum-prefix-length 2))
 #+END_SRC
 
+#+RESULTS:
+: company-select-previous
 * eclim 
 #+BEGIN_SRC emacs-lisp
-  (use-package eclim
-    :ensure t
-    :load-path ("~/.emacs.d/elpa/eclim-20171113.1754/")
-    :init
-    (progn
-      (setq eclimd-autostart t
-	    eclim-executable "/opt/eclipse/plugins/org.eclim_2.7.2/bin/eclim"
-	    eclimd-executable "/opt/eclipse/plugins/org.eclim_2.7.2/bin/eclimd"
-	    ;;eclimd-wait-for-process t
-	    eclimd-default-workspace "~/my-workspace"
-	    eclim-eclipse-dirs "/opt/eclipse"
-	    help-at-pt-display-when-idle t
-	    help-at-pt-timer-delay 1.0
-	    eclim-auto-save nil
-	    )
-      (help-at-pt-set-timer)
-      )
-    :hook (java-mode . eclim-mode)
-    )
+  ;; (use-package eclim
+  ;;   :ensure t
+  ;;   :load-path ("~/.emacs.d/elpa/eclim-20171113.1754/")
+  ;;   :init
+  ;;   (progn
+  ;;     (setq eclimd-autostart t
+  ;;           eclim-executable "/opt/eclipse/plugins/org.eclim_2.7.2/bin/eclim"
+  ;;           eclimd-executable "/opt/eclipse/plugins/org.eclim_2.7.2/bin/eclimd"
+  ;;           ;;eclimd-wait-for-process t
+  ;;           eclimd-default-workspace "~/my-workspace"
+  ;;           eclim-eclipse-dirs "/opt/eclipse"
+  ;;           help-at-pt-display-when-idle t
+  ;;           help-at-pt-timer-delay 1.0
+  ;;           eclim-auto-save nil
+  ;;           )
+  ;;     (help-at-pt-set-timer)
+  ;;     )
+  ;;   :hook (java-mode . eclim-mode)
+  ;;   )
+
+  ;;   (use-package company-emacs-eclim
+  ;;     :ensure t
+  ;;     :config (company-emacs-eclim-setup))
 #+END_SRC
 
 #+RESULTS:
-| eclim-mode | eclim |
+: t
+
+* exec-path-from-shell
+#+BEGIN_SRC emacs-lisp
+  (use-package exec-path-from-shell
+    :ensure t
+    :init
+    (when (memq window-system '(mac ns x))
+      (exec-path-from-shell-initialize)))
+#+END_SRC
+
+#+RESULTS:
 
 * flycheck
 #+BEGIN_SRC emacs-lisp
@@ -226,6 +253,36 @@
 
 #+RESULTS:
 : t
+
+* gradle
+#+BEGIN_SRC emacs-lisp
+  (use-package gradle-mode
+    :ensure t
+    :hook (java-mode . (lambda() (gradle-mode 1))))
+
+  ;; (defun build-and-run (&optional CLASS-NAME)
+  ;;   "Get class name from buffer."
+  ;;   (interactive "sClass to run (default current buffer): ")
+  ;;   (gradle-run (concat "build run -Pmain=" (or CLASS-NAME (file-name-base (buffer-file-name (window-buffer (minibuffer-selected-window))))))))
+
+  (cl-defun build-and-run (&optional CLASS-NAME &key (CLASS-NAME (file-name-base (buffer-file-name (window-buffer (minibuffer-selected-window))))))
+    (interactive "sClass to run (default current buffer): ")
+    (save-buffer)
+    (gradle-run (concat "build run -q -Pmain=" CLASS-NAME)))
+
+  (define-key gradle-mode-map (kbd "C-c C-r") 'build-and-run)
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package groovy-mode
+    :ensure t
+    :hook (//.gradle// . groovy-mode))
+#+END_SRC
+
+#+RESULTS:
+| groovy-mode |
 
 * Helm
 #+BEGIN_SRC emacs-lisp
@@ -284,12 +341,42 @@
 #+RESULTS:
 : helm-select-action
 
+* icons and fonts
+#+BEGIN_SRC emacs-lisp
+  (use-package all-the-icons
+    :ensure t)
+#+END_SRC
+* jdee
+#+BEGIN_SRC emacs-lisp
+;;  (use-package jdee
+  ;;  :ensure t)
+#+END_SRC
+
+#+RESULTS:
+
+* js2
+#+BEGIN_SRC emacs-lisp
+  (use-package js2-mode
+    :ensure t
+    :hook ((//.js// . js2-mode)
+           (js2-mode . js2-imenu-extras-mode))
+    )
+
+  (use-package js2-refactor
+    :ensure t)
+#+END_SRC
+
+#+RESULTS:
+
 * magit
 #+BEGIN_SRC emacs-lisp
-(use-package magit
-  ;;magit is magical git
-  :ensure t
-  :bind ("C-x g" . magit-status))
+  (use-package magit
+    ;;magit is magical git
+    :ensure t
+    :bind ("C-x g" . magit-status)
+    :config
+    (setq magit-commit-show-diff nil
+          magit-revert-buffers 1))
 #+END_SRC
 
 #+RESULTS:
@@ -306,6 +393,59 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "pandoc"))
 #+END_SRC
+
+* meghanada
+#+BEGIN_SRC emacs-lisp
+  (use-package meghanada
+    :ensure t
+    :init
+    (setq meghanada-gradle-path "gradle")
+    :bind
+    (:map meghanada-mode-map
+          (("C-M-o" . meghanada-optimize-import)
+           ("C-M-t" . meghanada-import-all)
+           )))
+  (defun tkj-java-meghanda-mode-hook ()
+    (meghanada-mode)
+    (flycheck-mode))
+  (add-hook 'java-mode-hook 'tkj-java-meghanda-mode-hook)
+#+END_SRC
+
+#+RESULTS:
+| tkj-java-meghanda-mode-hook | (lambda nil (gradle-mode 1)) |
+
+* neotree
+#+BEGIN_SRC emacs-lisp
+  (use-package neotree
+    :ensure t
+    :config (setq neo-theme (if (display-graphic-p) 'icons))
+    :bind ("<f8>" . neotree-project-dir-toggle))
+
+  (defun neotree-project-dir-toggle ()
+    "Open NeoTree using the project root, using find-file-in-project,
+  or the current buffer directory."
+    (interactive)
+    (let ((project-dir
+           (ignore-errors
+             ;;; Pick one: projectile or find-file-in-project
+                                          ; (projectile-project-root)
+             (ffip-project-root)
+             ))
+          (file-name (buffer-file-name))
+          (neo-smart-open t))
+      (if (and (fboundp 'neo-global--window-exists-p)
+               (neo-global--window-exists-p))
+          (neotree-hide)
+        (progn
+          (neotree-show)
+          (if project-dir
+              (neotree-dir project-dir))
+          (if file-name
+              (neotree-find file-name))))))
+#+END_SRC
+
+#+RESULTS:
+: neotree-project-dir-toggle
 
 * org-mode
 #+BEGIN_SRC emacs-lisp
@@ -342,6 +482,140 @@
   ;; second
   (pdf-tools-install t))
 #+END_SRC
+
+* projectile
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :hook (gradle-mode . projectile-mode))
+
+  (use-package helm-projectile
+    :ensure t
+    :config
+    (helm-projectile-on))
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* python
+#+BEGIN_SRC emacs-lisp
+  (use-package anaconda-mode
+    :ensure t
+    :hook
+    (python-mode . anaconda-mode)
+    (python-mode . anaconda-eldoc-mode))
+
+  ;;spacing around operators
+  (use-package electric-operator
+    :ensure t
+    :hook ((ess-mode python-mode) . electric-operator-mode))
+
+  (use-package python-mode
+    :ensure t)
+
+
+  ;;for autocompletion
+  (use-package company-jedi
+    :ensure t)
+#+END_SRC
+
+#+RESULTS:
+
+* try
+#+BEGIN_SRC emacs-lisp
+  (use-package try
+    :ensure t)
+#+END_SRC
+
+#+RESULTS:
+
+* virtualenvwrapper
+#+BEGIN_SRC emacs-lisp
+  (use-package virtualenvwrapper
+    :ensure t
+    :config
+    (progn
+      ;;(venv-initialize-eshell)
+      (setq venv-location "~/.virtualenvs")))
+#+END_SRC
+
+* web-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package web-mode
+    :mode (("\\.html\\'" . web-mode)
+           ("\\.html\\.erb\\'" . web-mode)
+           ("\\.mustache\\'" . web-mode)
+           ("\\.jinja\\'" . web-mode)
+           ("\\.php\\'" . web-mode))
+    :config
+    (progn
+      (setq web-mode-engines-alist
+            '(("\\.jinja\\'"  . "django")))))
+#+END_SRC
+
+#+RESULTS:
+
+* move file
+#+BEGIN_SRC emacs-lisp
+  (defun move-file (new-location)
+    "Write this file to NEW-LOCATION, and delete the old one."
+    (interactive (list (expand-file-name
+                        (if buffer-file-name
+                            (read-file-name "Move file to: ")
+                          (read-file-name "Move file to: "
+                                          default-directory
+                                          (expand-file-name (file-name-nondirectory (buffer-name))
+                                                            default-directory))))))
+    (when (file-exists-p new-location)
+      (delete-file new-location))
+    (let ((old-location (expand-file-name (buffer-file-name))))
+      (message "old file is %s and new file is %s"
+               old-location
+               new-location)
+      (write-file new-location t)
+      (when (and old-location
+                 (file-exists-p new-location)
+                 (not (string-equal old-location new-location)))
+        (delete-file old-location))))
+  (bind-key "C-x C-m" #'move-file)
+#+END_SRC
+
+#+RESULTS:
+: move-file
+
+* toggle split
+#+BEGIN_SRC emacs-lisp
+  (defun toggle-window-split ()
+    (interactive)
+    (if (= (count-windows) 2)
+        (let* ((this-win-buffer (window-buffer))
+               (next-win-buffer (window-buffer (next-window)))
+               (this-win-edges (window-edges (selected-window)))
+               (next-win-edges (window-edges (next-window)))
+               (this-win-2nd (not (and (<= (car this-win-edges)
+                                           (car next-win-edges))
+                                       (<= (cadr this-win-edges)
+                                           (cadr next-win-edges)))))
+               (splitter
+                (if (= (car this-win-edges)
+                       (car (window-edges (next-window))))
+                    'split-window-horizontally
+                  'split-window-vertically)))
+          (delete-other-windows)
+          (let ((first-win (selected-window)))
+            (funcall splitter)
+            (if this-win-2nd (other-window 1))
+            (set-window-buffer (selected-window) this-win-buffer)
+            (set-window-buffer (next-window) next-win-buffer)
+            (select-window first-win)
+            (if this-win-2nd (other-window 1))))))
+
+  (global-set-key (kbd "C-x |") 'toggle-window-split)
+#+END_SRC
+
+#+RESULTS:
+: toggle-window-split
 
 * change directory
 #+BEGIN_SRC emacs-lisp
