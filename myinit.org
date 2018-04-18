@@ -72,7 +72,9 @@
 #+BEGIN_SRC emacs-lisp
   (use-package color-theme-sanityinc-tomorrow
     :ensure t)
-#+END_SRC
+
+  
+  #+END_SRC
 
 #+RESULTS:
 
@@ -117,8 +119,13 @@
 * cdlatex
 #+BEGIN_SRC emacs-lisp
   (use-package cdlatex
-    :hook (LaTeX-mode . turn-on-cdlatex))
+    :ensure t
+    :hook (LaTeX-mode . turn-on-cdlatex)
+    )
 #+END_SRC
+
+#+RESULTS:
+| (lambda nil (setq TeX-command-list (cons (quote (Make latexmk -outdir=/tmp %t TeX-run-TeX nil t :help Make pdf output using latexmk.)) TeX-command-list))) | TeX-PDF-mode | reftex-mode | LaTeX-math-mode | turn-on-cdlatex |
 
 * auctex
 #+BEGIN_SRC emacs-lisp
@@ -152,10 +159,10 @@
     (LaTeX-mode . reftex-mode)
     (LaTeX-mode . TeX-PDF-mode)
     (LaTeX-mode . (lambda ()
-		    (push
-		     '("Make" "latexmk -outdir=/tmp %t" TeX-run-TeX nil t
-		       :help "Make pdf output using latexmk.")
-		     TeX-command-list)))
+            (push
+             '("Make" "latexmk -outdir=/tmp %t" TeX-run-TeX nil t
+               :help "Make pdf output using latexmk.")
+             TeX-command-list)))
     :config
     (setq-default TeX-command-default "latexmk")
     ;; revert pdf from file after compilation finishes
@@ -165,9 +172,9 @@
     (use-package latex
       :bind
       (:map LaTeX-mode-map
-	    ("M-p" . outline-previous-visible-heading)
-	    ("M-n" . outline-next-visible-heading)
-	    ("<backtab>" . org-cycle))
+        ("M-p" . outline-previous-visible-heading)
+        ("M-n" . outline-next-visible-heading)
+        ("<backtab>" . org-cycle))
       :config
       (push "\\.fdb_latexmk" LaTeX-clean-intermediate-suffixes)
       (push "\\.fls" LaTeX-clean-intermediate-suffixes)
@@ -396,19 +403,19 @@
 
 * meghanada
 #+BEGIN_SRC emacs-lisp
-  (use-package meghanada
-    :ensure t
-    :init
-    (setq meghanada-gradle-path "gradle")
-    :bind
-    (:map meghanada-mode-map
-          (("C-M-o" . meghanada-optimize-import)
-           ("C-M-t" . meghanada-import-all)
-           )))
-  (defun tkj-java-meghanda-mode-hook ()
-    (meghanada-mode)
-    (flycheck-mode))
-  (add-hook 'java-mode-hook 'tkj-java-meghanda-mode-hook)
+  ;; (use-package meghanada
+  ;;   :ensure t
+  ;;   :init
+  ;;   (setq meghanada-gradle-path "gradle")
+  ;;   :bind
+  ;;   (:map meghanada-mode-map
+  ;;         (("C-M-o" . meghanada-optimize-import)
+  ;;          ("C-M-t" . meghanada-import-all)
+  ;;          )))
+  ;; (defun tkj-java-meghanda-mode-hook ()
+  ;;   (meghanada-mode)
+  ;;   (flycheck-mode))
+  ;; (add-hook 'java-mode-hook 'tkj-java-meghanda-mode-hook)
 #+END_SRC
 
 #+RESULTS:
@@ -452,12 +459,24 @@
   (use-package org
     :ensure t
     :config
-    (setq org-src-window-setup 'current-window)
+    (setq org-directory "~/Dropbox/org"
+          org-src-window-setup 'current-window
+          org-mobile-directory "~/Dropbox/Apps/MobileOrg"
+          org-mobile-files '("~/Dropbox/org")
+          org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org"
+          )
+    
     )
-    (use-package org-bullets
-      :ensure t
-      :hook (org-mode . (lambda () (org-bullets-mode 1))))
+  (use-package org-bullets
+    :ensure t
+    :hook (org-mode . (lambda () (org-bullets-mode 1))))
+
+
 #+END_SRC
+
+#+RESULTS:
+| (lambda nil (org-bullets-mode 1)) | #[nil \300\301\302\303\304$\207 [org-add-hook change-major-mode-hook org-show-block-all append local] 5] | #[nil \300\301\302\303\304$\207 [org-add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+
 * pdf-tools
 #+BEGIN_SRC emacs-lisp
 (use-package pdf-tools
@@ -556,6 +575,14 @@
 
 #+RESULTS:
 
+* yasnippet
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t)
+
+  (use-package java-snippets
+    :ensure t)
+#+END_SRC
 * move file
 #+BEGIN_SRC emacs-lisp
   (defun move-file (new-location)
@@ -619,6 +646,81 @@
 
 * change directory
 #+BEGIN_SRC emacs-lisp
-(cd (getenv "OneDriveBash"))
+;;(cd (getenv "OneDriveBash"))
 #+END_SRC
+
+
+* latex
+#+BEGIN_SRC emacs-lisp :results output silent
+  ;; My custom LaTeX class for Org-mode export. require is needed for it to work.
+  ;;(setf org-highlight-latex-and-related '(latex))
+  (setq org-src-fontify-natively t)
+  (setq org-latex-with-hyperref nil)
+  (setq org-latex-title-command "\\maketitle")
+  (setq org-latex-toc-command "")
+  (setq org-export-with-section-numbers nil)
+  (setq user-full-name "Nicholas Hanoian")
+  (setq org-latex-create-formula-image-program 'imagemagick)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))   
+
+  (unless (boundp 'org-latex-classes)
+    (setq org-latex-classes nil))
+
+  (add-to-list 'org-latex-classes
+               '("homework"
+                 "\\documentclass{homework}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+
+
+#+END_SRC
+
+** centered previews
+#+BEGIN_SRC emacs-lisp
+  ;; specify the justification you want
+  (plist-put org-format-latex-options :justify 'center)
+
+  (defun org-justify-fragment-overlay (beg end image imagetype)
+    "Adjust the justification of a LaTeX fragment.
+  The justification is set by :justify in
+  org-format-latex-options. Only equations at the beginning of a
+  line are justified."
+    (cond
+     ;; Centered justification
+     ((and (eq 'center (plist-get org-format-latex-options :justify)) 
+           (= beg (line-beginning-position)))
+      (let* ((img (create-image image 'imagemagick t))
+             (width (car (image-size img)))
+             (offset (floor (- (/ (window-text-width) 2) (/ width 2)))))
+        (overlay-put (ov-at) 'before-string (make-string offset ? ))))
+     ;; Right justification
+     ((and (eq 'right (plist-get org-format-latex-options :justify)) 
+           (= beg (line-beginning-position)))
+      (let* ((img (create-image image 'imagemagick t))
+             (width (car (image-display-size (overlay-get (ov-at) 'display))))
+             (offset (floor (- (window-text-width) width (- (line-end-position) end)))))
+        (overlay-put (ov-at) 'before-string (make-string offset ? ))))))
+
+  (defun org-latex-fragment-tooltip (beg end image imagetype)
+    "Add the fragment tooltip to the overlay and set click function to toggle it."
+    (overlay-put (ov-at) 'help-echo
+                 (concat (buffer-substring beg end)
+                         "mouse-1 to toggle."))
+    (overlay-put (ov-at) 'local-map (let ((map (make-sparse-keymap)))
+                                      (define-key map [mouse-1]
+                                        `(lambda ()
+                                           (interactive)
+                                           (org-remove-latex-fragment-image-overlays ,beg ,end)))
+                                      map)))
+
+  ;; advise the function to a
+  (advice-add 'org--format-latex-make-overlay :after 'org-justify-fragment-overlay)
+  (advice-add 'org--format-latex-make-overlay :after 'org-latex-fragment-tooltip)
+#+END_SRC
+
+#+RESULTS:
 
