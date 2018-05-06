@@ -17,7 +17,7 @@
   ;;reduce clutter in init file
   (setq custom-file "~/.emacs.d/custom.el")
   (load custom-file)
-  (package-initialize)
+  ;;(package-initialize)
 
   ;; Delete my files by moving them to the trash. I'm human and
   ;; occasionally delete things that I actually want later:
@@ -55,9 +55,13 @@
 * modes
 #+BEGIN_SRC emacs-lisp
   (global-visual-line-mode t)
+  (diminish 'visual-line-mode)
+  (diminish 'eldoc-mode)
+  (global-hl-line-mode t)
   (electric-pair-mode 1)
-  (show-paren-mode 1)
+  (show-paren-mode 1) 
   (set-face-attribute 'default nil :height 110)
+  (scroll-bar-mode 0)
 
   ;;linum-mode hooks
   (add-hook 'emacs-lisp-mode-hook 'linum-mode)
@@ -114,99 +118,125 @@
     :ensure t
     :defer 10
     :config
-    (global-aggressive-indent-mode))
-#+END_SRC
-* cdlatex
-#+BEGIN_SRC emacs-lisp
-  (use-package cdlatex
-    :ensure t
-    :hook (LaTeX-mode . turn-on-cdlatex)
-    )
+    (global-aggressive-indent-mode)
+	:diminish)
 #+END_SRC
 
 #+RESULTS:
-| (lambda nil (setq TeX-command-list (cons (quote (Make latexmk -outdir=/tmp %t TeX-run-TeX nil t :help Make pdf output using latexmk.)) TeX-command-list))) | TeX-PDF-mode | reftex-mode | LaTeX-math-mode | turn-on-cdlatex |
+: t
 
 * auctex
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :results output silent 
   (use-package tex-site
-    ;; AuCTeX is better than the built in tex mode; let's use it.  This
-    ;; demand adds almost nothing and ensures that auctex gets to set itself
-    ;; up properly. That's necessary because of how weirdly it gets loaded.
-    :ensure auctex
-    :demand t
-    :custom
-    (TeX-auto-save t)
-    (TeX-electric-escape t)
-    (TeX-electric-math '("\\(" . "\\)") "Smart $ behavior")
-    (TeX-electric-sub-and-superscript t)
-    (TeX-parse-self t)
-    (reftex-plug-into-AUCTeX t)
-    (TeX-source-correlate-method 'synctex)
-    (TeX-source-correlate-mode t)
-    (TeX-clean-confirm nil)
-    ;; TeX-command-list by default contains a bunch of stuff I'll never
-    ;; use. I use latexmk, xelatexmk, and View.  That's pretty much it.
-    ;; Maybe one day I'll add "clean" back to the list.
-    ;; (TeX-command-list
-    ;;  '(("latexmk" "latexmk -synctex=1 -quiet -pdf %s"
-    ;;     TeX-run-compile nil t :help "Process file with latexmk")
-    ;;    ("View" "%V" TeX-run-discard-or-function nil t :help "Run Viewer")
-    ;;    ("xelatexmk" "latexmk -synctex=1 -quiet -xelatex %s"
-    ;;     TeX-run-compile nil t :help "Process file with xelatexmk")))
-    :hook
-    (LaTeX-mode . LaTeX-math-mode)
-    (LaTeX-mode . reftex-mode)
-    (LaTeX-mode . TeX-PDF-mode)
-    (LaTeX-mode . (lambda ()
-            (push
-             '("Make" "latexmk -outdir=/tmp %t" TeX-run-TeX nil t
-               :help "Make pdf output using latexmk.")
-             TeX-command-list)))
-    :config
-    (setq-default TeX-command-default "latexmk")
-    ;; revert pdf from file after compilation finishes
-    (use-package tex-buf
-      :config
-      (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-    (use-package latex
-      :bind
-      (:map LaTeX-mode-map
-        ("M-p" . outline-previous-visible-heading)
-        ("M-n" . outline-next-visible-heading)
-        ("<backtab>" . org-cycle))
-      :config
-      (push "\\.fdb_latexmk" LaTeX-clean-intermediate-suffixes)
-      (push "\\.fls" LaTeX-clean-intermediate-suffixes)
-      (push "\\.synctex.gz" LaTeX-clean-intermediate-suffixes)))
+	;; AuCTeX is better than the built in tex mode; let's use it.  This
+	;; demand adds almost nothing and ensures that auctex gets to set itself
+	;; up properly. That's necessary because of how weirdly it gets loaded.
+	:ensure auctex
+	:demand t
+	:custom
+	(TeX-auto-save t)
+	;;(TeX-electric-escape t)
+	(TeX-electric-math '("\\(" . "\\)") "Smart $ behavior")
+	(TeX-electric-sub-and-superscript t)
+	(TeX-parse-self t)
+	(reftex-plug-into-AUCTeX t)
+	;;(setq font-latex-fontify-script nil) ;; stop changing position of stuff on lines
+	(TeX-source-correlate-method 'synctex)
+	(TeX-source-correlate-mode t)
+	(TeX-clean-confirm nil)
+	;; TeX-command-list by default contains a bunch of stuff I'll never
+	;; use. I use latexmk, xelatexmk, and View.  That's pretty much it.
+	;; Maybe one day I'll add "clean" back to the list.
+	;; (TeX-command-list
+	;;  '(("latexmk" "latexmk -synctex=1 -quiet -pdf %s"
+	;;     TeX-run-compile nil t :help "Process file with latexmk")
+	;;    ("View" "%V" TeX-run-discard-or-function nil t :help "Run Viewer")
+	;;    ("xelatexmk" "latexmk -synctex=1 -quiet -xelatex %s"
+	;;     TeX-run-compile nil t :help "Process file with xelatexmk")))
+	:hook
+	(LaTeX-mode . LaTeX-math-mode)
+	(LaTeX-mode . reftex-mode)
+	(LaTeX-mode . TeX-PDF-mode)
+	(LaTeX-mode . (lambda ()
+					(push
+					 '("Make" "latexmk -outdir=/tmp %t" TeX-run-TeX nil t
+					   :help "Make pdf output using latexmk.")
+					 TeX-command-list)))
+	:config
+	(setq-default TeX-command-default "latexmk")
+	;; revert pdf from file after compilation finishes
+	(use-package tex-buf
+	  :config
+	  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+	(use-package latex
+	  :bind
+	  (:map LaTeX-mode-map
+			("M-p" . outline-previous-visible-heading)
+			("M-n" . outline-next-visible-heading)
+			("<backtab>" . org-cycle))
+	  :config
+	  (push "\\.fdb_latexmk" LaTeX-clean-intermediate-suffixes)
+	  (push "\\.fls" LaTeX-clean-intermediate-suffixes)
+	  (push "\\.synctex.gz" LaTeX-clean-intermediate-suffixes)))
 #+END_SRC
+
+#+RESULTS:
+| japanese-latex-mode-initialization | er/add-latex-mode-expansions | (lambda nil (push '(Make latexmk -outdir=/tmp %t TeX-run-TeX nil t :help Make pdf output using latexmk.) TeX-command-list)) | preview-mode-setup | (lambda nil (setq TeX-command-list (cons '(Make latexmk -outdir=/tmp %t TeX-run-TeX nil t :help Make pdf output using latexmk.) TeX-command-list))) | TeX-PDF-mode | reftex-mode | LaTeX-math-mode | turn-on-cdlatex |
+
+* Beacon mode
+#+BEGIN_SRC emacs-lisp
+  ;;   ;; flashes the cursor's line when you scroll
+  ;;   (use-package beacon
+  ;; 	:ensure t
+  ;; 	:config (beacon-mode 1)
+  ;; )
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* cdlatex
+#+BEGIN_SRC emacs-lisp
+  (use-package cdlatex
+	:ensure t
+	:hook ((LaTeX-mode . turn-on-cdlatex)
+		   ;;(org-mode . turn-on-cdlatex)
+)
+	)
+#+END_SRC
+
+#+RESULTS:
+| preview-mode-setup | er/add-latex-mode-expansions | turn-on-cdlatex | (lambda nil (setq TeX-command-list (cons '(Make latexmk -outdir=/tmp %t TeX-run-TeX nil t :help Make pdf output using latexmk.) TeX-command-list))) | TeX-PDF-mode | reftex-mode | LaTeX-math-mode |
 
 * company
 #+BEGIN_SRC emacs-lisp
   (use-package company
-    ;; Company mode provides autocompletion of text and code.
-    :ensure t  
-    :bind
-    (:map company-active-map
-          ("C-s" . company-search-candidates)
-          ("<tab>" . company-complete-common-or-cycle)
-          ("RET" . company-complete-selection)
-          ("C-n" . company-select-next)
-          ("C-p" . company-select-previous))
-    :hook
-    ((prog-mode ess-mode) . company-mode)
-    :config
-    (defun my/python-mode-hook ()
-      (add-to-list 'company-backends 'company-jedi))
-    (add-hook 'python-mode-hook 'my/python-mode-hook)
-    :custom
-    (company-idle-delay 0.25)
-    (company-require-match nil)
-    (company-minimum-prefix-length 2))
+	;; Company mode provides autocompletion of text and code.
+	:ensure t  
+	:bind
+	(:map company-active-map
+		  ("C-s" . company-search-candidates)
+		  ("<tab>" . company-complete-common-or-cycle)
+		  ("RET" . company-complete-selection)
+		  ("C-n" . company-select-next)
+		  ("C-p" . company-select-previous))
+	:hook
+	((prog-mode ess-mode) . company-mode)
+	:config
+	(defun my/python-mode-hook ()
+	  (add-to-list 'company-backends 'company-jedi))
+	(add-hook 'python-mode-hook 'my/python-mode-hook)
+	:custom
+	(company-idle-delay 0.25)
+	(company-require-match nil)
+	(company-minimum-prefix-length 2)
+	:diminish "Company"
+	)
 #+END_SRC
 
 #+RESULTS:
 : company-select-previous
+
 * eclim 
 #+BEGIN_SRC emacs-lisp
   ;; (use-package eclim
@@ -247,6 +277,17 @@
 #+END_SRC
 
 #+RESULTS:
+* Expand region
+#+BEGIN_SRC emacs-lisp
+  ;; expand the marked region in semantic increments (negative prefix to reduce region)
+  (use-package expand-region
+	:ensure t
+	:config 
+	(global-set-key (kbd "C-=") 'er/expand-region))
+#+END_SRC
+
+#+RESULTS:
+: t
 
 * flycheck
 #+BEGIN_SRC emacs-lisp
@@ -254,18 +295,30 @@
     :ensure t
     :init (global-flycheck-mode)
     :config 
+	:diminish "FlyC"
     ;;(setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+	;;:diminish
     )
 #+END_SRC
 
 #+RESULTS:
-: t
+| FlyC |
+|      |
+* flyspell
+#+BEGIN_SRC emacs-lisp
+  (use-package flyspell
+  :ensure t
+  :diminish "FlyS")
+#+END_SRC
+
+#+RESULTS:
+| FlyS |
 
 * gradle
 #+BEGIN_SRC emacs-lisp
   (use-package gradle-mode
-    :ensure t
-    :hook (java-mode . (lambda() (gradle-mode 1))))
+	:ensure t
+	:hook (java-mode . (lambda() (gradle-mode 1))))
 
   ;; (defun build-and-run (&optional CLASS-NAME)
   ;;   "Get class name from buffer."
@@ -273,9 +326,9 @@
   ;;   (gradle-run (concat "build run -Pmain=" (or CLASS-NAME (file-name-base (buffer-file-name (window-buffer (minibuffer-selected-window))))))))
 
   (cl-defun build-and-run (&optional CLASS-NAME &key (CLASS-NAME (file-name-base (buffer-file-name (window-buffer (minibuffer-selected-window))))))
-    (interactive "sClass to run (default current buffer): ")
-    (save-buffer)
-    (gradle-run (concat "build run -q -Pmain=" CLASS-NAME)))
+	(interactive "sClass to run (default current buffer): ")
+	(save-buffer)
+	(gradle-run (concat "build run -q -Pmain=" CLASS-NAME)))
 
   (define-key gradle-mode-map (kbd "C-c C-r") 'build-and-run)
 #+END_SRC
@@ -342,17 +395,32 @@
         ;;(setq helm-swoop-pre-input-function  (lambda () ""))
         (setq helm-swoop-use-fuzzy-match t)
         )
-      ))
+      )
+	  :diminish)
 #+END_SRC
 
 #+RESULTS:
 : helm-select-action
+
+* Hungry Delete
+#+BEGIN_SRC emacs-lisp
+  ;; deletes all the whitespace when you hit backspace or delete
+  (use-package hungry-delete
+	:ensure t
+	:config
+	(global-hungry-delete-mode)
+	:diminish)
+#+END_SRC
+
+#+RESULTS:
+: t
 
 * icons and fonts
 #+BEGIN_SRC emacs-lisp
   (use-package all-the-icons
     :ensure t)
 #+END_SRC
+
 * jdee
 #+BEGIN_SRC emacs-lisp
 ;;  (use-package jdee
@@ -374,6 +442,123 @@
 #+END_SRC
 
 #+RESULTS:
+
+* latex
+#+BEGIN_SRC emacs-lisp :results output silent
+  ;; My custom LaTeX class for Org-mode export. require is needed for it to work.
+  ;;(setf org-highlight-latex-and-related '(latex))
+  (setq org-src-fontify-natively t)
+  (setq org-latex-with-hyperref nil)
+  (setq org-latex-title-command "\\maketitle")
+  (setq org-latex-toc-command "")
+  (setq org-export-with-section-numbers nil)
+  (setq user-full-name "Nicholas Hanoian")
+  (setq org-latex-create-formula-image-program 'imagemagick)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+  (setq org-latex-default-class "homework")
+  (setq preview-button-1 '[mouse-1])
+
+  (setq font-latex-fontify-script nil)
+  (setq font-latex-fontify-sectioning 'color)
+
+
+
+  ;; (defvar texfrag-submap
+  ;;  '(let ((map (make-sparse-keymap)))
+  ;;   (define-key map "\C-p" #'preview-at-point)
+  ;;   (define-key map "\C-r" #'preview-region)
+  ;;   (define-key map "\C-b" #'preview-buffer)
+  ;;   (define-key map "\C-d" #'preview-document)
+  ;;   (define-key map "\C-f" #'preview-cache-preamble)
+  ;;   (define-key map "\C-c\C-f" #'preview-cache-preamble-off)
+  ;;   (define-key map "\C-i" #'preview-goto-info-page)
+  ;;   ;;  (define-key map "\C-q" #'preview-paragraph)
+  ;;   (define-key map "\C-e" #'preview-environment)
+  ;;   (define-key map "\C-s" #'preview-section)
+  ;;   (define-key map "\C-w" #'preview-copy-region-as-mml)
+  ;;   (define-key map "\C-c\C-p" #'preview-clearout-at-point)
+  ;;   (define-key map "\C-c\C-r" #'preview-clearout)
+  ;;   (define-key map "\C-c\C-s" #'preview-clearout-section)
+  ;;   (define-key map "\C-c\C-b" #'preview-clearout-buffer)
+  ;;   (define-key map "\C-c\C-d" #'preview-clearout-document)
+  ;;   map))
+
+  ;;   (texfrag-set-prefix "\C-c\C-p")
+
+  (use-package ov
+	:ensure t)
+
+  (unless (boundp 'org-latex-classes)
+	(setq org-latex-classes nil))
+
+  (add-to-list 'org-latex-classes
+			   '("homework"
+				 "\\ProvidesPackage{/home/nick/Dropbox/config/homework}
+\\documentclass{/home/nick/Dropbox/config/homework}"
+				 ("\\section{%s}" . "\\section*{%s}")
+				 ("\\subsection{%s}" . "\\subsection*{%s}")
+				 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+				 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+				 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+			   '("article"
+				 "\\documentclass{article}"
+				 ("\\section{%s}" . "\\section*{%s}")
+				 ("\\subsection{%s}" . "\\subsection*{%s}")
+				 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+				 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+				 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+
+
+#+END_SRC
+
+** centered previews
+ #+BEGIN_SRC emacs-lisp
+   ;; specify the justification you want
+   (plist-put org-format-latex-options :justify 'center)
+
+   (defun org-justify-fragment-overlay (beg end image imagetype)
+	 "Adjust the justification of a LaTeX fragment.
+   The justification is set by :justify in
+   `org-format-latex-options'. Only equations at the beginning of a
+   line are justified."
+	 (cond
+	  ;; Centered justification
+	  ((and (eq 'center (plist-get org-format-latex-options :justify)) 
+			(= beg (line-beginning-position)))
+	   (let* ((img (create-image image 'imagemagick t))
+			  (width (car (image-size img)))
+			  ;;(offset (floor (- (/ (window-text-width) 2) (/ width 2) 15))))
+			  (offset 10))
+		 (overlay-put (ov-at) 'before-string (make-string offset ? ))))
+	  ;; Right justification
+	  ((and (eq 'right (plist-get org-format-latex-options :justify)) 
+			(= beg (line-beginning-position)))
+	   (let* ((img (create-image image 'imagemagick t))
+			  (width (car (image-display-size (overlay-get (ov-at) 'display))))
+			  (offset (floor (- (window-text-width) width (- (line-end-position) end)))))
+		 (overlay-put (ov-at) 'before-string (make-string offset ? ))))))
+
+   (defun org-latex-fragment-tooltip (beg end image imagetype)
+	 "Add the fragment tooltip to the overlay and set click function to toggle it."
+	 (overlay-put (ov-at) 'help-echo
+				  (concat (buffer-substring beg end)
+						  "mouse-1 to toggle."))
+	 (overlay-put (ov-at) 'local-map (let ((map (make-sparse-keymap)))
+									   (define-key map [mouse-1]
+										 `(lambda ()
+											(interactive)
+											(org-remove-latex-fragment-image-overlays ,beg ,end)))
+									   map)))
+
+   ;; advise the function to a
+   (advice-add 'org--format-latex-make-overlay :after 'org-justify-fragment-overlay)
+   (advice-add 'org--format-latex-make-overlay :after 'org-latex-fragment-tooltip)
+ #+END_SRC
+
+ #+RESULTS:
 
 * magit
 #+BEGIN_SRC emacs-lisp
@@ -455,27 +640,78 @@
 : neotree-project-dir-toggle
 
 * org-mode
-#+BEGIN_SRC emacs-lisp
+** general org stuff
+#+BEGIN_SRC emacs-lisp :results silent
   (use-package org
-    :ensure t
-    :config
-    (setq org-directory "~/Dropbox/org"
-          org-src-window-setup 'current-window
-          org-mobile-directory "~/Dropbox/Apps/MobileOrg"
-          org-mobile-files '("~/Dropbox/org")
-          org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org"
-          )
-    
-    )
+	:ensure t
+	:config
+	(setq org-directory "~/Dropbox/org"
+		  org-src-window-setup 'current-window
+		  org-mobile-directory "~/Dropbox/Apps/MobileOrg"
+		  org-mobile-files '("~/Dropbox/org")
+		  org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org"
+		  )
+	:hook (org-mode . company-mode)
+	)
   (use-package org-bullets
-    :ensure t
-    :hook (org-mode . (lambda () (org-bullets-mode 1))))
+	:ensure t
+	:hook (org-mode . (lambda () (org-bullets-mode 1))))
 
 
 #+END_SRC
 
+** latex and html macro
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-src-lang-modes '("latex-macros" . latex))
+
+  (defvar org-babel-default-header-args:latex-macros
+	'((:results . "raw")
+	  (:exports . "results")))
+
+  (defun prefix-all-lines (pre body)
+	(with-temp-buffer
+	  (insert body)
+	  (string-insert-rectangle (point-min) (point-max) pre)
+	  (buffer-string)))
+
+  (defun org-babel-execute:latex-macros (body _params)
+	(concat
+	 (prefix-all-lines "#+LATEX_HEADER: " body)
+	 "\n#+HTML_HEAD_EXTRA: <div style=\"display: none\"> \\(\n"
+	 (prefix-all-lines "#+HTML_HEAD_EXTRA: " body)
+	 "\n#+HTML_HEAD_EXTRA: \\)</div>\n"))
+#+END_SRC
+
 #+RESULTS:
-| (lambda nil (org-bullets-mode 1)) | #[nil \300\301\302\303\304$\207 [org-add-hook change-major-mode-hook org-show-block-all append local] 5] | #[nil \300\301\302\303\304$\207 [org-add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+: org-babel-execute:latex-macros
+
+** Don't ask to evaluate latex-macros or latex src blocks
+#+BEGIN_SRC emacs-lisp
+  (defun my-org-confirm-babel-evaluate (lang body)
+	(not (or (string= lang "latex-macros")
+			 (string= lang "latex"))))  
+  (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+#+END_SRC
+
+** org-mode company completion
+#+BEGIN_SRC emacs-lisp :results silent
+(defun org-keyword-backend (command &optional arg &rest ignored)
+  (interactive (list 'interactive))
+  (cl-case command
+    (interactive (company-begin-backend 'org-keyword-backend))
+    (prefix (and (eq major-mode 'org-mode)
+                 (cons (company-grab-line "^#\\+\\(\\w*\\)" 1)
+                       t)))
+    (candidates (mapcar #'upcase
+                        (cl-remove-if-not
+                         (lambda (c) (string-prefix-p arg c))
+                         (pcomplete-completions))))
+    (ignore-case t)
+    (duplicates t)))
+(add-to-list 'company-backends 'org-keyword-backend)
+#+END_SRC
+
+
 
 * pdf-tools
 #+BEGIN_SRC emacs-lisp
@@ -501,6 +737,9 @@
   ;; second
   (pdf-tools-install t))
 #+END_SRC
+
+#+RESULTS:
+: ((!#[ \t]*/.*[jp]ython[0-9.]* . python-mode) (%PDF . pdf-view-mode))
 
 * projectile
 #+BEGIN_SRC emacs-lisp
@@ -541,6 +780,18 @@
 
 #+RESULTS:
 
+* Texfrag
+#+BEGIN_SRC emacs-lisp :results silent
+  (use-package texfrag
+	:ensure t
+	:config
+	;;(texfrag-global-mode t)
+	:hook
+	(org-mode . texfrag-mode)
+	:diminish "Frag"
+	)
+#+END_SRC
+
 * try
 #+BEGIN_SRC emacs-lisp
   (use-package try
@@ -548,6 +799,18 @@
 #+END_SRC
 
 #+RESULTS:
+
+* Undo Tree
+#+BEGIN_SRC emacs-lisp
+  (use-package undo-tree
+	:ensure t
+	:init (global-undo-tree-mode)
+	:diminish
+	)
+#+END_SRC
+
+#+RESULTS:
+|   |
 
 * virtualenvwrapper
 #+BEGIN_SRC emacs-lisp
@@ -583,6 +846,7 @@
   (use-package java-snippets
     :ensure t)
 #+END_SRC
+
 * move file
 #+BEGIN_SRC emacs-lisp
   (defun move-file (new-location)
@@ -650,77 +914,98 @@
 #+END_SRC
 
 
-* latex
-#+BEGIN_SRC emacs-lisp :results output silent
-  ;; My custom LaTeX class for Org-mode export. require is needed for it to work.
-  ;;(setf org-highlight-latex-and-related '(latex))
-  (setq org-src-fontify-natively t)
-  (setq org-latex-with-hyperref nil)
-  (setq org-latex-title-command "\\maketitle")
-  (setq org-latex-toc-command "")
-  (setq org-export-with-section-numbers nil)
-  (setq user-full-name "Nicholas Hanoian")
-  (setq org-latex-create-formula-image-program 'imagemagick)
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))   
-
-  (unless (boundp 'org-latex-classes)
-    (setq org-latex-classes nil))
-
-  (add-to-list 'org-latex-classes
-               '("homework"
-                 "\\documentclass{homework}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-
-
-#+END_SRC
-
-** centered previews
+* spellcheck
 #+BEGIN_SRC emacs-lisp
-  ;; specify the justification you want
-  (plist-put org-format-latex-options :justify 'center)
+	;; find aspell and hunspell automatically
+	(cond
 
-  (defun org-justify-fragment-overlay (beg end image imagetype)
-    "Adjust the justification of a LaTeX fragment.
-  The justification is set by :justify in
-  org-format-latex-options. Only equations at the beginning of a
-  line are justified."
-    (cond
-     ;; Centered justification
-     ((and (eq 'center (plist-get org-format-latex-options :justify)) 
-           (= beg (line-beginning-position)))
-      (let* ((img (create-image image 'imagemagick t))
-             (width (car (image-size img)))
-             (offset (floor (- (/ (window-text-width) 2) (/ width 2)))))
-        (overlay-put (ov-at) 'before-string (make-string offset ? ))))
-     ;; Right justification
-     ((and (eq 'right (plist-get org-format-latex-options :justify)) 
-           (= beg (line-beginning-position)))
-      (let* ((img (create-image image 'imagemagick t))
-             (width (car (image-display-size (overlay-get (ov-at) 'display))))
-             (offset (floor (- (window-text-width) width (- (line-end-position) end)))))
-        (overlay-put (ov-at) 'before-string (make-string offset ? ))))))
+	 ((executable-find "aspell")
+	  (setq ispell-program-name "aspell")
+	  ;; Please note ispell-extra-args contains ACTUAL parameters passed to aspell
+	  (setq ispell-extra-args '("--mode=tex" "-t" "--sug-mode=ultra" "--lang=en_US"))))
 
-  (defun org-latex-fragment-tooltip (beg end image imagetype)
-    "Add the fragment tooltip to the overlay and set click function to toggle it."
-    (overlay-put (ov-at) 'help-echo
-                 (concat (buffer-substring beg end)
-                         "mouse-1 to toggle."))
-    (overlay-put (ov-at) 'local-map (let ((map (make-sparse-keymap)))
-                                      (define-key map [mouse-1]
-                                        `(lambda ()
-                                           (interactive)
-                                           (org-remove-latex-fragment-image-overlays ,beg ,end)))
-                                      map)))
+	(eval-after-load "flyspell"
+	  '(progn
+		 (define-key flyspell-mouse-map [mouse-3] #'flyspell-correct-word)))
 
-  ;; advise the function to a
-  (advice-add 'org--format-latex-make-overlay :after 'org-justify-fragment-overlay)
-  (advice-add 'org--format-latex-make-overlay :after 'org-latex-fragment-tooltip)
+
+  (defun endless/org-ispell ()
+	(make-local-variable 'ispell-skip-region-alist)
+
+	(defconst help/org-special-pre "^\s*#[+]")
+	(defun help/block-regex (special)
+	  "Make an ispell skip-region alist for a SPECIAL block."
+	  (interactive)
+	  `(,(concat help/org-special-pre "BEGIN_" special)
+		.
+		,(concat help/org-special-pre "END_" special)))
+
+	(add-to-list 'ispell-skip-region-alist (help/block-regex "SRC"))
+	(add-to-list 'ispell-skip-region-alist (help/block-regex "EXAMPLE"))
+	(add-to-list 'ispell-skip-region-alist '("^\s*:PROPERTIES\:$" . "^\s*:END\:$"))
+	(let ()
+	  (--each
+		  '(("ATTR_LATEX" nil)
+			("AUTHOR" nil)
+			("BLOG" nil)
+			("CREATOR" nil)
+			("DATE" nil)
+			("DESCRIPTION" nil)
+			("EMAIL" nil)
+			("EXPORT" nil)
+			("EXCLUDE_TAGS" nil)
+			("HTML_CONTAINER" nil)
+			("HTML_DOCTYPE" nil)
+			("HTML_HEAD" nil)
+			("HTML_HEAD_EXTRA" nil)
+			("HTML_LINK_HOME" nil)
+			("HTML_LINK_UP" nil)
+			("HTML_MATHJAX" nil)
+			("INFOJS_OPT" nil)
+			("KEYWORDS" nil)
+			("LANGUAGE" nil)
+			("LATEX_CLASS" nil)
+			("LATEX_CLASS_OPTIONS" nil)
+			("LATEX_HEADER" nil)
+			("LATEX_HEADER_EXTRA" nil)
+			("NAME" t)
+			("OPTIONS" t)
+			("POSTID" nil)
+			("RESULTS" t)
+			("SELECT_TAGS" nil)
+			("STARTUP" nil)
+			("TITLE" nil))
+		(add-to-list
+		 'ispell-skip-region-alist
+		 (let ((special (concat "#[+]" (car it) ":")))
+		   (if (cadr it)
+			   (cons special "$")
+			 (list special)))))))
+  (add-hook 'org-mode-hook #'endless/org-ispell)
 #+END_SRC
+
+#+RESULTS:
+| endless/org-ispell | (lambda nil (org-bullets-mode 1)) | er/add-org-mode-expansions | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+
+
+* powerline
+#+BEGIN_SRC emacs-lisp 
+  (use-package powerline
+	:ensure t
+	:config 
+	;;(powerline-default-theme)
+	)
+
+  (use-package spaceline
+	:ensure t 
+	:config
+	(spaceline-emacs-theme)
+	(spaceline-helm-mode)
+	;;(spaceline-spacemacs-theme)
+	)
+#+END_SRC
+
+
 
 #+RESULTS:
 

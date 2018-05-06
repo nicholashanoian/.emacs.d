@@ -1,5 +1,11 @@
 # Emacs configuration for running through bash on windows
 
+### Preview Latex
+Edit .emacs.d/elpa/auctex-*/prv-emacs.el
+Change
+
+
+
 ## Dependencies:
 ### Windows:
 VcXsrv - Windows X Server - google vcxsrv and use installer
