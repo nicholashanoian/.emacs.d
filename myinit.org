@@ -54,6 +54,7 @@
 
 * modes
 #+BEGIN_SRC emacs-lisp
+  (scroll-bar-mode 0)  
   (global-visual-line-mode t)
   (diminish 'visual-line-mode)
   (diminish 'eldoc-mode)
@@ -61,26 +62,97 @@
   (electric-pair-mode 1)
   (show-paren-mode 1) 
   (set-face-attribute 'default nil :height 110)
-  (scroll-bar-mode 0)
+  (pending-delete-mode 1)
+
+  ;;save outside clipboard to kill ring
+  (setq save-interprogram-paste-before-kill t)
+
 
   ;;linum-mode hooks
   (add-hook 'emacs-lisp-mode-hook 'linum-mode)
   (add-hook 'sh-mode-hook 'linum-mode)
+
+
+
+
+  ;;evaluate and replace
+  (defun eval-and-replace ()
+	"Replace the preceding sexp with its value."
+	(interactive)
+	(backward-kill-sexp)
+	(condition-case nil
+		(prin1 (eval (read (current-kill 0)))
+			   (current-buffer))
+	  (error (message "Invalid expression")
+			 (insert (current-kill 0)))))
+  (global-set-key (kbd "C-x M-e") 'eval-and-replace)
+
+
+  ;;open config
+  (define-key global-map (kbd "\e\ec")  (lambda () (interactive) (find-file "~/.emacs.d/myinit.org")))
 #+END_SRC
 
 #+RESULTS:
-| linum-mode |
+| lambda | nil | (interactive) | (find-file ~/.emacs.d/myinit.org) |
 
+* ibuffer
+#+BEGIN_SRC emacs-lisp
+	(use-package ibuffer
+	  :ensure t
+	  :config
+	  (global-set-key (kbd "C-x C-b") 'ibuffer)
+	  (setq ibuffer-saved-filter-groups
+			(quote (("default"
+					 ("dired" (mode . dired-mode))
+					 ("org" (name . "^.*org$"))
+					 ("web" (or (mode . web-mode) (mode . js2-mode)))
+					 ("shell" (or (mode . eshell-mode) (mode . shell-mode)))
+					 ("mu4e" (name . "\*mu4e\*"))
+					 ("programming" (or
+									 (mode . python-mode)
+									 (mode . c++-mode)))
+					 ("emacs" (or
+							   (name . "^\\*scratch\\*$")
+							   (name . "^\\*Messages\\*$")))
+					 ))))
+	  (add-hook 'ibuffer-mode-hook
+				(lambda ()
+				  (ibuffer-auto-mode 1)
+				  (ibuffer-switch-to-saved-filter-groups "default")))
+
+	  ;; don't show these
+
+	  ;; Don't show filter groups if there are no buffers in that group
+	  (setq ibuffer-show-empty-filter-groups nil)
+  
+	  ;; Don't ask for confirmation to delete marked buffers
+	  (setq ibuffer-expert t)
+	  (setq ibuffer-never-show-predicates '("helm"))
+	  )
+#+END_SRC
+
+#+RESULTS:
+: t
   
 * themes
 #+BEGIN_SRC emacs-lisp
-  (use-package color-theme-sanityinc-tomorrow
-    :ensure t)
+	;; (use-package color-theme-sanityinc-tomorrow
+	;;   :ensure t)
+	;; (use-package solarized-theme
+	;;   :ensure t)
+	;; (use-package zenburn-theme
+	;;   :ensure t)
+	;; (use-package moe-theme
+	;;   :ensure t)
+  (use-package color-theme
+	:ensure t
+	:config (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/"))
 
-  
+
   #+END_SRC
 
 #+RESULTS:
+: t
 
 * don't know if this is required
 #+BEGIN_SRC emacs-lisp
@@ -93,6 +165,13 @@
     :ensure t)
 #+END_SRC
 
+* hydra
+#+BEGIN_SRC emacs-lisp
+  (use-package hydra
+	:ensure t)
+#+END_SRC
+
+#+RESULTS:
 * ace-window
 #+BEGIN_SRC emacs-lisp
   (use-package ace-window
@@ -114,11 +193,11 @@
 * aggressive-indent
 #+BEGIN_SRC emacs-lisp
   (use-package aggressive-indent
-    ;; Keep code indented automatically
-    :ensure t
-    :defer 10
-    :config
-    (global-aggressive-indent-mode)
+	;; Keep code indented automatically
+	:ensure t
+	:defer 10
+	:config
+	(global-aggressive-indent-mode)
 	:diminish)
 #+END_SRC
 
@@ -360,7 +439,7 @@
      ([remap occur] . helm-occur)
      ([remap bookmark-jump] . helm-bookmarks)
      ("C-x b" . helm-buffers-list)
-     ("C-x C-b" . helm-buffers-list)
+     ;;("C-x C-b" . helm-buffers-list) ;;replaced by ibuffer
      ("M-s M-g" . helm-google-suggest)
      ("M-o" . helm-semantic-or-imenu)
      ("C-h SPC" . helm-all-mark-rings)
@@ -651,13 +730,20 @@
 		  org-mobile-files '("~/Dropbox/org")
 		  org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org"
 		  )
-	:hook (org-mode . company-mode)
+	(setq org-latex-caption-above nil)
+	:hook ((org-mode . company-mode)
+		   (org-mode . visual-line-mode))
 	)
   (use-package org-bullets
 	:ensure t
 	:hook (org-mode . (lambda () (org-bullets-mode 1))))
 
 
+  ;; (defun my-org-latex-export-to-pdf ()
+  ;;   (interactive)
+  ;;   (save-buffer)
+  ;;   (org-latex-export-to-pdf)
+  ;;   )
 #+END_SRC
 
 ** latex and html macro
@@ -694,24 +780,46 @@
 #+END_SRC
 
 ** org-mode company completion
-#+BEGIN_SRC emacs-lisp :results silent
-(defun org-keyword-backend (command &optional arg &rest ignored)
-  (interactive (list 'interactive))
-  (cl-case command
-    (interactive (company-begin-backend 'org-keyword-backend))
-    (prefix (and (eq major-mode 'org-mode)
-                 (cons (company-grab-line "^#\\+\\(\\w*\\)" 1)
-                       t)))
-    (candidates (mapcar #'upcase
-                        (cl-remove-if-not
-                         (lambda (c) (string-prefix-p arg c))
-                         (pcomplete-completions))))
-    (ignore-case t)
-    (duplicates t)))
-(add-to-list 'company-backends 'org-keyword-backend)
+#+BEGIN_SRC emacs-lisp
+	(defun org-keyword-backend (command &optional arg &rest ignored)
+	  (interactive (list 'interactive))
+	  (cl-case command
+		(interactive (company-begin-backend 'org-keyword-backend))
+		(prefix (and (eq major-mode 'org-mode)
+					 (cons (company-grab-line "^#\\+\\(\\w*\\)" 1)
+						   t)))
+		(candidates (mapcar #'upcase
+							(cl-remove-if-not
+							 (lambda (c) (string-prefix-p arg c))
+							 (pcomplete-completions))))
+		(ignore-case t)
+		(duplicates t)))
+
+  (defun my-org-mode-hook ()
+	(add-to-list 'company-backends 'org-keyword-backend))
+	 (add-hook 'org-mode-hook 'my-org-mode-hook)
+
 #+END_SRC
 
+#+RESULTS:
+: org-keyword-backend
 
+
+** toggle latex export on save
+#+BEGIN_SRC emacs-lisp
+  (defun toggle-latex-export-on-save ()
+	"Enable or disable export LATEX when saving current buffer."
+	(interactive)
+	(when (not (eq major-mode 'org-mode))
+	  (error "Not an org-mode file!"))
+	(if (memq 'org-latex-export-to-pdf after-save-hook)
+		(progn (remove-hook 'after-save-hook 'org-latex-export-to-pdf t)
+			   (message "Disabled org latex export on save"))
+	  (add-hook 'after-save-hook 'org-latex-export-to-pdf nil t)
+	  (set-buffer-modified-p t)
+	  (message "Enabled org latex export on save")))
+  (define-key org-mode-map (kbd "C-c l") 'toggle-latex-export-on-save)
+#+END_SRC
 
 * pdf-tools
 #+BEGIN_SRC emacs-lisp
@@ -916,17 +1024,17 @@
 
 * spellcheck
 #+BEGIN_SRC emacs-lisp
-	;; find aspell and hunspell automatically
-	(cond
+  ;; find aspell and hunspell automatically
+  (cond
 
-	 ((executable-find "aspell")
-	  (setq ispell-program-name "aspell")
-	  ;; Please note ispell-extra-args contains ACTUAL parameters passed to aspell
-	  (setq ispell-extra-args '("--mode=tex" "-t" "--sug-mode=ultra" "--lang=en_US"))))
+   ((executable-find "aspell")
+	(setq ispell-program-name "aspell")
+	;; Please note ispell-extra-args contains ACTUAL parameters passed to aspell
+	(setq ispell-extra-args '("--mode=tex" "-t" "--sug-mode=ultra" "--lang=en_US"))))
 
-	(eval-after-load "flyspell"
-	  '(progn
-		 (define-key flyspell-mouse-map [mouse-3] #'flyspell-correct-word)))
+  (eval-after-load "flyspell"
+	'(progn
+	   (define-key flyspell-mouse-map [mouse-3] #'flyspell-correct-word)))
 
 
   (defun endless/org-ispell ()
@@ -982,11 +1090,82 @@
 			   (cons special "$")
 			 (list special)))))))
   (add-hook 'org-mode-hook #'endless/org-ispell)
+
+
 #+END_SRC
 
 #+RESULTS:
-| endless/org-ispell | (lambda nil (org-bullets-mode 1)) | er/add-org-mode-expansions | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-block-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+: t
 
+** helm flyspell
+#+BEGIN_SRC emacs-lisp
+;;courtesy of  https://emacs.stackexchange.com/a/14917  
+(defun flyspell-goto-previous-error (arg)
+	"Go to arg previous spelling error."
+	(interactive "p")
+	(while (not (= 0 arg))
+	  (let ((pos (point))
+			(min (point-min)))
+		(if (and (eq (current-buffer) flyspell-old-buffer-error)
+				 (eq pos flyspell-old-pos-error))
+			(progn
+			  (if (= flyspell-old-pos-error min)
+				  ;; goto beginning of buffer
+				  (progn
+					(message "Restarting from end of buffer")
+					(goto-char (point-max)))
+				(backward-word 1))
+			  (setq pos (point))))
+		;; seek the next error
+		(while (and (> pos min)
+					(let ((ovs (overlays-at pos))
+						  (r '()))
+					  (while (and (not r) (consp ovs))
+						(if (flyspell-overlay-p (car ovs))
+							(setq r t)
+						  (setq ovs (cdr ovs))))
+					  (not r)))
+		  (backward-word 1)
+		  (setq pos (point)))
+		;; save the current location for next invocation
+		(setq arg (1- arg))
+		(setq flyspell-old-pos-error pos)
+		(setq flyspell-old-buffer-error (current-buffer))
+		(goto-char pos)
+		(if (= pos min)
+			(progn
+			  (message "No more miss-spelled word!")
+			  (setq arg 0))))))
+
+
+  (defun check-previous-spelling-error ()
+	"Jump to previous spelling error and correct it"
+	(interactive)
+	(push-mark-no-activate)
+	(flyspell-goto-previous-error 1)
+	(call-interactively 'helm-flyspell-correct)
+	(pop-global-mark))
+
+  (defun check-next-spelling-error ()
+	"Jump to next spelling error and correct it"
+	(interactive)
+	(push-mark-no-activate)
+	(flyspell-goto-next-error)
+	(call-interactively 'helm-flyspell-correct))
+
+  (defun push-mark-no-activate ()
+	"Pushes `point' to `mark-ring' and does not activate the region
+   Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
+	(interactive)
+	(push-mark (point) t nil)
+	(message "Pushed mark to ring"))
+
+  (use-package helm-flyspell
+	:ensure t
+	:config
+	(define-key flyspell-mode-map (kbd "C-;") 'check-previous-spelling-error))
+
+#+END_SRC
 
 * powerline
 #+BEGIN_SRC emacs-lisp 
@@ -1008,4 +1187,88 @@
 
 
 #+RESULTS:
+: t
 
+* multiple cursors
+#+BEGIN_SRC emacs-lisp
+	;;get rid of nasty secondary selection keybindings
+	(delete-overlay mouse-secondary-overlay)
+	(global-unset-key [M-mouse-1])
+	(global-unset-key [M-drag-mouse-1])
+	(global-unset-key [M-down-mouse-1])
+	(global-unset-key [M-mouse-3])
+	(global-unset-key [M-mouse-2])
+
+	(use-package multiple-cursors
+	  :ensure t
+	  )
+
+	;;sets return to enter new line rather than exit multiple cursors
+	(define-key mc/keymap (kbd "<return>") nil)
+
+  (global-set-key
+   (kbd "C-c m c")
+   (defhydra multiple-cursors-hydra (:hint nil)
+	 "
+		   ^Up^            ^Down^        ^Other^
+	  ----------------------------------------------
+	  [_p_]   Next    [_n_]   Next    [_l_] Edit lines
+	  [_P_]   Skip    [_N_]   Skip    [_a_] Mark all
+	  [_M-p_] Unmark  [_M-n_] Unmark  [_r_] Mark by regexp
+	  ^ ^             ^ ^             [_q_] Quit
+	  "
+	 ("l" mc/edit-lines :exit t)
+	 ("a" mc/mark-all-like-this :exit t)
+	 ("n" mc/mark-next-like-this)
+	 ("N" mc/skip-to-next-like-this)
+	 ("M-n" mc/unmark-next-like-this)
+	 ("p" mc/mark-previous-like-this)
+	 ("P" mc/skip-to-previous-like-this)
+	 ("M-p" mc/unmark-previous-like-this)
+	 ("r" mc/mark-all-in-region-regexp :exit t)
+	 ("q" nil)
+	 ("<mouse-1>" mc/add-cursor-on-click)
+	 ("<down-mouse-1>" ignore)
+	 ("<drag-mouse-1>" ignore)))
+
+#+END_SRC
+
+#+RESULTS:
+: multiple-cursors-hydra/body
+* plantuml
+#+BEGIN_SRC emacs-lisp
+  (use-package plantuml-mode
+	:ensure t
+	:config
+	(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+	)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* dictionary
+#+BEGIN_SRC emacs-lisp
+  (use-package adaptive-wrap
+	:ensure t)
+  (use-package wordnut
+	:ensure t
+	:bind (("C-c d" . wordnut-lookup-current-word)
+		   ("C-c D" . wordnut-search))
+	)
+#+END_SRC
+
+#+RESULTS:
+: wordnut-search
+* yasnippet
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+	:ensure t
+	:config
+	(setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+	(yas-global-mode)
+	(diminish 'yas-minor-mode)
+	)
+#+END_SRC
+
+#+RESULTS:
