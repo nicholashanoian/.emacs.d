@@ -24,8 +24,11 @@
 ;;   :demand t
 ;;   :load-path "~/.emacs.d/nhh-lisp/mdi")
 
+(use-package powerline
+  :ensure t)
+
 (use-package spaceline
-  :demand t
+  :ensure t
   :config
   (spaceline-define-segment me/erc-track
     "Show the ERC buffers with new messages."
