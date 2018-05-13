@@ -1,4 +1,15 @@
 #+STARTTIP: overview
+
+* don't know if this is required
+#+BEGIN_SRC emacs-lisp
+  (eval-when-compile
+    (add-to-list 'load-path "~/.emacs.d/elpa/use-package" user-emacs-directory)
+    (require 'use-package))
+  (use-package diminish
+    :ensure t)
+  (use-package bind-key
+    :ensure t)
+#+END_SRC
 * interface tweaks
 #+BEGIN_SRC emacs-lisp
 	  ;;; package --- summary
@@ -158,17 +169,6 @@
   #+END_SRC
 
 #+RESULTS:
-
-* don't know if this is required
-#+BEGIN_SRC emacs-lisp
-  (eval-when-compile
-    (add-to-list 'load-path "~/.emacs.d/elpa/use-package" user-emacs-directory)
-    (require 'use-package))
-  (use-package diminish
-    :ensure t)
-  (use-package bind-key
-    :ensure t)
-#+END_SRC
 
 * hydra
 #+BEGIN_SRC emacs-lisp
