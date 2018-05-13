@@ -1,32 +1,35 @@
 #+STARTTIP: overview
 * interface tweaks
 #+BEGIN_SRC emacs-lisp
-  ;;; package --- summary
-  ;;; Commentary:
-  ;;; Code:
+	  ;;; package --- summary
+	  ;;; Commentary:
+	  ;;; Code:
 
-  ;;disable start screen
-  (setq inhibit-startup-screen t)
-  (tool-bar-mode -1)
+	;;disable start screen
+	(setq inhibit-startup-screen t)
+	(tool-bar-mode -1)
 
-  ;;yes or no prompts to y or n
-  (fset 'yes-or-no-p 'y-or-n-p)
+	;;yes or no prompts to y or n
+	(fset 'yes-or-no-p 'y-or-n-p)
 
-  (global-set-key (kbd "<f5>") 'revert-buffer)
+	(global-set-key (kbd "<f5>") 'revert-buffer)
 
-  ;;reduce clutter in init file
-  (setq custom-file "~/.emacs.d/custom.el")
-  (load custom-file)
-  ;;(package-initialize)
+	;;reduce clutter in init file
+	(setq custom-file "~/.emacs.d/custom.el")
+	(load custom-file)
+	;;(package-initialize)
 
-  ;; Delete my files by moving them to the trash. I'm human and
-  ;; occasionally delete things that I actually want later:
-  (setq delete-by-moving-to-trash t)
+	;; Delete my files by moving them to the trash. I'm human and
+	;; occasionally delete things that I actually want later:
+	(setq delete-by-moving-to-trash t)
+	(setq display-time-mode 1
+		  fringe-mode 0)
+  (add-hook 'focus-out-hook #'garbage-collect)
 
 #+END_SRC
 
 #+RESULTS:
-: t
+: 0
 
 * scrolling
 #+BEGIN_SRC emacs-lisp
@@ -136,23 +139,25 @@
   
 * themes
 #+BEGIN_SRC emacs-lisp
-	;; (use-package color-theme-sanityinc-tomorrow
-	;;   :ensure t)
-	;; (use-package solarized-theme
-	;;   :ensure t)
-	;; (use-package zenburn-theme
-	;;   :ensure t)
-	;; (use-package moe-theme
-	;;   :ensure t)
-  (use-package color-theme
+  (use-package color-theme-sanityinc-tomorrow
 	:ensure t
-	:config (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/"))
-
-
+	:defer t)
+  (use-package solarized-theme
+	:ensure t
+	:defer t)
+  (use-package zenburn-theme
+	:ensure t
+	:defer t)
+  (use-package moe-theme
+	:ensure t
+	:defer t
+	)
+  (use-package material-theme
+	:ensure t
+	:defer t)
   #+END_SRC
 
 #+RESULTS:
-: t
 
 * don't know if this is required
 #+BEGIN_SRC emacs-lisp
@@ -175,16 +180,16 @@
 * ace-window
 #+BEGIN_SRC emacs-lisp
   (use-package ace-window
-    :ensure t
-    :init
-    (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-    (setq aw-background nil)
-    (progn
-      (global-set-key [remap other-window] 'ace-window)
-      (custom-set-faces
-       '(aw-leading-char-face
+	:ensure t
+	:init
+	(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+	(setq aw-background nil)
+	(progn
+	  (global-set-key [remap other-window] 'ace-window)
+	  (custom-set-faces
+	   '(aw-leading-char-face
 	 ((t (:inherit ace-jump-face-foreground :height 3.0)))))
-      ))
+	  ))
 
 #+END_SRC
 
@@ -497,13 +502,13 @@
 * icons and fonts
 #+BEGIN_SRC emacs-lisp
   (use-package all-the-icons
-    :ensure t)
+	:ensure t)
 #+END_SRC
 
 * jdee
 #+BEGIN_SRC emacs-lisp
-;;  (use-package jdee
-  ;;  :ensure t)
+  ;;  (use-package jdee
+	;;  :ensure t)
 #+END_SRC
 
 #+RESULTS:
@@ -823,27 +828,27 @@
 
 * pdf-tools
 #+BEGIN_SRC emacs-lisp
-(use-package pdf-tools
-  ;; I like emacs, so why not view PDFs in it?  The built-in docview mode
-  ;; can do so, but pdf-tools is better in all sorts of ways.
+  (use-package pdf-tools
+	;; I like emacs, so why not view PDFs in it?  The built-in docview mode
+	;; can do so, but pdf-tools is better in all sorts of ways.
 
-  ;; NOTE: ~pdf-tools~ only officially supports gnu/linux operating
-  ;; systems. I think that it will work on macs as well, but you may have
-  ;; to finagle it a bit. Regardless, I tell emacs to only use it if the OS
-  ;; is linux based.
-  :if (eq system-type 'gnu/linux)
-  :ensure t
-  :magic ("%PDF" . pdf-view-mode)
-  :defer 7
-  :custom
-  (pdf-sync-forward-display-pdf-key "<C-return>" "Use C-RET in latex mode to jump to location in pdf file")
-  (pdf-view-display-size 'fit-page "Show full pages by default instead of fitting page width.")
-  (TeX-view-program-selection '((output-pdf "pdf-tools")) "Use pdf-tools to display pdfs from latex runs.")
-  (TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view")))
-  :config
-  ;; The t says to install the server without asking me --- this may take a
-  ;; second
-  (pdf-tools-install t))
+	;; NOTE: ~pdf-tools~ only officially supports gnu/linux operating
+	;; systems. I think that it will work on macs as well, but you may have
+	;; to finagle it a bit. Regardless, I tell emacs to only use it if the OS
+	;; is linux based.
+	:if (eq system-type 'gnu/linux)
+	:ensure t
+	:magic ("%PDF" . pdf-view-mode)
+	:defer 7
+	:custom
+	(pdf-sync-forward-display-pdf-key "<C-return>" "Use C-RET in latex mode to jump to location in pdf file")
+	(pdf-view-display-size 'fit-page "Show full pages by default instead of fitting page width.")
+	(TeX-view-program-selection '((output-pdf "pdf-tools")) "Use pdf-tools to display pdfs from latex runs.")
+	(TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view")))
+	:config
+	;; The t says to install the server without asking me --- this may take a
+	;; second
+	(pdf-tools-install t))
 #+END_SRC
 
 #+RESULTS:
@@ -1168,22 +1173,7 @@
 #+END_SRC
 
 * powerline
-#+BEGIN_SRC emacs-lisp 
-  (use-package powerline
-	:ensure t
-	:config 
-	;;(powerline-default-theme)
-	)
-
-  (use-package spaceline
-	:ensure t 
-	:config
-	(spaceline-emacs-theme)
-	(spaceline-helm-mode)
-	;;(spaceline-spacemacs-theme)
-	)
-#+END_SRC
-
+see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 
 
 #+RESULTS:
@@ -1272,3 +1262,25 @@
 #+END_SRC
 
 #+RESULTS:
+
+* custom lisp
+#+BEGIN_SRC emacs-lisp
+    (defun load-directory (dir)
+	(let ((load-it (lambda (f)
+					 (load-file (concat (file-name-as-directory dir) f)))
+				   ))
+	  (mapc load-it (directory-files dir nil "\\.el$"))))
+  (load-directory "~/.emacs.d/nhh-lisp")
+#+END_SRC
+
+#+RESULTS:
+| mode-line.el | set-theme.el |
+* recent files
+#+BEGIN_SRC emacs-lisp
+  (recentf-mode 1)
+  (setq recentf-max-menu-items 25)
+  (global-set-key "\C-x\ \C-r" 'helm-recentf)
+#+END_SRC
+
+#+RESULTS:
+: helm-recentf
