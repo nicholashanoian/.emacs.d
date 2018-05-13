@@ -11,7 +11,7 @@
 ;;set up use-package according to http://cachestocaches.com/2015/8/getting-started-use-package/
 ;;; Code:
 (require 'package)
-(package-initalize)
+(package-initialize)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 ;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
