@@ -7,3 +7,4 @@ eshell/history
 eshell/lastdir
 *.rel
 myinit.el
+/xkcd/1971.json
