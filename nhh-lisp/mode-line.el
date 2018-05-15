@@ -81,7 +81,7 @@
   (setq-default
    mode-line-format '("%e" (:eval (spaceline-ml-main)))
    powerline-default-separator 'arrow
-   powerline-height 30
+   ;; powerline-height 30
    spaceline-highlight-face-func 'spaceline-highlight-face-modified
    ;;spaceline-flycheck-bullet (format "%s %s" (mdi "record") "%s")
    spaceline-separator-dir-left '(left . left)
