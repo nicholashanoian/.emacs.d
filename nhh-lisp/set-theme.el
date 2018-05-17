@@ -13,18 +13,32 @@
 (defun gh/add-theme-hook (theme-id hook-func)
   (add-to-list 'gh/theme-hooks (cons theme-id hook-func)))
 
+(defun me/unboldify (&optional faces)
+  "Set the weight property of FACES to `normal'.
+If FACES is not provided or nil, use `face-list' instead."
+  (interactive)
+  (mapc (lambda (face)
+          (when (eq (face-attribute face :weight) 'bold)
+            (set-face-attribute face nil :weight 'normal)))
+        (or faces (face-list))))
+
 (defun gh/load-theme-advice (f theme-id &optional no-confirm no-enable &rest args)
   "Enhances `load-theme' in two ways:
 1. Disables enabled themes for a clean slate.
 2. Calls functions registered using `gh/add-theme-hook'."
   (unless no-enable
     (gh/disable-all-themes))
-  (powerline-reset)
   (prog1
       (apply f theme-id no-confirm no-enable args)
     (unless no-enable
       (pcase (assq theme-id gh/theme-hooks)
-        (`(,_ . ,f) (funcall f))))))
+        (`(,_ . ,f) (funcall f))))
+	(powerline-reset)
+	(me/unboldify)))
+
+
+
+
 
 (advice-add 'load-theme
             :around

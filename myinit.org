@@ -12,31 +12,42 @@
 #+END_SRC
 * interface tweaks
 #+BEGIN_SRC emacs-lisp
-	  ;;; package --- summary
-	  ;;; Commentary:
-	  ;;; Code:
+      ;;; package --- summary
+      ;;; Commentary:
+      ;;; Code:
 
-	;;disable start screen
-	(setq inhibit-startup-screen t)
-	(tool-bar-mode -1)
+  ;;disable start screen
+  (setq inhibit-startup-screen t)
+  (tool-bar-mode -1)
 
-	;;yes or no prompts to y or n
-	(fset 'yes-or-no-p 'y-or-n-p)
+  ;;yes or no prompts to y or n
+  (fset 'yes-or-no-p 'y-or-n-p)
 
-	(global-set-key (kbd "<f5>") 'revert-buffer)
+  (global-set-key (kbd "<f5>") 'revert-buffer)
 
-	;;reduce clutter in init file
-	(setq custom-file "~/.emacs.d/custom.el")
-	(load custom-file)
-	;;(package-initialize)
+  ;;reduce clutter in init file
+  (setq custom-file "~/.emacs.d/custom.el")
+  (load custom-file)
+  ;;(package-initialize)
 
-	;; Delete my files by moving them to the trash. I'm human and
-	;; occasionally delete things that I actually want later:
-	(setq delete-by-moving-to-trash t)
-	(setq display-time-mode 1
-		  fringe-mode 0)
+  ;; Delete my files by moving them to the trash. I'm human and
+  ;; occasionally delete things that I actually want later:
+  (setq delete-by-moving-to-trash t)
+  (setq display-time-mode 1
+        fringe-mode 0)
+
+  ;;supposedly makes emacs snappier
   (add-hook 'focus-out-hook #'garbage-collect)
 
+  ;;removes menubar when in terminal
+  (defun contextual-menubar (&optional frame)
+    "Display the menubar in FRAME (default: selected frame) if on a
+      graphical display, but hide it if in terminal."
+    (interactive)
+    (set-frame-parameter frame 'menu-bar-lines 
+                         (if (display-graphic-p frame)
+                             1 0)))
+  (add-hook 'after-make-frame-functions 'contextual-menubar)
 #+END_SRC
 
 #+RESULTS:
@@ -291,27 +302,27 @@
 * company
 #+BEGIN_SRC emacs-lisp
   (use-package company
-	;; Company mode provides autocompletion of text and code.
-	:ensure t  
-	:bind
-	(:map company-active-map
-		  ("C-s" . company-search-candidates)
-		  ("<tab>" . company-complete-common-or-cycle)
-		  ("RET" . company-complete-selection)
-		  ("C-n" . company-select-next)
-		  ("C-p" . company-select-previous))
-	:hook
-	((prog-mode ess-mode) . company-mode)
-	:config
-	(defun my/python-mode-hook ()
-	  (add-to-list 'company-backends 'company-jedi))
-	(add-hook 'python-mode-hook 'my/python-mode-hook)
-	:custom
-	(company-idle-delay 0.25)
-	(company-require-match nil)
-	(company-minimum-prefix-length 2)
-	:diminish "Company"
-	)
+    ;; Company mode provides autocompletion of text and code.
+    :ensure t  
+    :bind
+    (:map company-active-map
+          ("C-s" . company-search-candidates)
+          ("<tab>" . company-complete-common-or-cycle)
+          ("RET" . company-complete-selection)
+          ("C-n" . company-select-next)
+          ("C-p" . company-select-previous))
+    :hook
+    ((prog-mode ess-mode) . company-mode)
+    :config
+    ;; (defun my/python-mode-hook ()
+    ;;   (add-to-list 'company-backends 'company-jedi))
+    ;; (add-hook 'python-mode-hook 'my/python-mode-hook)
+    :custom
+    (company-idle-delay 0.25)
+    (company-require-match nil)
+    (company-minimum-prefix-length 2)
+    :diminish "Company"
+    )
 #+END_SRC
 
 #+RESULTS:
@@ -525,70 +536,70 @@
 
 * latex
 #+BEGIN_SRC emacs-lisp :results output silent
-  ;; My custom LaTeX class for Org-mode export. require is needed for it to work.
-  ;;(setf org-highlight-latex-and-related '(latex))
-  (setq org-src-fontify-natively t)
-  (setq org-latex-with-hyperref nil)
-  (setq org-latex-title-command "\\maketitle")
-  (setq org-latex-toc-command "")
-  (setq org-export-with-section-numbers nil)
-  (setq user-full-name "Nicholas Hanoian")
-  (setq org-latex-create-formula-image-program 'imagemagick)
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-  (setq org-latex-default-class "homework")
-  (setq preview-button-1 '[mouse-1])
+    ;; My custom LaTeX class for Org-mode export. require is needed for it to work.
+    ;;(setf org-highlight-latex-and-related '(latex))
+    (setq org-src-fontify-natively t)
+    (setq org-latex-with-hyperref nil)
+    (setq org-latex-title-command "\\maketitle")
+    (setq org-latex-toc-command "")
+    (setq org-export-with-section-numbers nil)
+    (setq user-full-name "Nicholas Hanoian")
+    (setq org-latex-create-formula-image-program 'imagemagick)
+    (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+    (setq org-latex-default-class "homework")
+    (setq preview-button-1 '[mouse-1])
 
-  (setq font-latex-fontify-script nil)
-  (setq font-latex-fontify-sectioning 'color)
+    (setq font-latex-fontify-script nil)
+    (setq font-latex-fontify-sectioning 'color)
 
 
 
-  ;; (defvar texfrag-submap
-  ;;  '(let ((map (make-sparse-keymap)))
-  ;;   (define-key map "\C-p" #'preview-at-point)
-  ;;   (define-key map "\C-r" #'preview-region)
-  ;;   (define-key map "\C-b" #'preview-buffer)
-  ;;   (define-key map "\C-d" #'preview-document)
-  ;;   (define-key map "\C-f" #'preview-cache-preamble)
-  ;;   (define-key map "\C-c\C-f" #'preview-cache-preamble-off)
-  ;;   (define-key map "\C-i" #'preview-goto-info-page)
-  ;;   ;;  (define-key map "\C-q" #'preview-paragraph)
-  ;;   (define-key map "\C-e" #'preview-environment)
-  ;;   (define-key map "\C-s" #'preview-section)
-  ;;   (define-key map "\C-w" #'preview-copy-region-as-mml)
-  ;;   (define-key map "\C-c\C-p" #'preview-clearout-at-point)
-  ;;   (define-key map "\C-c\C-r" #'preview-clearout)
-  ;;   (define-key map "\C-c\C-s" #'preview-clearout-section)
-  ;;   (define-key map "\C-c\C-b" #'preview-clearout-buffer)
-  ;;   (define-key map "\C-c\C-d" #'preview-clearout-document)
-  ;;   map))
+    ;; (defvar texfrag-submap
+    ;;  '(let ((map (make-sparse-keymap)))
+    ;;   (define-key map "\C-p" #'preview-at-point)
+    ;;   (define-key map "\C-r" #'preview-region)
+    ;;   (define-key map "\C-b" #'preview-buffer)
+    ;;   (define-key map "\C-d" #'preview-document)
+    ;;   (define-key map "\C-f" #'preview-cache-preamble)
+    ;;   (define-key map "\C-c\C-f" #'preview-cache-preamble-off)
+    ;;   (define-key map "\C-i" #'preview-goto-info-page)
+    ;;   ;;  (define-key map "\C-q" #'preview-paragraph)
+    ;;   (define-key map "\C-e" #'preview-environment)
+    ;;   (define-key map "\C-s" #'preview-section)
+    ;;   (define-key map "\C-w" #'preview-copy-region-as-mml)
+    ;;   (define-key map "\C-c\C-p" #'preview-clearout-at-point)
+    ;;   (define-key map "\C-c\C-r" #'preview-clearout)
+    ;;   (define-key map "\C-c\C-s" #'preview-clearout-section)
+    ;;   (define-key map "\C-c\C-b" #'preview-clearout-buffer)
+    ;;   (define-key map "\C-c\C-d" #'preview-clearout-document)
+    ;;   map))
 
-  ;;   (texfrag-set-prefix "\C-c\C-p")
+    ;;   (texfrag-set-prefix "\C-c\C-p")
 
-  (use-package ov
-	:ensure t)
+    (use-package ov
+      :ensure t)
 
-  (unless (boundp 'org-latex-classes)
-	(setq org-latex-classes nil))
+    (unless (boundp 'org-latex-classes)
+      (setq org-latex-classes nil))
 
-  (add-to-list 'org-latex-classes
-			   '("homework"
-				 "\\ProvidesPackage{/home/nick/Dropbox/config/homework}
-\\documentclass{/home/nick/Dropbox/config/homework}"
-				 ("\\section{%s}" . "\\section*{%s}")
-				 ("\\subsection{%s}" . "\\subsection*{%s}")
-				 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-				 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-				 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+    (add-to-list 'org-latex-classes
+                 '("homework"
+                   "\\ProvidesPackage{/home/nick/Dropbox/config/homework}
+  \\documentclass{/home/nick/Dropbox/config/homework}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-  (add-to-list 'org-latex-classes
-			   '("article"
-				 "\\documentclass{article}"
-				 ("\\section{%s}" . "\\section*{%s}")
-				 ("\\subsection{%s}" . "\\subsection*{%s}")
-				 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-				 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-				 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+    (add-to-list 'org-latex-classes
+                 '("article"
+                   "\\documentclass{article}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 
 
@@ -867,23 +878,27 @@
 
 * python
 #+BEGIN_SRC emacs-lisp
-  (use-package anaconda-mode
-    :ensure t
-    :hook
-    (python-mode . anaconda-mode)
-    (python-mode . anaconda-eldoc-mode))
+  ;; (use-package anaconda-mode
+  ;;   :ensure t
+  ;;   :hook
+  ;;   (python-mode . anaconda-mode)
+  ;;   (python-mode . anaconda-eldoc-mode))
 
-  ;;spacing around operators
-  (use-package electric-operator
-    :ensure t
-    :hook ((ess-mode python-mode) . electric-operator-mode))
+  ;; ;;spacing around operators
+  ;; (use-package electric-operator
+  ;;   :ensure t
+  ;;   :hook ((ess-mode python-mode) . electric-operator-mode))
 
-  (use-package python-mode
-    :ensure t)
+  ;; (use-package python-mode
+  ;;   :ensure t)
 
 
-  ;;for autocompletion
-  (use-package company-jedi
+  ;; ;;for autocompletion
+  ;; (use-package company-jedi
+  ;;   :ensure t)
+
+
+  (use-package elpy
     :ensure t)
 #+END_SRC
 
@@ -1267,15 +1282,17 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
                    ))
       (mapc load-it (directory-files dir nil "\\.el$"))))
   (load-directory "~/.emacs.d/nhh-lisp")
-  (load-theme 'zenburn)
+
   (if (string-equal system-name "nick-laptop")
-      (progn(setq powerline-height 30)
-            (powerline-reset))
+      (setq powerline-height 30)
     (string-equal system-name "nick-pc")
-    (progn (setq powerline-height 20)
-           (powerline-reset))
+    (setq powerline-height 20)
+    (set-face-attribute 'default nil :height 130)
     )
 
+
+  (load-theme 'zenburn)
+  (powerline-reset)
 #+END_SRC
 
 #+RESULTS:
@@ -1293,3 +1310,29 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 
 
 test
+* terminal
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'eshell-mode-hook (lambda ()
+                                (setq-local global-hl-line-mode
+                                            nil)))
+  (add-hook 'term-mode-hook (lambda ()
+                              (setq-local global-hl-line-mode
+                                          nil)))
+#+END_SRC
+
+#+RESULTS:
+| lambda | nil | (setq-local global-hl-line-mode nil) |
+
+* bash completion
+#+BEGIN_SRC emacs-lisp
+  (use-package bash-completion
+    :ensure t
+    :config
+    (bash-completion-setup)
+    )
+#+END_SRC
+
+#+RESULTS:
+: t
+

@@ -24,6 +24,10 @@
 ;;   :demand t
 ;;   :load-path "~/.emacs.d/nhh-lisp/mdi")
 
+
+
+
+
 (use-package powerline
   :ensure t)
 
