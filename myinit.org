@@ -159,10 +159,6 @@
   (use-package zenburn-theme
 	:ensure t
 	:defer t)
-  (use-package moe-theme
-	:ensure t
-	:defer t
-	)
   (use-package material-theme
 	:ensure t
 	:defer t)
@@ -1265,12 +1261,21 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 
 * custom lisp
 #+BEGIN_SRC emacs-lisp
-    (defun load-directory (dir)
-	(let ((load-it (lambda (f)
-					 (load-file (concat (file-name-as-directory dir) f)))
-				   ))
-	  (mapc load-it (directory-files dir nil "\\.el$"))))
+  (defun load-directory (dir)
+    (let ((load-it (lambda (f)
+                     (load-file (concat (file-name-as-directory dir) f)))
+                   ))
+      (mapc load-it (directory-files dir nil "\\.el$"))))
   (load-directory "~/.emacs.d/nhh-lisp")
+  (load-theme 'zenburn)
+  (if (string-equal system-name "nick-laptop")
+      (progn(setq powerline-height 30)
+            (powerline-reset))
+    (string-equal system-name "nick-pc")
+    (progn (setq powerline-height 20)
+           (powerline-reset))
+    )
+
 #+END_SRC
 
 #+RESULTS:
@@ -1284,3 +1289,7 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 
 #+RESULTS:
 : helm-recentf
+
+
+
+test
