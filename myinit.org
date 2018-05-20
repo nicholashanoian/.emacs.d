@@ -40,14 +40,29 @@
   (add-hook 'focus-out-hook #'garbage-collect)
 
   ;;removes menubar when in terminal
-  (defun contextual-menubar (&optional frame)
-    "Display the menubar in FRAME (default: selected frame) if on a
-      graphical display, but hide it if in terminal."
-    (interactive)
-    (set-frame-parameter frame 'menu-bar-lines 
-                         (if (display-graphic-p frame)
-                             1 0)))
-  (add-hook 'after-make-frame-functions 'contextual-menubar)
+  ;; (defun contextual-menubar (&optional frame)
+  ;;   "Display the menubar in FRAME (default: selected frame) if on a
+  ;;     graphical display, but hide it if in terminal."
+  ;;   (interactive)
+  ;;   (set-frame-parameter frame 'menu-bar-lines 
+  ;;                        (if (display-graphic-p frame)
+  ;;                            1 0)))
+  ;; (add-hook 'after-make-frame-functions 'contextual-menubar)
+
+  ;;remove menubar
+  (menu-bar-mode -1)
+
+
+  ;;(set-default-font "DejaVu Sans Mono");; Set default font
+  (set-face-attribute 'default nil
+                      :family "DejaVu Sans Mono"
+                      :height 120
+                      :weight 'normal
+                      :width 'normal)
+
+  ;;focuse follows mouse
+  (setq mouse-autoselect-window t)
+
 #+END_SRC
 
 #+RESULTS:
@@ -1331,6 +1346,41 @@ test
     :config
     (bash-completion-setup)
     )
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* haskell
+#+BEGIN_SRC emacs-lisp
+  (use-package haskell-mode
+    :ensure t
+    :config
+    ;; add capability to submit code to interpreter and mark errors
+    (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+
+    ;; add missing keybindings for navigating errors
+    (define-key interactive-haskell-mode-map (kbd "M-n") 'haskell-goto-next-error)
+    (define-key interactive-haskell-mode-map (kbd "M-p") 'haskell-goto-prev-error)
+    (define-key interactive-haskell-mode-map (kbd "C-c M-p") 'haskell-goto-first-error)
+
+    ;; merge this with your existing custom-set-variables
+    (custom-set-variables
+
+     ;; NOTE: include following line to work around haskell-mode
+     ;; bug if using GHC >= 8.2.1.
+     ;; See: https://github.com/haskell/haskell-mode/issues/1553
+     '(haskell-process-args-stack-ghci
+       '("--ghci-options=-ferror-spans -fshow-loaded-modules"
+         "--no-build" "--no-load"))
+
+     ;; some options suggested in the haskell-mode documentation
+     '(haskell-process-auto-import-loaded-modules t)
+     '(haskell-process-log t)
+     '(haskell-process-suggest-remove-import-lines t)
+
+     ;; make sure "stack ghci" is used, even in the global project
+     '(haskell-process-type 'stack-ghci)))
 #+END_SRC
 
 #+RESULTS:
