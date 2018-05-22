@@ -63,10 +63,14 @@
   ;;focuse follows mouse
   (setq mouse-autoselect-window t)
 
+  ;;store backups here
+(defvar backup-dir "~/.emacs.d/backups/")
+;;(setq backup-directory-alist backup-dir)
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+
 #+END_SRC
 
 #+RESULTS:
-: 0
 
 * scrolling
 #+BEGIN_SRC emacs-lisp
@@ -202,20 +206,46 @@
 * ace-window
 #+BEGIN_SRC emacs-lisp
   (use-package ace-window
-	:ensure t
-	:init
-	(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-	(setq aw-background nil)
-	(progn
-	  (global-set-key [remap other-window] 'ace-window)
-	  (custom-set-faces
-	   '(aw-leading-char-face
-	 ((t (:inherit ace-jump-face-foreground :height 3.0)))))
-	  ))
+    :ensure t
+    :init
+    (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+    (setq aw-background nil)
+    (progn
+      (global-set-key [remap other-window] 'ace-window)
+      (custom-set-faces
+       '(aw-leading-char-face
+         ((t (:inherit ace-jump-face-foreground :height 3.0)))))
+      )
+    (define-key global-map (kbd "C-x \\") 'ace-swap-window)
+    )
 
 #+END_SRC
 
 #+RESULTS:
+
+* avy
+#+BEGIN_SRC emacs-lisp
+  (use-package avy
+    :ensure t
+    :config
+    (setq ;; avy-keys
+          ;; (nconc (number-sequence ?a ?z)
+          ;;        ;;(number-sequence ?A ?Z)
+          ;;        )
+          avy-background t
+          avy-all-windows nil
+          )
+    :bind
+    (("M-g g" . avy-goto-line)
+     ("M-g w" . avy-goto-word-or-subword-1)
+     
+
+     )
+    )
+#+END_SRC
+
+#+RESULTS:
+: avy-goto-word-or-subword-1
 
 * aggressive-indent
 #+BEGIN_SRC emacs-lisp
@@ -499,7 +529,7 @@
       (progn
         (global-set-key (kbd "C-s") 'helm-swoop-without-pre-input)
         ;;(setq helm-swoop-pre-input-function  (lambda () ""))
-        (setq helm-swoop-use-fuzzy-match t)
+        (setq helm-swoop-use-fuzzy-match nil)
         )
       )
 	  :diminish)
@@ -1207,51 +1237,55 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 
 * multiple cursors
 #+BEGIN_SRC emacs-lisp
-	;;get rid of nasty secondary selection keybindings
-	(delete-overlay mouse-secondary-overlay)
-	(global-unset-key [M-mouse-1])
-	(global-unset-key [M-drag-mouse-1])
-	(global-unset-key [M-down-mouse-1])
-	(global-unset-key [M-mouse-3])
-	(global-unset-key [M-mouse-2])
+  ;;get rid of nasty secondary selection keybindings
+  (delete-overlay mouse-secondary-overlay)
+  (global-unset-key [M-mouse-1])
+  (global-unset-key [M-drag-mouse-1])
+  (global-unset-key [M-down-mouse-1])
+  (global-unset-key [M-mouse-3])
+  (global-unset-key [M-mouse-2])
 
-	(use-package multiple-cursors
-	  :ensure t
-	  )
+  (use-package multiple-cursors
+    :ensure t
+    )
 
-	;;sets return to enter new line rather than exit multiple cursors
-	(define-key mc/keymap (kbd "<return>") nil)
+  ;;sets return to enter new line rather than exit multiple cursors
+  (define-key mc/keymap (kbd "<return>") nil)
+
+
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 
   (global-set-key
    (kbd "C-c m c")
    (defhydra multiple-cursors-hydra (:hint nil)
-	 "
-		   ^Up^            ^Down^        ^Other^
-	  ----------------------------------------------
-	  [_p_]   Next    [_n_]   Next    [_l_] Edit lines
-	  [_P_]   Skip    [_N_]   Skip    [_a_] Mark all
-	  [_M-p_] Unmark  [_M-n_] Unmark  [_r_] Mark by regexp
-	  ^ ^             ^ ^             [_q_] Quit
-	  "
-	 ("l" mc/edit-lines :exit t)
-	 ("a" mc/mark-all-like-this :exit t)
-	 ("n" mc/mark-next-like-this)
-	 ("N" mc/skip-to-next-like-this)
-	 ("M-n" mc/unmark-next-like-this)
-	 ("p" mc/mark-previous-like-this)
-	 ("P" mc/skip-to-previous-like-this)
-	 ("M-p" mc/unmark-previous-like-this)
-	 ("r" mc/mark-all-in-region-regexp :exit t)
-	 ("q" nil)
-	 ("<mouse-1>" mc/add-cursor-on-click)
-	 ("<down-mouse-1>" ignore)
-	 ("<drag-mouse-1>" ignore)))
+     "
+           ^Up^            ^Down^        ^Other^
+      ----------------------------------------------
+      [_p_]   Next    [_n_]   Next    [_l_] Edit lines
+      [_P_]   Skip    [_N_]   Skip    [_a_] Mark all
+      [_M-p_] Unmark  [_M-n_] Unmark  [_r_] Mark by regexp
+      ^ ^             ^ ^             [_q_] Quit
+      "
+     ("l" mc/edit-lines :exit t)
+     ("a" mc/mark-all-like-this :exit t)
+     ("n" mc/mark-next-like-this)
+     ("N" mc/skip-to-next-like-this)
+     ("M-n" mc/unmark-next-like-this)
+     ("p" mc/mark-previous-like-this)
+     ("P" mc/skip-to-previous-like-this)
+     ("M-p" mc/unmark-previous-like-this)
+     ("r" mc/mark-all-in-region-regexp :exit t)
+     ("q" nil)
+     ("<mouse-1>" mc/add-cursor-on-click)
+     ("<down-mouse-1>" ignore)
+     ("<drag-mouse-1>" ignore)))
 
 #+END_SRC
 
 #+RESULTS:
-: multiple-cursors-hydra/body
-* plantuml
+=multiple-cursors-hydra/body
+=* plantuml
 #+BEGIN_SRC emacs-lisp
   (use-package plantuml-mode
 	:ensure t
@@ -1357,12 +1391,13 @@ test
     :ensure t
     :config
     ;; add capability to submit code to interpreter and mark errors
-    (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+    ;;    (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+    (add-hook 'haskell-mode-hook '(lambda () (aggressive-indent-mode 0)))
 
     ;; add missing keybindings for navigating errors
-    (define-key interactive-haskell-mode-map (kbd "M-n") 'haskell-goto-next-error)
-    (define-key interactive-haskell-mode-map (kbd "M-p") 'haskell-goto-prev-error)
-    (define-key interactive-haskell-mode-map (kbd "C-c M-p") 'haskell-goto-first-error)
+    ;; (define-key interactive-haskell-mode-map (kbd "M-n") 'haskell-goto-next-error)
+    ;; (define-key interactive-haskell-mode-map (kbd "M-p") 'haskell-goto-prev-error)
+    ;; (define-key interactive-haskell-mode-map (kbd "C-c M-p") 'haskell-goto-first-error)
 
     ;; merge this with your existing custom-set-variables
     (custom-set-variables
@@ -1381,6 +1416,28 @@ test
 
      ;; make sure "stack ghci" is used, even in the global project
      '(haskell-process-type 'stack-ghci)))
+
+
+
+    (use-package intero
+      :ensure t
+      :config
+      (add-hook 'haskell-mode-hook 'intero-mode))
+
+
+
+
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* which key
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :ensure t
+    :config
+    (which-key-mode))
 #+END_SRC
 
 #+RESULTS:
