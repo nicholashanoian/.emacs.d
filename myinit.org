@@ -1365,13 +1365,14 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 
 
   (load-theme 'zenburn)
+  (spaceline-emacs-theme)
   (powerline-reset)
   (spaceline-emacs-theme)
 #+END_SRC
 
 #+RESULTS:
-| mode-line.el | set-theme.el |
-* recent files
+=#s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8 data ())
+=* recent files
 #+BEGIN_SRC emacs-lisp
   (recentf-mode 1)
   (setq recentf-max-menu-items 25)
@@ -1474,4 +1475,11 @@ test
 * puts rc files in conf-mode
 #+BEGIN_SRC emacs-lisp :results silent
   (add-to-list 'auto-mode-alist '("/\\.[^/]*rc" . conf-mode) t)
+#+END_SRC
+* Powershell
+#+BEGIN_SRC emacs-lisp
+  (use-package powershell
+    :ensure t)
+  (setq ispell-program-name "C:/Program Files (x86)/Aspell/bin/aspell.exe")
+  (cd "C:/Users/opernhh/Documents")
 #+END_SRC
