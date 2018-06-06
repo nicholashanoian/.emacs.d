@@ -228,10 +228,7 @@
   (use-package avy
     :ensure t
     :config
-    (setq ;; avy-keys
-          ;; (nconc (number-sequence ?a ?z)
-          ;;        ;;(number-sequence ?A ?Z)
-          ;;        )
+    (setq avy-keys (nconc (number-sequence ?a ?z))
           avy-background t
           avy-all-windows nil
           )
@@ -482,7 +479,7 @@
 
 * Helm
 #+BEGIN_SRC emacs-lisp
-  ;;; Helm
+    ;;; Helm
   (use-package helm
     ;; A package in a league of its own: https://tuhdo.github.io/helm-intro.html
     ;; load it soon after starting Emacs:
@@ -532,7 +529,10 @@
         (setq helm-swoop-use-fuzzy-match nil)
         )
       )
-	  :diminish)
+    (use-package helm-ag
+      :ensure t)
+    
+    :diminish)
 #+END_SRC
 
 #+RESULTS:
@@ -596,6 +596,7 @@
 
     (setq font-latex-fontify-script nil)
     (setq font-latex-fontify-sectioning 'color)
+
 
 
 
@@ -779,21 +780,22 @@
 ** general org stuff
 #+BEGIN_SRC emacs-lisp :results silent
   (use-package org
-	:ensure t
-	:config
-	(setq org-directory "~/Dropbox/org"
-		  org-src-window-setup 'current-window
-		  org-mobile-directory "~/Dropbox/Apps/MobileOrg"
-		  org-mobile-files '("~/Dropbox/org")
-		  org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org"
-		  )
-	(setq org-latex-caption-above nil)
-	:hook ((org-mode . company-mode)
-		   (org-mode . visual-line-mode))
-	)
+    :ensure t
+    :config
+    (setq org-directory "~/Dropbox/org"
+          org-src-window-setup 'current-window
+          org-mobile-directory "~/Dropbox/Apps/MobileOrg"
+          org-mobile-files '("~/Dropbox/org")
+          org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org"
+          )
+    (setq org-latex-caption-above nil)
+    :hook ((org-mode . company-mode)
+           (org-mode . visual-line-mode)
+           (org-mode . org-indent-mode))
+    )
   (use-package org-bullets
-	:ensure t
-	:hook (org-mode . (lambda () (org-bullets-mode 1))))
+    :ensure t
+    :hook (org-mode . (lambda () (org-bullets-mode 1))))
 
 
   ;; (defun my-org-latex-export-to-pdf ()
@@ -801,6 +803,7 @@
   ;;   (save-buffer)
   ;;   (org-latex-export-to-pdf)
   ;;   )
+
 #+END_SRC
 
 ** latex and html macro
@@ -838,28 +841,41 @@
 
 ** org-mode company completion
 #+BEGIN_SRC emacs-lisp
-	(defun org-keyword-backend (command &optional arg &rest ignored)
-	  (interactive (list 'interactive))
-	  (cl-case command
-		(interactive (company-begin-backend 'org-keyword-backend))
-		(prefix (and (eq major-mode 'org-mode)
-					 (cons (company-grab-line "^#\\+\\(\\w*\\)" 1)
-						   t)))
-		(candidates (mapcar #'upcase
-							(cl-remove-if-not
-							 (lambda (c) (string-prefix-p arg c))
-							 (pcomplete-completions))))
-		(ignore-case t)
-		(duplicates t)))
+  (defun org-keyword-backend (command &optional arg &rest ignored)
+    (interactive (list 'interactive))
+    (cl-case command
+      (interactive (company-begin-backend 'org-keyword-backend))
+      (prefix (and (eq major-mode 'org-mode)
+                   (cons (company-grab-line "^#\\+\\(\\w*\\)" 1)
+                         t)))
+      (candidates (mapcar #'upcase
+                          (cl-remove-if-not
+                           (lambda (c) (string-prefix-p arg c))
+                           (pcomplete-completions))))
+      (ignore-case t)
+      (duplicates t)))
+
+  (defun org-files-backend (command &optional arg &rest ignored)
+    (interactive (list 'interactive))
+    (cl-case command
+      (interactive (company-begin-backend 'org-files-backend))
+      (prefix (and (eq major-mode 'org-mode)
+                   (cons (company-grab-line "^=\\/\\(\\w*\\)" 1)
+                         t)))
+      (candidates 'company-files--complete)
+      (ignore-case t)
+      (duplicates t)))
 
   (defun my-org-mode-hook ()
-	(add-to-list 'company-backends 'org-keyword-backend))
-	 (add-hook 'org-mode-hook 'my-org-mode-hook)
+    (add-to-list 'company-backends 'org-keyword-backend)
+    (add-to-list 'company-backends 'org-files-backend)
+    )
+  (add-hook 'org-mode-hook 'my-org-mode-hook)
 
 #+END_SRC
 
 #+RESULTS:
-: org-keyword-backend
+| (lambda nil (set (make-local-variable (quote company-backends)) (quote ((company-files company-dabbrev))))) | endless/org-ispell | texfrag-mode | my-org-mode-hook | (lambda nil (org-bullets-mode 1)) | visual-line-mode | company-mode | er/add-org-mode-expansions | #[nil \300\301\302\303\304$\207 [org-add-hook change-major-mode-hook org-show-block-all append local] 5] | #[nil \300\301\302\303\304$\207 [org-add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
 
 
 ** toggle latex export on save
@@ -877,6 +893,14 @@
 	  (message "Enabled org latex export on save")))
   (define-key org-mode-map (kbd "C-c l") 'toggle-latex-export-on-save)
 #+END_SRC
+
+** agenda
+#+BEGIN_SRC emacs-lisp
+  (setq org-fast-tag-selection-single-key 1)
+#+END_SRC
+
+#+RESULTS:
+: 1
 
 * pdf-tools
 #+BEGIN_SRC emacs-lisp
@@ -1342,6 +1366,7 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 
   (load-theme 'zenburn)
   (powerline-reset)
+  (spaceline-emacs-theme)
 #+END_SRC
 
 #+RESULTS:
@@ -1419,10 +1444,14 @@ test
 
 
 
-    (use-package intero
-      :ensure t
-      :config
-      (add-hook 'haskell-mode-hook 'intero-mode))
+  (use-package intero
+    :ensure t
+    :config
+    (add-hook 'haskell-mode-hook 'intero-mode))
+
+
+  (use-package helm-hoogle
+    :ensure t)
 
 
 
@@ -1430,7 +1459,6 @@ test
 #+END_SRC
 
 #+RESULTS:
-: t
 
 * which key
 #+BEGIN_SRC emacs-lisp
@@ -1443,3 +1471,7 @@ test
 #+RESULTS:
 : t
 
+* puts rc files in conf-mode
+#+BEGIN_SRC emacs-lisp :results silent
+  (add-to-list 'auto-mode-alist '("/\\.[^/]*rc" . conf-mode) t)
+#+END_SRC

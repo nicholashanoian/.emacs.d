@@ -70,11 +70,12 @@
  '(haskell-process-log t)
  '(haskell-process-suggest-remove-import-lines t)
  '(haskell-process-type (quote stack-ghci))
+ '(helm-ag-base-command "ack --nocolor --nogroup")
  '(helm-command-prefix-key "M-,")
  '(helm-display-header-line nil)
  '(helm-echo-input-in-header-line t)
  '(helm-ff-skip-boring-files t)
- '(helm-net-prefer-curl t t)
+ '(helm-net-prefer-curl t)
  '(helm-split-window-default-side (quote below))
  '(helm-split-window-inside-p t)
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
@@ -101,6 +102,7 @@
    (quote
 	("#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3")))
  '(hl-paren-colors (quote ("#2aa198" "#b58900" "#268bd2" "#6c71c4" "#859900")))
+ '(hl-sexp-background-color "#efebe9")
  '(ispell-personal-dictionary "~/Dropbox/config/.aspell.en.pws")
  '(jdee-db-active-breakpoint-face-colors (cons "#191C25" "#80A0C2"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#191C25" "#A2BF8A"))
@@ -113,6 +115,7 @@
  '(nrepl-message-colors
    (quote
 	("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
+ '(org-agenda-files (quote ("~/Dropbox/org/agend.org")))
  '(org-file-apps
    (quote
 	((auto-mode . emacs)
@@ -122,7 +125,7 @@
  '(org-highlight-latex-and-related (quote (latex entities)))
  '(package-selected-packages
    (quote
-	(dired+ which-key intero haskell-mode haskell bash-completion powerline material-theme delight mdi zenburn-theme solarized-theme color-theme-sanityinc-tomorrow zenburn wordnut adaptive-wrap plantuml-mode plantuml texfrag auctex helm-flyspell hydra sublimity-attractive sublimity-map sublimity-scroll spacemacs-common spaceline pdf-tools expand-region hungry-delete undo-tree ov ox-latex org-edit-latex org-latex yasnippit java-snippets web-mode virtualenvwrapper all-the-fonts all-the-icons neotree exec-path-from-shell python-mode electric-operator anaconda-mode company-jedi helm-projectile projectile multiple-cursors js2-refactor js2-mode groovy-mode gradle-mode meghanada eclimd helm-org helm-files tex-site helm-swoop try ace-window auto-org-md org-edna org-bullets company-emacs-eclim eclim markdown-mode magit cdlatex avy-flycheck aggressive-indent company helm flycheck diminish use-package)))
+	(helm-hoogle helm-ag dired+ which-key intero haskell-mode haskell bash-completion powerline material-theme delight mdi zenburn-theme solarized-theme color-theme-sanityinc-tomorrow zenburn wordnut adaptive-wrap plantuml-mode plantuml texfrag auctex helm-flyspell hydra sublimity-attractive sublimity-map sublimity-scroll spacemacs-common spaceline pdf-tools expand-region hungry-delete undo-tree ov ox-latex org-edit-latex org-latex yasnippit java-snippets web-mode virtualenvwrapper all-the-fonts all-the-icons neotree exec-path-from-shell python-mode electric-operator anaconda-mode company-jedi helm-projectile projectile multiple-cursors js2-refactor js2-mode groovy-mode gradle-mode meghanada eclimd helm-org helm-files tex-site helm-swoop try ace-window auto-org-md org-edna org-bullets company-emacs-eclim eclim markdown-mode magit cdlatex avy-flycheck aggressive-indent company helm flycheck diminish use-package)))
  '(pdf-sync-forward-display-pdf-key "<C-return>" t)
  '(pdf-view-display-size (quote fit-page) nil nil "Show full pages by default instead of fitting page width.")
  '(pdf-view-image-relief 4)

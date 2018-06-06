@@ -34,7 +34,8 @@ If FACES is not provided or nil, use `face-list' instead."
       (pcase (assq theme-id gh/theme-hooks)
         (`(,_ . ,f) (funcall f))))
 	(powerline-reset)
-	(me/unboldify)))
+	;;(me/unboldify)
+	))
 
 
 
