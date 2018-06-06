@@ -1478,8 +1478,10 @@ test
 #+END_SRC
 * Powershell
 #+BEGIN_SRC emacs-lisp
+
   (use-package powershell
     :ensure t)
-  (setq ispell-program-name "C:/Program Files (x86)/Aspell/bin/aspell.exe")
-  (cd "C:/Users/opernhh/Documents")
+  (if (string-equal system-type "ms-dos")
+      (setq ispell-program-name "C:/Program Files (x86)/Aspell/bin/aspell.exe")
+    (cd "C:/Users/opernhh/Documents"))
 #+END_SRC
