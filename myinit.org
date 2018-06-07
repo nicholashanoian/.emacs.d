@@ -1485,3 +1485,53 @@ test
       (setq ispell-program-name "C:/Program Files (x86)/Aspell/bin/aspell.exe")
     (cd "C:/Users/opernhh/Documents"))
 #+END_SRC
+*  org-gcal
+#+BEGIN_SRC emacs-lisp
+
+  (setq package-check-signature nil)
+
+
+  (use-package org-gcal
+    :ensure t
+    :config
+    (setq org-gcal-client-id "238978929348-asuc286b95jfvf9hako6rjc71lf6ql2p.apps.googleusercontent.com"
+          org-gcal-client-secret "KE7YQs6iDehFpv3YfbUbWjaE"
+          org-gcal-file-alist '(("nicholashanoian@gmail.com" .  "~/Dropbox/org/gcal.org"))))
+
+  (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+  (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+#+END_SRC
+
+#+RESULTS:
+| lambda | nil | (org-gcal-sync) |
+
+* org capture
+#+BEGIN_SRC emacs-lisp
+
+  (setq org-agenda-files (list "~/Dropbox/org/gcal.org"
+                               "~/Dropbox/org/agenda.org"))
+
+  (setq org-capture-templates
+        '(("a" "Appointment" entry (file  "~/Dropbox/org/gcal.org" )
+           "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+          ("l" "Link" entry (file+headline "~/Dropbox/org/links.org" "Links")
+           "* %? %^L %^g \n%T" :prepend t)
+          ("b" "Blog idea" entry (file+headline "~/Dropbox/org/i.org" "Blog Topics:")
+           "* %?\n%T" :prepend t)
+          ("t" "To Do Item" entry (file+headline "~/Dropbox/org/i.org" "To Do")
+           "* TODO %?\n%u" :prepend t)
+          ("n" "Note" entry (file+headline "~/Dropbox/org/i.org" "Note space")
+           "* %?\n%u" :prepend t)
+          ("j" "Journal" entry (file+datetree "~/Dropbox/journal.org")
+           "* %?\nEntered on %U\n  %i\n  %a")
+          ))
+#+END_SRC
+
+#+RESULTS:
+| a | Appointment | entry | (file ~/Dropbox/org/gcal.org) | * %? |
+
+
+
+
+
+
