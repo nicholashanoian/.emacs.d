@@ -125,7 +125,7 @@
  '(org-highlight-latex-and-related (quote (latex entities)))
  '(package-selected-packages
    (quote
-	(org-gcal helm-hoogle helm-ag dired+ which-key intero haskell-mode haskell bash-completion powerline material-theme delight mdi zenburn-theme solarized-theme color-theme-sanityinc-tomorrow zenburn wordnut adaptive-wrap plantuml-mode plantuml texfrag auctex helm-flyspell hydra sublimity-attractive sublimity-map sublimity-scroll spacemacs-common spaceline pdf-tools expand-region hungry-delete undo-tree ov ox-latex org-edit-latex org-latex yasnippit java-snippets web-mode virtualenvwrapper all-the-fonts all-the-icons neotree exec-path-from-shell python-mode electric-operator anaconda-mode company-jedi helm-projectile projectile multiple-cursors js2-refactor js2-mode groovy-mode gradle-mode meghanada eclimd helm-org helm-files tex-site helm-swoop try ace-window auto-org-md org-edna org-bullets company-emacs-eclim eclim markdown-mode magit cdlatex avy-flycheck aggressive-indent company helm flycheck diminish use-package)))
+	(paredit smart-parens org-alert powershell org-gcal helm-hoogle helm-ag dired+ which-key intero haskell-mode haskell bash-completion powerline material-theme delight mdi zenburn-theme solarized-theme color-theme-sanityinc-tomorrow zenburn wordnut adaptive-wrap plantuml-mode plantuml texfrag auctex helm-flyspell hydra sublimity-attractive sublimity-map sublimity-scroll spacemacs-common spaceline pdf-tools expand-region hungry-delete undo-tree ov ox-latex org-edit-latex org-latex yasnippit java-snippets web-mode virtualenvwrapper all-the-fonts all-the-icons neotree exec-path-from-shell python-mode electric-operator anaconda-mode company-jedi helm-projectile projectile multiple-cursors js2-refactor js2-mode groovy-mode gradle-mode meghanada eclimd helm-org helm-files tex-site helm-swoop try ace-window auto-org-md org-edna org-bullets company-emacs-eclim eclim markdown-mode magit cdlatex avy-flycheck aggressive-indent company helm flycheck diminish use-package)))
  '(pdf-sync-forward-display-pdf-key "<C-return>" t)
  '(pdf-view-display-size (quote fit-page) nil nil "Show full pages by default instead of fitting page width.")
  '(pdf-view-image-relief 4)
@@ -139,6 +139,7 @@
  '(projectile-globally-ignored-file-suffixes (quote ("#" "~")))
  '(py-python-command "/usr/bin/python")
  '(py-shell-name "python3")
+ '(python-shell-virtualenv-root "~/.venvs")
  '(reftex-plug-into-AUCTeX t t)
  '(safe-local-variable-values
    (quote

@@ -9,6 +9,7 @@
 		eval-last-sexp
 		hungry-delete-backward
 		hungry-delete-forward
+		indent-for-tab-command
 		kill-region
 		kill-visual-line
 		org-beginning-of-line
