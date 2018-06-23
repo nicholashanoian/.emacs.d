@@ -1502,18 +1502,18 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 * org-gcal
 #+BEGIN_SRC emacs-lisp
 
-  (setq package-check-signature nil)
+  ;; (setq package-check-signature nil)
 
 
-  (use-package org-gcal
-    :ensure t
-    :config
-    (setq org-gcal-client-id "238978929348-asuc286b95jfvf9hako6rjc71lf6ql2p.apps.googleusercontent.com"
-          org-gcal-client-secret "KE7YQs6iDehFpv3YfbUbWjaE"
-          org-gcal-file-alist '(("nicholashanoian@gmail.com" .  "~/Dropbox/org/gcal.org"))))
+  ;; (use-package org-gcal
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq org-gcal-client-id "238978929348-asuc286b95jfvf9hako6rjc71lf6ql2p.apps.googleusercontent.com"
+  ;;         org-gcal-client-secret "KE7YQs6iDehFpv3YfbUbWjaE"
+  ;;         org-gcal-file-alist '(("nicholashanoian@gmail.com" .  "~/Dropbox/org/gcal.org"))))
 
-  (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
-  (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+  ;; (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+  ;; (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
 #+END_SRC
 
 #+RESULTS:
@@ -1610,3 +1610,27 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 
 #+RESULTS:
 : capitalize-word
+* dired
+#+BEGIN_SRC emacs-lisp
+  (define-key dired-mode-map (kbd "l") 'dired-up-directory)
+  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+#+END_SRC
+
+#+RESULTS:
+: dired-find-alternate-file
+* ansi-term
+#+BEGIN_SRC emacs-lisp
+  (define-key term-mode-map (kbd "C-s") 'helm-swoop-without-pre-input)
+#+END_SRC
+
+#+RESULTS:
+: helm-swoop-without-pre-input
+
+* better shell
+Use =better-shell-sudo-here= to reopen current file as root
+#+BEGIN_SRC emacs-lisp
+(use-package better-shell
+:ensure t)
+#+END_SRC
+
+#+RESULTS:

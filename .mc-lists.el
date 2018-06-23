@@ -34,5 +34,7 @@
 		multiple-cursors-hydra/mc/unmark-next-like-this
 		multiple-cursors-hydra/mc/unmark-previous-like-this
 		multiple-cursors-hydra/nil
+		org-cycle
+		org-shifttab
 		text-scale-adjust
 		))
