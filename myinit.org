@@ -12,58 +12,60 @@
 #+END_SRC
 * interface tweaks
 #+BEGIN_SRC emacs-lisp
-        ;;; package --- summary
-        ;;; Commentary:
-        ;;; Code:
+            ;;; package --- summary
+            ;;; Commentary:
+            ;;; Code:
 
-    ;;disable start screen
-    (setq inhibit-startup-screen t)
-    (tool-bar-mode -1)
+  ;;disable start screen
+  (setq inhibit-startup-screen t)
+  (tool-bar-mode -1)
 
-    ;;yes or no prompts to y or n
-    (fset 'yes-or-no-p 'y-or-n-p)
+  ;;yes or no prompts to y or n
+  (fset 'yes-or-no-p 'y-or-n-p)
 
-    (global-set-key (kbd "<f5>") 'revert-buffer)
+  (global-set-key (kbd "<f5>") 'revert-buffer)
 
-    ;;reduce clutter in init file
-    (setq custom-file "~/.emacs.d/custom.el")
-    (load custom-file)
-    ;;(package-initialize)
+  ;;reduce clutter in init file
+  (setq custom-file "~/.emacs.d/custom.el")
+  (load custom-file)
+  ;;(package-initialize)
 
-    ;; Delete my files by moving them to the trash. I'm human and
-    ;; occasionally delete things that I actually want later:
-    (setq delete-by-moving-to-trash t)
-    (setq display-time-mode 1
-          fringe-mode 0)
+  ;; Delete my files by moving them to the trash. I'm human and
+  ;; occasionally delete things that I actually want later:
+  (setq delete-by-moving-to-trash t)
+  (setq display-time-mode 1
+        fringe-mode 0)
 
-    ;;supposedly makes emacs snappier
-    (add-hook 'focus-out-hook #'garbage-collect)
+  ;;supposedly makes emacs snappier
+  (add-hook 'focus-out-hook #'garbage-collect)
 
-    ;;removes menubar when in terminal
-    ;; (defun contextual-menubar (&optional frame)
-    ;;   "Display the menubar in FRAME (default: selected frame) if on a
-    ;;     graphical display, but hide it if in terminal."
-    ;;   (interactive)
-    ;;   (set-frame-parameter frame 'menu-bar-lines 
-    ;;                        (if (display-graphic-p frame)
-    ;;                            1 0)))
-    ;; (add-hook 'after-make-frame-functions 'contextual-menubar)
+  ;;removes menubar when in terminal
+  ;; (defun contextual-menubar (&optional frame)
+  ;;   "Display the menubar in FRAME (default: selected frame) if on a
+  ;;     graphical display, but hide it if in terminal."
+  ;;   (interactive)
+  ;;   (set-frame-parameter frame 'menu-bar-lines 
+  ;;                        (if (display-graphic-p frame)
+  ;;                            1 0)))
+  ;; (add-hook 'after-make-frame-functions 'contextual-menubar)
 
-    ;;remove menubar
-    (menu-bar-mode -1)
+  ;;remove menubar
+  (menu-bar-mode -1)
 
 
-    ;;(set-default-font "DejaVu Sans Mono");; Set default font
-    (set-face-attribute 'default nil
-                        :family "DejaVu Sans Mono"
-                        :height 120
-                        :weight 'normal
-                        :width 'normal)
+  ;;(set-default-font "DejaVu Sans Mono");; Set default font
+  (set-face-attribute 'default nil
+                      :family "DejaVu Sans Mono"
+                      :height 120
+                      :weight 'normal
+                      :width 'normal)
 
-    ;;focuse follows mouse
-    (setq mouse-autoselect-window t)
+  ;;(set-face-attribute 'default "-*-fira mono medium-medium-*-*-*-*-*-*-*-*-*-*-*")
 
-    ;;store backups here
+  ;;focuse follows mouse
+  (setq mouse-autoselect-window t)
+
+  ;;store backups here
   (defvar backup-dir "~/.emacs.d/backups/")
   ;;(setq backup-directory-alist backup-dir)
   (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
@@ -73,7 +75,7 @@
 #+RESULTS:
 : comment-line
 
-* scrolling
+* Scrolling
 #+BEGIN_SRC emacs-lisp
   ;; Emacs has some awful scrolling by default. This gets rid of that.
   (setq scroll-step 1) ; keyboard scroll one line at a time
@@ -106,7 +108,7 @@
   (global-hl-line-mode t)
   (electric-pair-mode 1)
   (show-paren-mode 1) 
-  (set-face-attribute 'default nil :height 110)
+;;  (set-face-attribute 'default nil :height 110)
   (pending-delete-mode 1)
 
   ;;save outside clipboard to kill ring
@@ -1365,10 +1367,10 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
   (load-directory "~/.emacs.d/nhh-lisp")
 
   (if (string-equal system-name "nick-laptop")
-      (setq powerline-height 30)
+      (setq powerline-height 40)
     (string-equal system-name "nick-pc")
     (setq powerline-height 20)
-    (set-face-attribute 'default nil :height 130)
+    (set-face-attribute 'default nil :height 120)
     )
 
 
@@ -1379,6 +1381,7 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 #+END_SRC
 
 #+RESULTS:
+| %e | (:eval (spaceline-ml-main)) |
 =#s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8 data ())
 =* recent files
 #+BEGIN_SRC emacs-lisp
@@ -1620,7 +1623,7 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 : dired-find-alternate-file
 * ansi-term
 #+BEGIN_SRC emacs-lisp
-  (define-key term-mode-map (kbd "C-s") 'helm-swoop-without-pre-input)
+  ;; (define-key term-mode-map (kbd "C-s") 'helm-swoop-without-pre-input)
 #+END_SRC
 
 #+RESULTS:
@@ -1634,3 +1637,83 @@ Use =better-shell-sudo-here= to reopen current file as root
 #+END_SRC
 
 #+RESULTS:
+* rainbow mode
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-mode
+    :ensure t)
+#+END_SRC
+
+#+RESULTS:
+* Sage
+#+BEGIN_SRC emacs-lisp
+(use-package sage-shell-mode
+:ensure t
+:config
+(sage-shell:define-alias))
+
+(use-package ob-sagemath
+:ensure t
+:config
+;; Ob-sagemath supports only evaluating with a session.
+(setq org-babel-default-header-args:sage '((:session . t)
+                                           (:results . "output")))
+
+;; C-c c for asynchronous evaluating (only for SageMath code blocks).
+(with-eval-after-load "org"
+  (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
+
+;; Do not confirm before evaluation
+(setq org-confirm-babel-evaluate nil)
+
+;; Do not evaluate code blocks when exporting.
+(setq org-export-babel-evaluate nil)
+
+;; Show images when opening a file.
+(setq org-startup-with-inline-images t)
+
+;; Show images after evaluating code blocks.
+;;(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* Mathematica
+#+BEGIN_SRC emacs-lisp
+  (use-package wolfram-mode
+    :ensure t
+    :config
+    (setq wolfram-path "~/.Mathematica/Applications")
+    (key-binding (wolfram-mode-map) (kbd "C-c C-c") 'wolfram-send-last-mathexp))
+#+END_SRC
+
+#+RESULTS:
+: t
+* ESS
+#+BEGIN_SRC emacs-lisp
+  (use-package ess
+    :ensure t)
+#+END_SRC
+* org-babel
+#+BEGIN_SRC emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((R . t)
+     (emacs-lisp . t)
+     (python . t)))
+
+(setq org-image-actual-width '(500))
+#+END_SRC
+
+#+RESULTS:
+| 500 |
+* daemon cursor color
+#+BEGIN_SRC emacs-lisp
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions
+                (lambda (frame)
+                  (with-selected-frame frame
+                    (load-theme 'zenburn t))))
+    (load-theme 'zenburn t))
+#+END_SRC

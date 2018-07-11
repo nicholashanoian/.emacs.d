@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
 		beginning-of-visual-line
+		c-electric-semi&comma
 		end-of-visual-line
 		eval-and-replace
 		eval-last-sexp
@@ -22,7 +23,10 @@
 
 (setq mc/cmds-to-run-once
       '(
+		ace-window
+		handle-select-window
 		helm-M-x
+		ignore
 		mouse-set-region
 		multiple-cursors-hydra/body
 		multiple-cursors-hydra/ignore

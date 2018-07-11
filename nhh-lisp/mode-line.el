@@ -184,7 +184,11 @@
 						:foreground zenburn-blue-5)
 	(set-face-attribute 'spaceline-unmodified nil
 						:background zenburn-green-1
-						:foreground zenburn-green+4)))
+						:foreground zenburn-green+4)
+	(set-face-attribute 'org-latex-and-related nil
+						:foreground zenburn-green+2)
+	(set-face-attribute 'widget-field nil
+						:foreground zenburn-bg)))
 
 
 
