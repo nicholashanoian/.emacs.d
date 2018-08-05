@@ -89,23 +89,6 @@
 
 #+RESULTS:
 : toggle-window-split
-
-*** capitalize words
-#+BEGIN_SRC emacs-lisp
-(setq looking-back-limit 300)
-(defadvice upcase-word (before upcase-word-advice activate)
-  (unless (looking-back "\\b" looking-back-limit)
-    (backward-word)))
-
-(defadvice downcase-word (before downcase-word-advice activate)
-  (unless (looking-back "\\b" looking-back-limit)
-    (backward-word)))
-
-(defadvice capitalize-word (before capitalize-word-advice activate)
-  (unless (looking-back "\\b" looking-back-limit)
-    (backward-word)))
-#+END_SRC
-
 *** load-directory
 #+BEGIN_SRC emacs-lisp
   (defun load-directory (dir)
@@ -522,6 +505,16 @@ Expand the marked region in semantic increments (negative prefix to reduce regio
 	(global-set-key (kbd "C-=") 'er/expand-region))
 #+END_SRC
 
+** Fix word
+#+BEGIN_SRC emacs-lisp
+  (use-package fix-word
+    :ensure t
+    :config
+    (global-set-key (kbd "M-u") #'fix-word-upcase)
+    (global-set-key (kbd "M-l") #'fix-word-downcase)
+    (global-set-key (kbd "M-c") #'fix-word-capitalize)
+    )
+#+END_SRC
 ** Flycheck
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
