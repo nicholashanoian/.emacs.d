@@ -1277,8 +1277,6 @@ To visualize undo history. =C-x u=
   (setq org-fast-tag-selection-single-key 1)
 #+END_SRC
 
-#+RESULTS:
-: 1
 
 *** org-babel
 #+BEGIN_SRC emacs-lisp
@@ -1301,20 +1299,122 @@ To visualize undo history. =C-x u=
 #+END_SRC
 
 *** org capture
+testing
 #+BEGIN_SRC emacs-lisp
+    ;;; Package --- summary: asdf
+    ;;; Commentary:
+    ;;; Code:
 
-  (setq org-agenda-files (list "~/Dropbox/org/gcal.org"
-                               "~/Dropbox/org/agenda.org"))
+
+  ;; (setq org-agenda-files (list "~/Dropbox/org/gcal.org"
+  ;;                              "~/Dropbox/org/agenda.org"))
+
+  (require 'org-capture)
+
+  ;; (defconst nhh-org-directory)
+
+  (setq nhh-org-directory (file-name-as-directory "~/Dropbox/org/"))
+  (setq org-agenda-files (list nhh-org-directory))
+
+
+
+  (defun nhh-org-format-list (prefix template list)
+    "Add PREFIX and TEMPLATE to LIST."
+    (mapcar (lambda (elem)  (append (cons (concat prefix (car elem)) (cdr elem))  (list template))) list)
+    )
+
+  (nhh-org-format-list "h" "* TODO %?" classes)
+
+  (append '(1 2 3) (list 4))
+
+  (car '((lion tiger cheetah)
+         (gazelle antelope zebra)
+         (whale dolphin seal)))
+
+  (list (values-list '(1 2)) '(3 4))
+
+  (defun nhh-org-build-individual-template (letter title file template)
+    "Create individual org capture template.
+    LETTER is the keybinding,
+    TITLE is the title of the template,
+    FILE is the file where the note is captured,
+    and TEMPLATE is the org capture template"
+    (list letter title 'entry `(file ,(concat nhh-org-directory file)) template)
+    )
+
+
+  ;; "* TODO %?"
+
+  (defun nhh-org-build-template-group (prefix template list)
+    "Builds template group with PREFIX, TEMPLATE, and LIST of letters, titles, and files."
+    (let ((formatted-list (nhh-org-format-list prefix template list)))
+      (mapcar (lambda (elem) (apply #'nhh-org-build-individual-template elem)) formatted-list))
+    )
+
+
+
+  ;; (defconst classes)
+  (setq classes '(("a" "algorithms" "algorithms.org") ("g" "graph" "graph.org") ("h" "hcol" "hcol.org")))
 
   (setq org-capture-templates
-        '(("a" "Appointment" entry (file  "~/Dropbox/org/gcal.org" )
+        (append
+         '(("h" "Homework"))
+         (nhh-org-build-template-group "h" "* TODO %?" classes)
+         `(
+           ("t" "To Do" entry (file ,(concat nhh-org-directory "in.org"))
+            "* TODO %?" :prepend t)
+           )
+         )
+        )
+
+
+
+  ;; (mapcar (lambda (class) (apply #'nhh-org-build-individual-template  class)) (nhh-make-homework-templates "h" classes))
+
+  ;; (setq org-capture-templates
+  ;; 	  `(,(mapcar (lambda (class) (apply #'nhh-org-build-individual-template  class)) (nhh-make-homework-templates "h" classes))
+
+
+  ;; 		)
+  ;; 	  )
+
+
+
+
+
+  ;; (nhh-make-homework-templates "h" classes)
+
+
+  (cons '(1 2) '((3) (4)))
+  (append '(1 2) '(3 4))
+
+
+
+
+
+  ;; (nhh-org-build-individual-template '("t" "Test" "todo.org"))
+
+
+  ;; (setq org-capture-templates
+  ;;       `(,(mapcar (lambda (class) (apply #'nhh-org-build-individual-template  class)) classes)
+  ;;         ("l" "lone" entry (file "~/Dropbox/org/lone.org") "asdf")
+
+
+  ;;         ))
+
+
+
+
+  (setq org-capture-templates
+        '(("h" "homework")
+
+          ("ha" "Appointment" entry (file  "~/Dropbox/org/gcal.org" )
            "* %?\nSCHEDULED: %^T")
-          ("l" "Link" entry (file+headline "~/Dropbox/org/links.org" "Links")
+          ("hl" "Link" entry (file+headline "~/Dropbox/org/links.org" "Links")
            "* %? %^L %^g \n%T" :prepend t)
-          ("b" "Blog idea" entry (file+headline "~/Dropbox/org/i.org" "Blog Topics:")
+          ("hb" "Blog idea" entry (file+headline "~/Dropbox/org/i.org" "Blog Topics:")
            "* %?\n%T" :prepend t)
-          ("t" "To Do Item" entry (file+headline "~/Dropbox/org/i.org" "To Do")
-           "* TODO %?\n%u" :prepend t)
+
           ("n" "Note" entry (file+headline "~/Dropbox/org/i.org" "Note space")
            "* %?\n%u" :prepend t)
           ("j" "Journal" entry (file+datetree "~/Dropbox/journal.org")
@@ -1356,8 +1456,10 @@ To visualize undo history. =C-x u=
 
 ** ESS
 #+BEGIN_SRC emacs-lisp
-  (use-package ess
-    :ensure t)
+	(use-package ess
+	  ;; :ensure t
+:disabled
+  )
 #+END_SRC
 ** Gradle
 #+BEGIN_SRC emacs-lisp
@@ -1487,12 +1589,14 @@ To visualize undo history. =C-x u=
 ** Sage
 #+BEGIN_SRC emacs-lisp
 (use-package sage-shell-mode
-:ensure t
+:disabled
+;;:ensure t
 :config
 (sage-shell:define-alias))
 
 (use-package ob-sagemath
-:ensure t
+:disabled
+;;:ensure t
 :config
 ;; Ob-sagemath supports only evaluating with a session.
 (setq org-babel-default-header-args:sage '((:session . t)
