@@ -56,6 +56,7 @@ _m l_: Material L.       _m d_ Material D.
 _l_: Leuven              _z_: Zenburn
 _t d_: Tomorrow Day      _t n_: Tomorrow Night
 ^ ^                      _t e_: Tomorrow Eighties
+^^                       _d_: Dracula
 "
   ("s d" (load-theme 'solarized-dark  t))
   ("s l" (load-theme 'solarized-light t))
@@ -66,9 +67,10 @@ _t d_: Tomorrow Day      _t n_: Tomorrow Night
   ("t d" (load-theme 'sanityinc-tomorrow-day      t))
   ("t n" (load-theme 'sanityinc-tomorrow-night    t))
   ("t e" (load-theme 'sanityinc-tomorrow-eighties t))
+  ("d" (load-theme 'dracula t))
   ("n" (progn (gh/disable-all-themes)(powerline-reset)))
   ("RET" nil "done" :color blue)
   ("C-g" nil "done" :color blue)
   ("q" nil "done" :color blue))
 
-(bind-keys ("C-c w t"  . gh/themes-hydra/body))
+(bind-keys ("C-c t"  . gh/themes-hydra/body))

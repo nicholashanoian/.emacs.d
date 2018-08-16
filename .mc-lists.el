@@ -8,6 +8,7 @@
 		end-of-visual-line
 		eval-and-replace
 		eval-last-sexp
+		fix-word-capitalize
 		hungry-delete-backward
 		hungry-delete-forward
 		indent-for-tab-command

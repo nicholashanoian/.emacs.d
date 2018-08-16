@@ -97,6 +97,47 @@
                    ))
       (mapc load-it (directory-files dir nil "\\.el$"))))
 #+END_SRC
+*** dired hidden files
+#+BEGIN_SRC emacs-lisp
+(require 'dired)
+
+;;;###autoload
+(define-minor-mode dired-hide-dotfiles-mode
+  "Toggle `dired-hide-dotfiles-mode'"
+  :init-value nil
+  :lighter " !."
+  :group 'dired
+  (if dired-hide-dotfiles-mode
+      (dired-hide-dotfiles--hide)
+    (revert-buffer)))
+
+;;;###autoload
+(defun dired-hide-dotfiles--hide ()
+  "Hide all dot-files in the current `dired' buffer."
+  (when dired-hide-dotfiles-mode
+    (dired-mark-files-regexp "^\\.")
+    (dired-do-kill-lines)))
+
+;;;###autoload
+(add-hook 'dired-after-readin-hook 'dired-hide-dotfiles--hide)
+#+END_SRC
+*** open in external program
+#+BEGIN_SRC emacs-lisp
+(defun xdg-open (filename)
+  (interactive "fFilename: ")
+  (let ((process-connection-type))
+    (start-process "" nil "xdg-open" (expand-file-name filename))))
+
+(defun find-file-auto (orig-fun &rest args)
+  (let ((filename (car args)))
+    (if (cl-find-if
+         (lambda (regexp) (string-match regexp filename))
+         '("\\.pdf\\'" "\\.jpg?\\'" "\\.png?\\'"))
+        (xdg-open filename)
+      (apply orig-fun args))))
+
+(advice-add 'find-file :around 'find-file-auto)
+#+END_SRC
 * General
 ** Clean feel
 #+BEGIN_SRC emacs-lisp
@@ -116,7 +157,7 @@
                       :height 120
                       :weight 'normal
                       :width 'normal)
-                      
+
   ;; no scroll bar
   (scroll-bar-mode 0)
 
@@ -130,7 +171,7 @@
 
   (blink-cursor-mode 0)
 
-
+  (setq sentence-end-double-space nil)
 #+END_SRC
 
 ** Daemon cursor color
@@ -171,9 +212,8 @@
 - =M-k= copy current line
 #+BEGIN_SRC emacs-lisp
 
-  ;;open config
-  (define-key global-map (kbd "\e\ec")  (lambda () (interactive) (find-file "~/.emacs.d/myinit.org")))
-
+    ;;open config
+    (define-key global-map (kbd "\e\ec")  (lambda () (interactive) (find-file "~/.emacs.d/myinit.org")))
 #+END_SRC
 
 ** Puts rc files in conf-mode
@@ -251,17 +291,20 @@
 ** Themes
 #+BEGIN_SRC emacs-lisp
   (use-package color-theme-sanityinc-tomorrow
-	:ensure t
-	:defer t)
+    :ensure t
+    :defer t)
   (use-package solarized-theme
-	:ensure t
-	:defer t)
+    :ensure t
+    :defer t)
   (use-package zenburn-theme
-	:ensure t
-	:defer t)
+    :ensure t
+    :defer t)
   (use-package material-theme
-	:ensure t
-	:defer t)
+    :ensure t
+    :defer t)
+  (use-package dracula-theme
+    :ensure t
+    :defer t)
   #+END_SRC
 
 #+RESULTS:
@@ -442,24 +485,24 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
      )
     )
 #+END_SRC
-
-** Dictionary
+** captain
 #+BEGIN_SRC emacs-lisp
-  (use-package adaptive-wrap
-	:ensure t)
-  (use-package wordnut
-	:ensure t
-	:bind (("C-c d" . wordnut-lookup-current-word)
-		   ("C-c D" . wordnut-search))
-	)
+  (use-package captain
+    :ensure t
+    :config
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (setq captain-predicate (lambda () (nth 8 (syntax-ppss (point)))))))
+    (add-hook 'text-mode-hook
+              (lambda ()
+                (setq captain-predicate (lambda () t))))
+    (add-hook
+     'org-mode-hook
+     (lambda ()
+       (captain-mode)
+       (setq captain-predicate
+             (lambda () (not (org-in-src-block-p)))))))
 #+END_SRC
-
-** dired
-#+BEGIN_SRC emacs-lisp
-  (define-key dired-mode-map (kbd "l") 'dired-up-directory)
-  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
-#+END_SRC
-
 ** company
 #+BEGIN_SRC emacs-lisp
   (use-package company
@@ -486,6 +529,91 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
     )
 #+END_SRC
 
+** Dictionary
+#+BEGIN_SRC emacs-lisp
+  (use-package adaptive-wrap
+	:ensure t)
+  (use-package wordnut
+	:ensure t
+	:bind (("C-c d" . wordnut-lookup-current-word)
+		   ("C-c D" . wordnut-search))
+	)
+#+END_SRC
+
+** dired
+#+BEGIN_SRC emacs-lisp
+    (require 'dired)
+    (add-hook 'dired-mode-hook (lambda () (progn
+                                            ;; (dired-omit-mode)
+                                            (dired-hide-details-mode)
+                                            (dired-hide-dotfiles-mode)
+                                            )))
+
+    (define-key dired-mode-map (kbd "l") 'dired-up-directory)
+    (define-key dired-mode-map (kbd "b") 'dired-up-directory)
+    (define-key dired-mode-map (kbd "<left>") 'dired-up-directory)
+    (define-key dired-mode-map (kbd "<right>") 'dired-find-alternate-file)
+
+    (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+    (define-key global-map (kbd "C-x d") 'dired-jump)
+    (define-key dired-mode-map (kbd "h") 'dired-hide-dotfiles-mode)
+
+  (define-key dired-mode-map (kbd "f") 'helm-find-files)
+  (define-key dired-mode-map (kbd "/") 'helm-swoop-without-pre-input)
+
+
+#+END_SRC
+
+** dired extras
+#+BEGIN_SRC emacs-lisp
+  (require 'dired)
+
+  (defun joseph-kill-all-other-dired-buffers ( &optional current-buf)
+    "kill all dired-buffers and diredp-w32-drivers-mode(w32 use this mode )
+    except current-buf ,if current-buf is nil then kill all"
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when (and (not (eq current-buf buf))
+                   (or  (eq 'dired-mode  major-mode)
+                        (eq 'diredp-w32-drives-mode major-mode)))
+          (kill-buffer buf)))))
+
+  (defadvice dired-find-file (around dired-find-file-single-buffer activate)
+    "Replace current buffer if file is a directory."
+    (interactive)
+    (let ((orig (current-buffer))
+          (filename (dired-get-file-for-visit)))
+      ad-do-it
+      (when (and (file-directory-p filename)
+                 (not (eq (current-buffer) orig)))
+        (joseph-kill-all-other-dired-buffers (current-buffer)))))
+
+  (defadvice dired-up-directory (around dired-up-directory-single-buffer activate)
+    "Replace current buffer if file is a directory."
+    (interactive)
+    (let ((orig (current-buffer)))
+      ad-do-it
+      (joseph-kill-all-other-dired-buffers (current-buffer))))
+
+  (defadvice dired (before dired-single-buffer activate)
+    "Replace current buffer if file is a directory."
+    (joseph-kill-all-other-dired-buffers)
+    )
+  ;;;###autoload
+  (defun dired-mouse-find-alternate-file (event)
+    "In dired, visit the file or directory you click on instead of the dired buffer."
+    (interactive "e")
+    (let (file)
+      (save-excursion
+        (with-current-buffer (window-buffer (posn-window (event-end event)))
+          (save-excursion
+            (goto-char (posn-point (event-end event)))
+            (setq file (dired-get-filename nil t)))))
+      (select-window (posn-window (event-end event)))
+      (find-alternate-file (file-name-sans-versions file t))))
+
+  (define-key dired-mode-map [mouse-2] 'dired-mouse-find-alternate-file)
+#+END_SRC
 ** exec-path-from-shell
 Ensures environment variables inside emacs like the saem as in the user's shell
 #+BEGIN_SRC emacs-lisp
@@ -1166,7 +1294,8 @@ To visualize undo history. =C-x u=
           )
     (setq org-latex-caption-above nil)
     :hook ((org-mode . company-mode)
-           (org-mode . org-indent-mode))
+           (org-mode . org-indent-mode)
+           (org-mode . flyspell-mode))
     )
 
   (use-package org-bullets
@@ -1204,7 +1333,6 @@ To visualize undo history. =C-x u=
 	 (prefix-all-lines "#+HTML_HEAD_EXTRA: " body)
 	 "\n#+HTML_HEAD_EXTRA: \\)</div>\n"))
 #+END_SRC
-
 
 *** Don't ask to evaluate latex-macros or latex src blocks
 #+BEGIN_SRC emacs-lisp
@@ -1521,9 +1649,4 @@ To visualize undo history. =C-x u=
     (progn
       (setq web-mode-engines-alist
             '(("\\.jinja\\'"  . "django")))))
-#+END_SRC
-
-
-
-
-
+#+END_SRC 
