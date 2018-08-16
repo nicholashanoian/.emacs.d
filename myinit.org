@@ -1420,39 +1420,17 @@ To visualize undo history. =C-x u=
 #+END_SRC
 
 *** org capture
-testing
 #+BEGIN_SRC emacs-lisp
-    ;;; Package --- summary: asdf
-    ;;; Commentary:
-    ;;; Code:
-
-
-  ;; (setq org-agenda-files (list "~/Dropbox/org/gcal.org"
-  ;;                              "~/Dropbox/org/agenda.org"))
-
   (require 'org-capture)
 
-  ;; (defconst nhh-org-directory)
-
   (setq nhh-org-directory (file-name-as-directory "~/Dropbox/org/"))
+(message "here")
   (setq org-agenda-files (list nhh-org-directory))
-
-
 
   (defun nhh-org-format-list (prefix template list)
     "Add PREFIX and TEMPLATE to LIST."
     (mapcar (lambda (elem)  (append (cons (concat prefix (car elem)) (cdr elem))  (list template))) list)
     )
-
-  (nhh-org-format-list "h" "* TODO %?" classes)
-
-  (append '(1 2 3) (list 4))
-
-  (car '((lion tiger cheetah)
-         (gazelle antelope zebra)
-         (whale dolphin seal)))
-
-  (list (values-list '(1 2)) '(3 4))
 
   (defun nhh-org-build-individual-template (letter title file template)
     "Create individual org capture template.
@@ -1463,18 +1441,12 @@ testing
     (list letter title 'entry `(file ,(concat nhh-org-directory file)) template)
     )
 
-
-  ;; "* TODO %?"
-
   (defun nhh-org-build-template-group (prefix template list)
     "Builds template group with PREFIX, TEMPLATE, and LIST of letters, titles, and files."
     (let ((formatted-list (nhh-org-format-list prefix template list)))
       (mapcar (lambda (elem) (apply #'nhh-org-build-individual-template elem)) formatted-list))
     )
 
-
-
-  ;; (defconst classes)
   (setq classes '(("a" "algorithms" "algorithms.org") ("g" "graph" "graph.org") ("h" "hcol" "hcol.org")))
 
   (setq org-capture-templates
@@ -1488,8 +1460,14 @@ testing
          )
         )
 
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c c") 'org-capture)
 
 
+
+#+END_SRC
+*** org capture testing
+#+BEGIN_SRC emacs-lisp :tangle no
   ;; (mapcar (lambda (class) (apply #'nhh-org-build-individual-template  class)) (nhh-make-homework-templates "h" classes))
 
   ;; (setq org-capture-templates
@@ -1509,8 +1487,15 @@ testing
   (cons '(1 2) '((3) (4)))
   (append '(1 2) '(3 4))
 
+  (append '(1 2 3) (list 4))
 
+  (car '((lion tiger cheetah)
+         (gazelle antelope zebra)
+         (whale dolphin seal)))
 
+  (list (values-list '(1 2)) '(3 4))
+
+  (nhh-org-format-list "h" "* TODO %?" classes)
 
 
   ;; (nhh-org-build-individual-template '("t" "Test" "todo.org"))
@@ -1541,8 +1526,6 @@ testing
           ("j" "Journal" entry (file+datetree "~/Dropbox/journal.org")
            "* %?\nEntered on %U\n  %i\n  %a")
           ))
-  (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-c c") 'org-capture)
 #+END_SRC
 
 *** org alert
