@@ -5,6 +5,7 @@
       '(
 		beginning-of-visual-line
 		c-electric-semi&comma
+		comment-line
 		end-of-visual-line
 		eval-and-replace
 		eval-last-sexp

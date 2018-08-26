@@ -154,7 +154,7 @@
   ;; set default font
   (set-face-attribute 'default nil
                       :family "DejaVu Sans Mono"
-                      :height 120
+                      :height 118
                       :weight 'normal
                       :width 'normal)
 
@@ -319,20 +319,6 @@
       (setq ispell-program-name "C:/Program Files (x86)/Aspell/bin/aspell.exe")
     (cd "C:/Users/opernhh/Documents"))
   )
-#+END_SRC
-** NHH Lisp
-#+BEGIN_SRC emacs-lisp
-  
-  (load-directory "~/.emacs.d/nhh-lisp")
-
-  (if (string-equal system-name "nick-laptop")
-      (setq powerline-height 40)
-    (string-equal system-name "nick-pc")
-    (setq powerline-height 20)
-    (set-face-attribute 'default nil :height 120)
-    )
-
-
 #+END_SRC
 
 ** Powerline
@@ -1045,6 +1031,12 @@ To temporarily
     :ensure t)
 #+END_SRC
 
+** tramp
+#+BEGIN_SRC emacs-lisp
+  (setq tramp-terminal-type "dumb"
+        tramp-default-method "ssh")
+
+#+END_SRC
 ** Undo Tree
 To visualize undo history. =C-x u=
 #+BEGIN_SRC emacs-lisp
@@ -1304,6 +1296,9 @@ To visualize undo history. =C-x u=
 
   (setq org-hide-leading-stars t)
 
+;; ask to archive all complete subtrees
+  (define-key org-mode-map (kbd "C-c C-x C-a")
+  (lambda () (interactive) (org-archive-subtree '(4))))
 #+END_SRC
 *** refile
 #+BEGIN_SRC emacs-lisp
@@ -1396,6 +1391,23 @@ To visualize undo history. =C-x u=
 *** agenda
 #+BEGIN_SRC emacs-lisp
   (setq org-fast-tag-selection-single-key 1)
+  (setq org-agenda-timegrid-use-ampm t)
+
+
+  ;; (setq org-agenda-custom-commands
+  ;;       '(("g" "General Agenda"
+  ;;          ((agenda "")
+  ;;           (todo "")
+  ;;           (todo )
+  ;;           ;; (tags "garden")
+  ;;           ))
+  ;;         ;; ("o" "Agenda and Office-related tasks"
+  ;;         ;; ((agenda "")
+  ;;         ;; (tags-todo "work")
+  ;;         ;; (tags "office")))
+
+  ;;         ))
+
 #+END_SRC
 
 
@@ -1416,7 +1428,33 @@ To visualize undo history. =C-x u=
     :ensure t
     :config
     (org-super-agenda-mode)
+
+
+  ;;   (setq org-agenda-custom-commands
+  ;;         `(
+  ;;           ("s" "Super Agenda" 
+  ;;            (let ((org-super-agenda-groups
+  ;;                     '((:auto-category t)))
+  ;;                    (org-agenda-span 1))
+  ;;                (org-agenda-list))
+  ;;            )
+  ;;           ))
+
+
+
+
     )
+
+
+  ;; ;; (setq
+  ;; org-agenda-custom-commands
+  ;; ;
+                                          ;       '(("c" "Desk Work" tags-todo "computer" ;; (1) (2) (3) (4)
+  ;;          ((org-agenda-files '("~/org/widgets.org" "~/org/clients.org")) ;; (5)
+  ;;           (org-agenda-sorting-strategy '(priority-up effort-down))) ;; (5) cont.
+  ;;          ("~/computer.html")) ;; (6)
+  ;;         ;; ...other commands here
+  ;;         ))
 #+END_SRC
 
 *** org capture
@@ -1547,6 +1585,11 @@ To visualize undo history. =C-x u=
     (org-cycle))
     (define-key org-mode-map (kbd "C-<tab>") 'nhh-org-collapse-current)
 #+END_SRC
+*** htmlize
+#+BEGIN_SRC emacs-lisp
+(use-package htmlize
+:ensure t)
+#+END_SRC
 * Programming
 ** Bash completion
 
@@ -1656,7 +1699,11 @@ To visualize undo history. =C-x u=
   ;;   (flycheck-mode))
   ;; (add-hook 'java-mode-hook 'tkj-java-meghanda-mode-hook)
 #+END_SRC
-
+** lua
+#+BEGIN_SRC emacs-lisp
+  (use-package lua-mode
+    :ensure t)
+#+END_SRC
 ** python
 #+BEGIN_SRC emacs-lisp
   ;; (use-package anaconda-mode
@@ -1727,6 +1774,7 @@ To visualize undo history. =C-x u=
 ** web-mode
 #+BEGIN_SRC emacs-lisp
   (use-package web-mode
+  :ensure t
     :mode (("\\.html\\'" . web-mode)
            ("\\.html\\.erb\\'" . web-mode)
            ("\\.mustache\\'" . web-mode)
@@ -1737,3 +1785,18 @@ To visualize undo history. =C-x u=
       (setq web-mode-engines-alist
             '(("\\.jinja\\'"  . "django")))))
 #+END_SRC 
+* Last
+** NHH Lisp
+#+BEGIN_SRC emacs-lisp
+  
+  (load-directory "~/.emacs.d/nhh-lisp")
+
+  (if (string-equal system-name "nick-laptop")
+      (setq powerline-height 40)
+    (string-equal system-name "nick-pc")
+    (setq powerline-height 20)
+    (set-face-attribute 'default nil :height 120)
+    )
+
+
+#+END_SRC
