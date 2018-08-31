@@ -508,9 +508,9 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
     ;;   (add-to-list 'company-backends 'company-jedi))
     ;; (add-hook 'python-mode-hook 'my/python-mode-hook)
     :custom
-    (company-idle-delay 0.25)
+    (company-idle-delay 0.5)
     (company-require-match nil)
-    (company-minimum-prefix-length 2)
+    (company-minimum-prefix-length 3)
     :diminish "Company"
     )
 #+END_SRC
@@ -1600,7 +1600,12 @@ To visualize undo history. =C-x u=
     (bash-completion-setup)
     )
 #+END_SRC
-
+** c++
+- Needs cmake and clang
+#+BEGIN_SRC emacs-lisp
+  (use-package irony
+    :ensure t)
+#+END_SRC
 ** ESS
 #+BEGIN_SRC emacs-lisp
 	(use-package ess
@@ -1774,17 +1779,64 @@ To visualize undo history. =C-x u=
 ** web-mode
 #+BEGIN_SRC emacs-lisp
   (use-package web-mode
-  :ensure t
+    :ensure t
     :mode (("\\.html\\'" . web-mode)
            ("\\.html\\.erb\\'" . web-mode)
            ("\\.mustache\\'" . web-mode)
            ("\\.jinja\\'" . web-mode)
-           ("\\.php\\'" . web-mode))
+           ;; ("\\.php\\'" . web-mode)
+           )
     :config
+
+    (defun my-setup-php ()
+      ;; enable web mode
+      (web-mode)
+
+      ;; make these variables local
+      (make-local-variable 'web-mode-code-indent-offset)
+      (make-local-variable 'web-mode-markup-indent-offset)
+      (make-local-variable 'web-mode-css-indent-offset)
+
+      ;; set indentation, can set different indentation level for different code type
+      (setq web-mode-code-indent-offset 4)
+      (setq web-mode-css-indent-offset 2)
+      (setq web-mode-markup-indent-offset 2)
+      (flycheck-select-checker 'my-php)
+      (flycheck-mode t)
+      )
+
+    (add-to-list 'auto-mode-alist '("\\.php$" . my-setup-php))
+    (flycheck-define-checker my-php
+      "A PHP syntax checker using the PHP command line interpreter.
+
+    See URL `http://php.net/manual/en/features.commandline.php'."
+      :command ("php" "-l" "-d" "error_reporting=E_ALL" "-d" "display_errors=1"
+                "-d" "log_errors=0" source)
+      :error-patterns
+      ((error line-start (or "Parse" "Fatal" "syntax") " error" (any ":" ",") " "
+              (message) " in " (file-name) " on line " line line-end))
+      :modes (php-mode php+-mode web-mode))
+  
+
+
     (progn
       (setq web-mode-engines-alist
             '(("\\.jinja\\'"  . "django")))))
+  (use-package company-php
+  :ensure t)
+  (use-package ac-php
+  :ensure t
+  :config
+  (add-hook 'web-mode-hook
+            '(lambda ()
+               (require 'company-php)
+               (company-mode t)
+               (ac-php-core-eldoc-setup) ;; enable eldoc
+               (make-local-variable 'company-backends)
+               (add-to-list 'company-backends 'company-ac-php-backend))))
 #+END_SRC 
+
+
 * Last
 ** NHH Lisp
 #+BEGIN_SRC emacs-lisp
