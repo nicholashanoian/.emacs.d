@@ -1835,10 +1835,13 @@ To visualize undo history. =C-x u=
                (add-to-list 'company-backends 'company-ac-php-backend))))
 #+END_SRC 
 
-** SQLi
+** edbi
 #+BEGIN_SRC emacs-lisp
-(use-package edbi
-    :ensure t)
+  (use-package edbi
+    :ensure t
+    :config
+    (add-hook 'edbi:sql-mode-hook #'company-mode)
+    )
 #+END_SRC
 * Last
 ** NHH Lisp
