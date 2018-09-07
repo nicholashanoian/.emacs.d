@@ -803,6 +803,10 @@ Deletes all the whitespace when you hit backspace or delete
                    ("programming" (or
                                    (mode . python-mode)
                                    (mode . c++-mode)))
+                   ("edbi" (or
+                            (name . "*edbi*")
+                            (name . "*epc*")
+                            ))
                    ("emacs" (or
                              (name . "^\\*scratch\\*$")
                              (name . "^\\*Messages\\*$")))
