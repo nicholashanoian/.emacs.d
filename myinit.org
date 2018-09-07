@@ -1836,6 +1836,16 @@ To visualize undo history. =C-x u=
 #+END_SRC 
 
 ** edbi
+You need to install some stuff:
+- =mysql= package on machine
+- Perl packages:
+#+BEGIN_SRC sh
+sudo cpan RPC::EPC::Service DBI DBD::SQLite DBD::Pg DBD::mysql
+#+END_SRC
+
+To connect: =M-x edbi:open-db-viewer=
+Data source: =dbi:mysql:database=<dbname>:host=<url>=
+
 #+BEGIN_SRC emacs-lisp
   (use-package edbi
     :ensure t
