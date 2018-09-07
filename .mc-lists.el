@@ -4,8 +4,12 @@
 (setq mc/cmds-to-run-for-all
       '(
 		beginning-of-visual-line
+		c-electric-colon
+		c-electric-lt-gt
+		c-electric-paren
 		c-electric-semi&comma
 		comment-line
+		electric-pair-delete-pair
 		end-of-visual-line
 		eval-and-replace
 		eval-last-sexp

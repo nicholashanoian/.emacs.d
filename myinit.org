@@ -1608,10 +1608,9 @@ To visualize undo history. =C-x u=
 #+END_SRC
 ** ESS
 #+BEGIN_SRC emacs-lisp
-	(use-package ess
-	  ;; :ensure t
-:disabled
-  )
+  (use-package ess
+    :ensure t
+    )
 #+END_SRC
 ** Gradle
 #+BEGIN_SRC emacs-lisp
@@ -1836,7 +1835,11 @@ To visualize undo history. =C-x u=
                (add-to-list 'company-backends 'company-ac-php-backend))))
 #+END_SRC 
 
-
+** SQLi
+#+BEGIN_SRC emacs-lisp
+(use-package edbi
+    :ensure t)
+#+END_SRC
 * Last
 ** NHH Lisp
 #+BEGIN_SRC emacs-lisp
