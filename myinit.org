@@ -1096,13 +1096,14 @@ To visualize undo history. =C-x u=
     (setq org-latex-listings 'minted)
   (setq org-src-fontify-natively t)
 
-  ;; (setq org-latex-pdf-process
-  ;;       '("latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -pdf -f %f"))
   (setq org-latex-pdf-process
-        '("latexmk -pdf -f %f"))
+         '("latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -pdf -f %f -c"))
+  ;; (setq org-latex-pdf-process
+  ;;       '("latexmk -pdf -f %f"))
 
 
-  ;; (defvar texfrag-submap
+  ;; ;
+                                          ; (defvar texfrag-submap
   ;;  '(let ((map (make-sparse-keymap)))
   ;;   (define-key map "\C-p" #'preview-at-point)
   ;;   (define-key map "\C-r" #'preview-region)
