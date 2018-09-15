@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: org-local-variables
-# key: lv
+# key: <lv
 # --
 * COMMENT Local Variables
 # Local Variables:

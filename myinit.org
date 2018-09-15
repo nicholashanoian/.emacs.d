@@ -1077,27 +1077,41 @@ To visualize undo history. =C-x u=
 ** latex
 *** latex org export
 #+BEGIN_SRC emacs-lisp
-      ;; My custom LaTeX class for Org-mode export. require is needed for it to work.
-      (setf org-highlight-latex-and-related '(latex))
-      (setq org-src-fontify-natively t)
-      (setq org-latex-with-hyperref nil)
-      (setq org-latex-title-command "\\maketitle")
-      (setq org-latex-toc-command "")
-      (setq org-export-with-section-numbers nil)
-      (setq user-full-name "Nicholas Hanoian")
-      (setq org-latex-create-formula-image-program 'imagemagick)
-      (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-      (setq org-latex-default-class "homework")
-      (setq preview-button-1 '[mouse-1])
-      (setq font-latex-fontify-script nil)
-      (setq font-latex-fontify-sectioning 'color)
+  ;; My custom LaTeX class for Org-mode export. require is needed for it to work.
+  (setf org-highlight-latex-and-related '(latex))
+  (setq org-src-fontify-natively t)
+  (setq org-latex-with-hyperref nil)
+  (setq org-latex-title-command "\\maketitle")
+  (setq org-latex-toc-command "")
+  (setq org-export-with-section-numbers nil)
+  (setq user-full-name "Nicholas Hanoian")
+  (setq org-latex-create-formula-image-program 'imagemagick)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+  (setq org-latex-default-class "homework")
+  (setq preview-button-1 '[mouse-1])
+  (setq font-latex-fontify-script nil)
+  (setq font-latex-fontify-sectioning 'color)
 
-      (setq TeX-auto-untabify 't)
-    (setq org-latex-listings 'minted)
+  (setq TeX-auto-untabify 't)
+  (setq org-latex-listings 'minted)
+  (setq org-latex-minted-options '(
+                                   ;; ("frame" "lines")
+                                   ;; ("framesep" "2mm")
+                                   ;; ("bgcolor" "bg")
+                                   ;; ("fontsize" "\\footnotesize")
+                                   ;; ("linenos" "")
+                                   ))
+
   (setq org-src-fontify-natively t)
 
+
+
   (setq org-latex-pdf-process
-         '("latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -pdf -f %f -c"))
+        '("latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -pdf -f %f"))
+
+  (defun org-tmp-pdf ()
+    (org-babel-temp-file "./figure-" ".pdf"))
+
   ;; (setq org-latex-pdf-process
   ;;       '("latexmk -pdf -f %f"))
 
@@ -1134,7 +1148,7 @@ To visualize undo history. =C-x u=
   (add-to-list 'org-latex-classes
                '("homework"
                  "\\ProvidesPackage{/home/nick/Dropbox/config/homework}
-        \\documentclass{/home/nick/Dropbox/config/homework}"
+                \\documentclass{/home/nick/Dropbox/config/homework}"
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -1290,27 +1304,28 @@ To visualize undo history. =C-x u=
 ** org-mode
 *** general org stuff
 #+BEGIN_SRC emacs-lisp :results silent
-  (use-package org
-    :ensure t
-    :config
-    (setq org-directory "~/Dropbox/org"
-          org-src-window-setup 'current-window
-          )
-    (setq org-latex-caption-above nil)
-    :hook ((org-mode . company-mode)
-           (org-mode . org-indent-mode)
-           (org-mode . flyspell-mode))
-    )
+    (use-package org
+      :ensure t
+      :config
+      (setq org-directory "~/Dropbox/org"
+            org-src-window-setup 'current-window
+            )
+      (setq org-latex-caption-above nil)
+      :hook ((org-mode . company-mode)
+             (org-mode . org-indent-mode)
+             (org-mode . flyspell-mode))
+      )
 
-  (use-package org-bullets
-    :ensure t
-    :hook (org-mode . (lambda () (org-bullets-mode 1))))
+    (use-package org-bullets
+      :ensure t
+      :hook (org-mode . (lambda () (org-bullets-mode 1))))
 
-  (setq org-hide-leading-stars t)
+  (setq org-confirm-babel-evaluate nil)
+    (setq org-hide-leading-stars t)
 
-;; ask to archive all complete subtrees
-  (define-key org-mode-map (kbd "C-c C-x C-a")
-  (lambda () (interactive) (org-archive-subtree '(4))))
+  ;; ask to archive all complete subtrees
+    (define-key org-mode-map (kbd "C-c C-x C-a")
+    (lambda () (interactive) (org-archive-subtree '(4))))
 #+END_SRC
 *** refile
 #+BEGIN_SRC emacs-lisp
@@ -1898,4 +1913,12 @@ Data source: =dbi:mysql:database=<dbname>:host=<url>=
 #+BEGIN_SRC emacs-lisp
   (custom-set-faces
    '(web-mode-html-tag-bracket-face ((t (:foreground "#DCDCCC")))))
+#+END_SRC
+
+
+* orgmk
+#+BEGIN_SRC emacs-lisp
+(use-package ox-gfm
+:ensure t)
+
 #+END_SRC
