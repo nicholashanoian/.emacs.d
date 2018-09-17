@@ -15,6 +15,7 @@
 		eval-and-replace
 		eval-last-sexp
 		fix-word-capitalize
+		fix-word-downcase
 		hungry-delete-backward
 		hungry-delete-forward
 		indent-for-tab-command

@@ -133,7 +133,8 @@
  '(reftex-plug-into-AUCTeX t)
  '(safe-local-variable-values
    (quote
-	((eval progn
+	((eval toggle-latex-export-on-save)
+	 (eval progn
 		   (toggle-latex-export-on-save)
 		   (flyspell-mode)))))
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#657b83" 0.2))
@@ -141,11 +142,7 @@
  '(term-default-bg-color "#fdf6e3")
  '(term-default-fg-color "#657b83")
  '(texfrag-header-default
-   "\\documentclass{homework}
-\\usepackage{amsmath,amsfonts}
-\\usepackage[utf8]{inputenc}
-\\usepackage[T1]{fontenc}
-\\begin{document}")
+   "\\documentclass{homework}\n\\usepackage{amsmath,amsfonts}\n\\usepackage[utf8]{inputenc}\n\\usepackage[T1]{fontenc}\n\\begin{document}")
  '(texfrag-subdir "build/texfrag")
  '(vc-annotate-background-mode nil)
  '(weechat-color-list

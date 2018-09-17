@@ -1066,7 +1066,7 @@ To visualize undo history. =C-x u=
     :ensure t
     :config
     (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-    (yas-global-mode)
+    (yas-global-mode 1)
     (diminish 'yas-minor-mode)
     )
 
@@ -1109,7 +1109,7 @@ To visualize undo history. =C-x u=
   (setq org-latex-pdf-process
         '("latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -pdf -f %f"))
 
-  (defun org-tmp-pdf ()
+  (defun tmp-pdf ()
     (org-babel-temp-file "./figure-" ".pdf"))
 
   ;; (setq org-latex-pdf-process
@@ -1164,6 +1164,7 @@ To visualize undo history. =C-x u=
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
+(setq org-export-headline-levels 4)
 
 
 #+END_SRC
@@ -1359,9 +1360,9 @@ To visualize undo history. =C-x u=
 *** Don't ask to evaluate latex-macros or latex src blocks
 #+BEGIN_SRC emacs-lisp
   (defun my-org-confirm-babel-evaluate (lang body)
-	(not (or (string= lang "latex-macros")
-			 (string= lang "latex"))))  
-  (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+    (not (or (string= lang "latex-macros")
+             (string= lang "latex"))))  
+  ;; (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 #+END_SRC
 
 *** org-mode company completion
@@ -1401,17 +1402,64 @@ To visualize undo history. =C-x u=
 
 *** toggle latex export on save
 #+BEGIN_SRC emacs-lisp
+
+
+ 
+
+  (ignore-errors
+    (require 'ansi-color)
+    (defun my-colorize-compilation-buffer ()
+      (when (eq major-mode 'compilation-mode)
+        (ansi-color-apply-on-region compilation-filter-start (point-max))))
+    (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
+
+(defun nhh-compile-finish (buffer outstr)
+  (unless (string-match "finished" outstr)
+    (switch-to-buffer-other-window buffer))
+  t)
+
+(setq compilation-finish-functions 'nhh-compile-finish)
+
+(require 'cl)
+
+(defadvice compilation-start
+  (around inhibit-display
+      (command &optional mode name-function highlight-regexp)) 
+  (if (not (string-match "^\\(find\\|grep\\)" command))
+      (flet ((display-buffer)
+         (set-window-point)
+         (goto-char)) 
+    (fset 'display-buffer 'ignore)
+    (fset 'goto-char 'ignore)
+    (fset 'set-window-point 'ignore)
+    (save-window-excursion 
+      ad-do-it))
+    ad-do-it))
+
+(ad-activate 'compilation-start)
+
+
+  (defun orgmk-latex ()
+    (interactive)
+    (let ((myfile (concat (file-name-base (buffer-file-name (buffer-base-buffer))) ".pdf")))
+
+      (compile (concat "orgmk " myfile))
+      (message (concat "Beginning compilation for " myfile))))
+
+
+
+
   (defun toggle-latex-export-on-save ()
-	"Enable or disable export LATEX when saving current buffer."
-	(interactive)
-	(when (not (eq major-mode 'org-mode))
-	  (error "Not an org-mode file!"))
-	(if (memq 'org-latex-export-to-pdf after-save-hook)
-		(progn (remove-hook 'after-save-hook 'org-latex-export-to-pdf t)
-			   (message "Disabled org latex export on save"))
-	  (add-hook 'after-save-hook 'org-latex-export-to-pdf nil t)
-	  (set-buffer-modified-p t)
-	  (message "Enabled org latex export on save")))
+    "Enable or disable export LATEX when saving current buffer."
+    (interactive)
+    (when (not (eq major-mode 'org-mode))
+      (error "Not an org-mode file!"))
+    (if (memq 'orgmk-latex after-save-hook)
+        (progn (remove-hook 'after-save-hook 'orgmk-latex t)
+               (message "Disabled org latex export on save"))
+      (add-hook 'after-save-hook 'orgmk-latex nil t)
+      ;; (set-buffer-modified-p t)
+      (message "Enabled org latex export on save")))
   (define-key org-mode-map (kbd "C-c l") 'toggle-latex-export-on-save)
 #+END_SRC
 
@@ -1437,16 +1485,110 @@ To visualize undo history. =C-x u=
 
 #+END_SRC
 
+*** graphs
+#+BEGIN_SRC emacs-lisp
+    (setq org-babel-default-header-args
+                 '((:session)
+                   (:exports . "both")
+                   (:tangle . "yes")
+                   (:results . "output replace")))
+
+  (setq org-latex-image-default-width "0.75\\textwidth")
+  (setq org-latex-tables-booktabs t)
+
+#+END_SRC
+
+*** inline image
+#+BEGIN_SRC emacs-lisp
+(setq image-file-name-extensions
+	  (quote
+	   ("png" "jpeg" "jpg" "gif" "tiff" "tif" "xbm" "xpm" "pbm" "pgm" "ppm" "pnm" "svg" "pdf" "bmp")))
+
+(setq org-image-actual-width 600)
+
+(setq org-imagemagick-display-command "convert -density 600 \"%s\" -thumbnail \"%sx%s>\" \"%s\"")
+(defun org-display-inline-images (&optional include-linked refresh beg end)
+  "Display inline images.
+Normally only links without a description part are inlined, because this
+is how it will work for export.  When INCLUDE-LINKED is set, also links
+with a description part will be inlined.  This
+can be nice for a quick
+look at those images, but it does not reflect what exported files will look
+like.
+When REFRESH is set, refresh existing images between BEG and END.
+This will create new image displays only if necessary.
+BEG and END default to the buffer boundaries."
+  (interactive "P")
+  (unless refresh
+    (org-remove-inline-images)
+    (if (fboundp 'clear-image-cache) (clear-image-cache)))
+  (save-excursion
+    (save-restriction
+      (widen)
+      (setq beg (or beg (point-min)) end (or end (point-max)))
+      (goto-char beg)
+      (let ((re (concat "\\[\\[\\(\\(file:\\)\\|\\([./~]\\)\\)\\([^]\n]+?"
+                        (substring (org-image-file-name-regexp) 0 -2)
+                        "\\)\\]" (if include-linked "" "\\]")))
+            old file ov img)
+        (while (re-search-forward re end t)
+          (setq old (get-char-property-and-overlay (match-beginning 1)
+                                                   'org-image-overlay)
+				file (expand-file-name
+                      (concat (or (match-string 3) "") (match-string 4))))
+          (when (file-exists-p file)
+            (let ((file-thumb (format "%s%s_thumb.png" (file-name-directory file) (file-name-base file))))
+              (if (file-exists-p file-thumb)
+                  (let ((thumb-time (nth 5 (file-attributes file-thumb 'string)))
+                        (file-time (nth 5 (file-attributes file 'string))))
+                    (if (time-less-p thumb-time file-time)
+						(shell-command (format org-imagemagick-display-command
+											   file org-image-actual-width org-image-actual-width file-thumb) nil nil)))
+                (shell-command (format org-imagemagick-display-command
+									   file org-image-actual-width org-image-actual-width file-thumb) nil nil))
+              (if (and (car-safe old) refresh)
+                  (image-refresh (overlay-get (cdr old) 'display))
+                (setq img (save-match-data (create-image file-thumb)))
+                (when img
+                  (setq ov (make-overlay (match-beginning 0) (match-end 0)))
+                  (overlay-put ov 'display img)
+                  (overlay-put ov 'face 'default)
+                  (overlay-put ov 'org-image-overlay t)
+                  (overlay-put ov 'modification-hooks
+                               (list 'org-display-inline-remove-overlay))
+                  (push ov org-inline-image-overlays))))))))))
+
+
+
+(defun org-display-inline-images--with-color-theme-background-color (args)
+  "Specify background color of Org-mode inline image through modify `ARGS'."
+  (let* ((file (car args))
+         (type (cadr args))
+         (data-p (caddr args))
+         (props (cdddr args)))
+    ;; get this return result style from `create-image'
+    (append (list file type data-p)
+            (list :background  "#fffeed")
+			props)))
+
+(advice-add 'create-image :filter-args
+            #'org-display-inline-images--with-color-theme-background-color)
+
+(add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+
+
+
+#+END_SRC
 
 *** org-babel
 #+BEGIN_SRC emacs-lisp
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((R . t)
-     (emacs-lisp . t)
-     (python . t)))
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((R . t)
+       (emacs-lisp . t)
+       (python . t)))
 
-(setq org-image-actual-width '(500))
+  ;; (setq org-image-actual-width '(500))
 #+END_SRC
 
 *** org super agenda
@@ -1857,6 +1999,7 @@ To visualize undo history. =C-x u=
               (message) " in " (file-name) " on line " line line-end))
       :modes (php-mode php+-mode web-mode))
 
+    ;; (define-key web-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make push")))
 
 
     (progn

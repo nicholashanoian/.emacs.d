@@ -4,5 +4,5 @@
 # --
 * COMMENT Local Variables
 # Local Variables:
-# eval: (progn ${1:(toggle-latex-export-on-save)} ${2:(flyspell-mode)})
+# eval: ${1:(toggle-latex-export-on-save)}
 # End:

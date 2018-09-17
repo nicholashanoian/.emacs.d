@@ -2,4 +2,4 @@
 # name: org-local-variables
 # key: <g
 # --
-:results graphics :file (nhh-tmp-pdf)
+:results graphics :file (tmp-pdf)
