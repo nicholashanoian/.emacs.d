@@ -1,4 +1,4 @@
-#+PROPERTY: header-args  :results output silent
+#+PROPERTY: header-args  :results output silent :exports code :eval never-export
 
 * Initial
 ** use-package
