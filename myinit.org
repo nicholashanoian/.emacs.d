@@ -1781,7 +1781,7 @@ BEG and END default to the buffer boundaries."
               :ensure t
               :config
               (define-key c++-mode-map (kbd "C-c C-c") #'compile)
-              (define-key c++-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make run")))
+              (define-key c++-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make run -C ../")))
               )
 
 
