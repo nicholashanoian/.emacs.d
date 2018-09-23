@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: org-local-variables
+# name: org-graph
 # key: <g
 # --
 :results graphics :file (tmp-pdf)

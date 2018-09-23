@@ -81,8 +81,8 @@
 
 (add-to-list 'org-latex-classes
 			 '("homework"
-			   "\\ProvidesPackage{/home/nick/Dropbox/config/homework}
-                \\documentclass{/home/nick/Dropbox/config/homework}"
+			   "\\ProvidesPackage{/home/nick/dropbox/config/homework}
+                \\documentclass{/home/nick/dropbox/config/homework}"
 			   ("\\section{%s}" . "\\section*{%s}")
 			   ("\\subsection{%s}" . "\\subsection*{%s}")
 			   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")

@@ -132,7 +132,7 @@
   (let ((filename (car args)))
     (if (cl-find-if
          (lambda (regexp) (string-match regexp filename))
-         '("\\.pdf\\'" "\\.jpg?\\'" "\\.png?\\'"))
+         '("\\.pdf\\'" "\\.jpg?\\'" "\\.png?\\'" "\\.docx\\'"))
         (xdg-open filename)
       (apply orig-fun args))))
 
@@ -1065,9 +1065,11 @@ To visualize undo history. =C-x u=
   (use-package yasnippet
     :ensure t
     :config
-    (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+    ;; (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+    (setq yas-snippet-dirs
+          '("~/.emacs.d/snippets"))
     (yas-global-mode 1)
-    (diminish 'yas-minor-mode)
+    ;; (diminish 'yas-minor-mode)
     )
 
   (use-package java-snippets
@@ -1147,8 +1149,8 @@ To visualize undo history. =C-x u=
 
   (add-to-list 'org-latex-classes
                '("homework"
-                 "\\ProvidesPackage{/home/nick/Dropbox/config/homework}
-                \\documentclass{/home/nick/Dropbox/config/homework}"
+                 "\\ProvidesPackage{/home/nick/dropbox/config/homework}
+                \\documentclass{/home/nick/dropbox/config/homework}"
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
