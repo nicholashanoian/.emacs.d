@@ -172,6 +172,13 @@
   (blink-cursor-mode 0)
 
   (setq sentence-end-double-space nil)
+
+  ;; background colored fringes
+  ;; (set-face-attribute 'fringe nil :background (face-attribute 'default :background))
+
+
+
+
 #+END_SRC
 
 ** Daemon cursor color
@@ -1060,6 +1067,40 @@ To visualize undo history. =C-x u=
     (which-key-mode))
 #+END_SRC
 
+** writeroom mode
+#+BEGIN_SRC emacs-lisp
+  (use-package writeroom-mode
+    :ensure t
+    :config
+    (setq writeroom-bottom-divider-width 0)
+    (setq writeroom-border-width 20)
+    ;; (setq writeroom-border-width 20)
+    (setq writeroom-width 90)
+    (custom-set-variables
+     (writeroom-global-effects
+      (quote
+       (writeroom-set-fullscreen writeroom-set-alpha writeroom-set-menu-bar-lines writeroom-set-tool-bar-lines writeroom-set-vertical-scroll-bars writeroom-set-bottom-divider-width writeroom-set-internal-border-width))))
+    )
+
+  (setq default-fringe-color (face-attribute 'fringe :background))
+
+  (defun my-writeroom-theme (arg)
+    "Change fringe color to background ARG."
+    (cond
+     ((= arg 1)
+      (set-face-attribute 'fringe nil :background (face-attribute 'default :background)))
+     ((= arg -1)
+      (set-face-attribute 'fringe nil :background default-fringe-color)))
+
+    )
+  (custom-set-variables
+   '(writeroom-global-effects
+     (quote
+      (writeroom-set-fullscreen writeroom-set-alpha writeroom-set-menu-bar-lines writeroom-set-tool-bar-lines writeroom-set-vertical-scroll-bars writeroom-set-bottom-divider-width writeroom-set-internal-border-width
+                                my-writeroom-theme))))
+
+  (global-set-key (kbd "C-<f11>") #'writeroom-mode)
+#+END_SRC
 ** yasnippet
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
@@ -1071,6 +1112,9 @@ To visualize undo history. =C-x u=
     (yas-global-mode 1)
     ;; (diminish 'yas-minor-mode)
     )
+
+  (use-package yasnippet-snippets
+    :ensure t)
 
   (use-package java-snippets
     :ensure t)
@@ -1778,18 +1822,26 @@ BEG and END default to the buffer boundaries."
       :ensure t)
 
   (use-package cc-mode
-              :ensure t
-              :config
-              (define-key c++-mode-map (kbd "C-c C-c") #'compile)
-              (define-key c++-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make run -C ../")))
-              )
+    :ensure t
+    :config
+    (define-key c++-mode-map (kbd "C-c C-c") #'compile)
+    (define-key c++-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make run -C ../")))
+    (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+    )
 
+  (use-package company-c-headers
+    :ensure t
+    :config
+    (add-to-list 'company-backends 'company-c-headers)
+    )
 
   (use-package auto-yasnippet
     :ensure t)
 
   (use-package function-args
     :ensure t)
+
+
 #+END_SRC
 ** ESS
 #+BEGIN_SRC emacs-lisp
