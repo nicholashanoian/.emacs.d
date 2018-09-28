@@ -176,7 +176,7 @@
   ;; background colored fringes
   ;; (set-face-attribute 'fringe nil :background (face-attribute 'default :background))
 
-
+(setq frame-title-format '("%b"   "  —  Emacs"))
 
 
 #+END_SRC
