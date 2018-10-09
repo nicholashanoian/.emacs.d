@@ -2,4 +2,4 @@
 # name: org-local-variables
 # key: <lv
 # --
-# -*- mode: org-mode; eval: (toggle-latex-export-on-save); -*-
+# -*- mode: org; eval: (toggle-latex-export-on-save); -*-
