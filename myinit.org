@@ -955,7 +955,12 @@ Show hex and rgb colors
 ** smartparens
 #+BEGIN_SRC emacs-lisp
   (use-package paredit
-    :ensure t)
+    :ensure t
+    :config
+    (global-set-key (kbd "C-<right>") #'paredit-forward-slurp-sexp)
+    (global-set-key (kbd "C-<left>") #'paredit-forward-barf-sexp)
+
+    )
 #+END_SRC
 
 ** spellcheck
