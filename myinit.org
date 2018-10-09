@@ -176,7 +176,7 @@
   ;; background colored fringes
   ;; (set-face-attribute 'fringe nil :background (face-attribute 'default :background))
 
-
+(setq frame-title-format '("%b"   "  —  Emacs"))
 
 
 #+END_SRC
@@ -1199,7 +1199,17 @@ To visualize undo history. =C-x u=
   (add-to-list 'org-latex-classes
                '("homework"
                  "\\ProvidesPackage{/home/nick/dropbox/config/homework}
-                \\documentclass{/home/nick/dropbox/config/homework}"
+                  \\documentclass{/home/nick/dropbox/config/homework}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  (add-to-list 'org-latex-classes
+               '("cheatsheet"
+                 "\\ProvidesPackage{/home/nick/dropbox/config/cheatsheet}
+                  \\documentclass{/home/nick/dropbox/config/cheatsheet}"
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -1215,7 +1225,7 @@ To visualize undo history. =C-x u=
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-(setq org-export-headline-levels 4)
+  (setq org-export-headline-levels 4)
 
 
 #+END_SRC

@@ -90,6 +90,16 @@
 			   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
 (add-to-list 'org-latex-classes
+             '("cheatsheet"
+               "\\ProvidesPackage{/home/nick/dropbox/config/cheatsheet}
+                \\documentclass[landscape]{/home/nick/dropbox/config/cheatsheet}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
 			 '("article"
 			   "\\documentclass{article}"
 			   ("\\section{%s}" . "\\section*{%s}")
