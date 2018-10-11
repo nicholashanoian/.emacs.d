@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: org-local-variables
-# key: <lv
+# key: lex
 # --
 # -*- mode: org; eval: (toggle-latex-export-on-save); -*-
