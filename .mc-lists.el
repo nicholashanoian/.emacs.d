@@ -11,9 +11,12 @@
 		c-electric-paren
 		c-electric-semi&comma
 		c-electric-slash
+		comint-interrupt-subjob
 		comment-line
 		electric-pair-delete-pair
 		end-of-visual-line
+		ess-smart-comma
+		ess-yank
 		eval-and-replace
 		eval-last-sexp
 		fix-word-capitalize
@@ -29,6 +32,7 @@
 		org-return
 		org-self-insert-command
 		org-yank
+		paredit-forward-slurp-sexp
 		))
 
 (setq mc/cmds-to-run-once

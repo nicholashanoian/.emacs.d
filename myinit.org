@@ -942,7 +942,11 @@ Interface to git in emacs
   (use-package helm-projectile
     :ensure t
     :config
-    (helm-projectile-on))
+    (helm-projectile-on)
+    (helm-projectile-fuzzy-match t))
+
+  (use-package flx-ido
+    :ensure t)
 #+END_SRC
 
 ** rainbow mode
@@ -1842,6 +1846,7 @@ BEG and END default to the buffer boundaries."
     (define-key c++-mode-map (kbd "C-c C-c") #'compile)
     (define-key c++-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make run -C ../")))
     (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+    (setq-default c-basic-offset 4)
     )
 
   (use-package company-c-headers
@@ -1856,12 +1861,45 @@ BEG and END default to the buffer boundaries."
   (use-package function-args
     :ensure t)
 
+ (defadvice find-tag (before c-tag-file activate)
+   "Automatically create tags file."
+   (let ((tag-file (concat default-directory "TAGS")))
+     (unless (file-exists-p tag-file)
+       (shell-command "etags *.[ch] -o TAGS 2>/dev/null"))
+     (visit-tags-table tag-file)))
 
+
+#+END_SRC
+
+** ctags
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-gtags
+    :ensure t
+    :config
+    (add-hook 'c++-mode-hook 'helm-gtags-mode)
+;; customize
+(custom-set-variables
+ '(helm-gtags-path-style 'relative)
+ '(helm-gtags-ignore-case t)
+ '(helm-gtags-auto-update t))
+
+;; key bindings
+(with-eval-after-load 'helm-gtags
+  (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-find-tag)
+  (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+  (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+  (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
+  (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+  (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+  (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack))
+    )
 #+END_SRC
 ** ESS
 #+BEGIN_SRC emacs-lisp
   (use-package ess
     :ensure t
+    :config
+    (ess-toggle-underscore nil)
     )
 #+END_SRC
 ** Gradle

@@ -70,6 +70,9 @@
  '(helm-display-header-line nil)
  '(helm-echo-input-in-header-line t)
  '(helm-ff-skip-boring-files t)
+ '(helm-gtags-auto-update t)
+ '(helm-gtags-ignore-case t)
+ '(helm-gtags-path-style (quote relative))
  '(helm-net-prefer-curl t)
  '(helm-split-window-default-side (quote below))
  '(helm-split-window-inside-p t)
@@ -116,7 +119,7 @@
  '(org-highlight-latex-and-related (quote (latex entities)))
  '(package-selected-packages
    (quote
-	(writeroom-mode company-c-headers yasnippet-snippets ox-gfm c++-mode function-args auto-yasnippet htmlize lua-mode dracula-theme captain fix-word org-super-agenda ess ob-sagemath sage-shell-mode sage-shell rainbow-mode better-shell paredit smart-parens org-alert powershell helm-hoogle helm-ag dired+ which-key intero haskell-mode haskell bash-completion powerline material-theme delight mdi zenburn-theme solarized-theme color-theme-sanityinc-tomorrow zenburn wordnut adaptive-wrap plantuml-mode plantuml texfrag auctex helm-flyspell hydra sublimity-attractive sublimity-map sublimity-scroll spacemacs-common spaceline expand-region hungry-delete undo-tree ov ox-latex org-edit-latex org-latex yasnippit java-snippets web-mode virtualenvwrapper all-the-fonts all-the-icons neotree exec-path-from-shell python-mode electric-operator anaconda-mode company-jedi helm-projectile projectile multiple-cursors js2-refactor js2-mode groovy-mode gradle-mode meghanada eclimd helm-org helm-files tex-site helm-swoop try ace-window auto-org-md org-edna org-bullets company-emacs-eclim eclim markdown-mode magit cdlatex avy-flycheck aggressive-indent company helm flycheck diminish use-package)))
+	(flx-ido helm-gtags writeroom-mode company-c-headers yasnippet-snippets ox-gfm c++-mode function-args auto-yasnippet htmlize lua-mode dracula-theme captain fix-word org-super-agenda ess ob-sagemath sage-shell-mode sage-shell rainbow-mode better-shell paredit smart-parens org-alert powershell helm-hoogle helm-ag dired+ which-key intero haskell-mode haskell bash-completion powerline material-theme delight mdi zenburn-theme solarized-theme color-theme-sanityinc-tomorrow zenburn wordnut adaptive-wrap plantuml-mode plantuml texfrag auctex helm-flyspell hydra sublimity-attractive sublimity-map sublimity-scroll spacemacs-common spaceline expand-region hungry-delete undo-tree ov ox-latex org-edit-latex org-latex yasnippit java-snippets web-mode virtualenvwrapper all-the-fonts all-the-icons neotree exec-path-from-shell python-mode electric-operator anaconda-mode company-jedi helm-projectile projectile multiple-cursors js2-refactor js2-mode groovy-mode gradle-mode meghanada eclimd helm-org helm-files tex-site helm-swoop try ace-window auto-org-md org-edna org-bullets company-emacs-eclim eclim markdown-mode magit cdlatex avy-flycheck aggressive-indent company helm flycheck diminish use-package)))
  '(pdf-sync-forward-display-pdf-key "<C-return>" t)
  '(pdf-view-display-size (quote fit-page) nil nil "Show full pages by default instead of fitting page width.")
  '(pdf-view-image-relief 4)
@@ -149,6 +152,9 @@
    (quote
 	(unspecified "#fdf6e3" "#eee8d5" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#657b83" "#839496")))
  '(which-key-mode t)
+ '(writeroom-global-effects
+   (quote
+	(writeroom-set-fullscreen writeroom-set-alpha writeroom-set-menu-bar-lines writeroom-set-tool-bar-lines writeroom-set-vertical-scroll-bars writeroom-set-bottom-divider-width writeroom-set-internal-border-width my-writeroom-theme)))
  '(xterm-color-names
    ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#073642"])
  '(xterm-color-names-bright
