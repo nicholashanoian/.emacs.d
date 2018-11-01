@@ -2107,7 +2107,7 @@ BEG and END default to the buffer boundaries."
               (message) " in " (file-name) " on line " line line-end))
       :modes (php-mode php+-mode web-mode))
 
-    ;; (define-key web-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make push")))
+    (define-key web-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make push")))
 
 
     (progn
