@@ -516,7 +516,7 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
     ;;   (add-to-list 'company-backends 'company-jedi))
     ;; (add-hook 'python-mode-hook 'my/python-mode-hook)
     :custom
-    (company-idle-delay 0.5)
+    (company-idle-delay 0.25)
     (company-require-match nil)
     (company-minimum-prefix-length 3)
     :diminish "Company"
@@ -803,21 +803,31 @@ Deletes all the whitespace when you hit backspace or delete
     (global-set-key (kbd "C-x C-b") 'ibuffer)
     (setq ibuffer-saved-filter-groups
           (quote (("default"
-                   ("dired" (mode . dired-mode))
+                   ("Dired" (mode . dired-mode))
                    ("org" (name . "^.*org$"))
-                   ("web" (or (mode . web-mode) (mode . js2-mode)))
-                   ("shell" (or (mode . eshell-mode) (mode . shell-mode)))
+                   ("Web" (or (mode . web-mode) (mode . js2-mode)))
+                   ("C/C++" (or (mode . c++-mode)
+                                (mode . c-mode)
+                                (name . "clang")))
+                   ("Python" (mode . python-mode))
+                   ("R" (or (mode . ess-mode)
+                            (name . "^\\*ESS\\*$")
+                            (name . "^\\*R\\*$")))
+                   ("Git" (or (mode . magit-process-mode)
+                              (mode . magit-status-mode)
+                              (mode . magit-popup-mode)))
+                   ("Shell" (or (mode . eshell-mode) (mode . shell-mode)))
                    ("mu4e" (name . "\*mu4e\*"))
-                   ("programming" (or
-                                   (mode . python-mode)
-                                   (mode . c++-mode)))
+
                    ("edbi" (or
                             (name . "*edbi*")
                             (name . "*epc*")
                             ))
-                   ("emacs" (or
-                             (name . "^\\*scratch\\*$")
-                             (name . "^\\*Messages\\*$")))
+                   ("Emacs" (or (name . "^\\*scratch\\*$")
+                                (name . "^\\*Messages\\*$")
+                                (name . "^\\*warnings\\*$")
+                                (name . "^\\*completions\\*$")
+                                (name . "^\\*compilation\\*$")))
                    ))))
     (add-hook 'ibuffer-mode-hook
               (lambda ()
@@ -943,7 +953,8 @@ Interface to git in emacs
     :ensure t
     :config
     (helm-projectile-on)
-    (helm-projectile-fuzzy-match t))
+;;    (helm-projectile-fuzzy-match t)
+)
 
   (use-package flx-ido
     :ensure t)
@@ -1086,9 +1097,13 @@ To visualize undo history. =C-x u=
     ;; (setq writeroom-border-width 20)
     (setq writeroom-width 90)
     (custom-set-variables
-     (writeroom-global-effects
-      (quote
-       (writeroom-set-fullscreen writeroom-set-alpha writeroom-set-menu-bar-lines writeroom-set-tool-bar-lines writeroom-set-vertical-scroll-bars writeroom-set-bottom-divider-width writeroom-set-internal-border-width))))
+     '(writeroom-global-effects '(writeroom-set-fullscreen
+                                  writeroom-set-alpha
+                                  writeroom-set-menu-bar-lines
+                                  writeroom-set-tool-bar-lines
+                                  writeroom-set-vertical-scroll-bars
+                                  writeroom-set-bottom-divider-width
+                                  writeroom-set-internal-border-width)))
     )
 
   (setq default-fringe-color (face-attribute 'fringe :background))
@@ -1469,7 +1484,7 @@ To visualize undo history. =C-x u=
 #+BEGIN_SRC emacs-lisp
 
 
- 
+
 
   (ignore-errors
     (require 'ansi-color)
@@ -1478,30 +1493,27 @@ To visualize undo history. =C-x u=
         (ansi-color-apply-on-region compilation-filter-start (point-max))))
     (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
 
-(defun nhh-compile-finish (buffer outstr)
-  (unless (string-match "finished" outstr)
-    (switch-to-buffer-other-window buffer))
-  t)
+  (defun nhh-compile-finish (buffer outstr)
+    (unless (string-match "finished" outstr)
+      (switch-to-buffer-other-window buffer))
+    t)
 
-(setq compilation-finish-functions 'nhh-compile-finish)
+  (setq compilation-finish-functions 'nhh-compile-finish)
 
-(require 'cl)
+  (require 'cl)
 
-(defadvice compilation-start
-  (around inhibit-display
-      (command &optional mode name-function highlight-regexp)) 
-  (if (not (string-match "^\\(find\\|grep\\)" command))
-      (flet ((display-buffer)
-         (set-window-point)
-         (goto-char)) 
-    (fset 'display-buffer 'ignore)
-    (fset 'goto-char 'ignore)
-    (fset 'set-window-point 'ignore)
-    (save-window-excursion 
+  (defadvice compilation-start
+      (around inhibit-display
+              (command &optional mode name-function highlight-regexp)) 
+    (if (not (string-match "^\\(find\\|grep\\)" command))
+        (cl-letf (((symbol-function 'display-buffer) #'ignore)
+                  ((symbol-function 'set-window-point) #'ignore)
+                  ((symbol-function 'goto-char) #'ignore)) 
+          (save-window-excursion 
+            ad-do-it))
       ad-do-it))
-    ad-do-it))
 
-(ad-activate 'compilation-start)
+  (ad-activate 'compilation-start)
 
 
   (defun orgmk-latex ()
@@ -1899,8 +1911,10 @@ BEG and END default to the buffer boundaries."
   (use-package ess
     :ensure t
     :config
-(setq ess-smart-S-assign-key nil)
-;;(ess-disable-smart-S-assign)
+    (setq ess-smart-S-assign-key nil)
+    (add-hook 'inferior-ess-mode-hook '(lambda () (aggressive-indent-mode 0)))
+
+    ;; (ess-disable-smart-S-assign)
     )
 #+END_SRC
 ** Gradle

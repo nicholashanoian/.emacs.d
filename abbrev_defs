@@ -43,6 +43,8 @@
 
 (define-abbrev-table 'TeX-output-mode-abbrev-table '())
 
+(define-abbrev-table 'apache-mode-abbrev-table '())
+
 (define-abbrev-table 'awk-mode-abbrev-table
   '(
    ))
@@ -64,6 +66,8 @@
 (define-abbrev-table 'calendar-mode-abbrev-table '())
 
 (define-abbrev-table 'captain-mode-abbrev-table '())
+
+(define-abbrev-table 'change-log-mode-abbrev-table '())
 
 (define-abbrev-table 'comint-mode-abbrev-table '())
 
@@ -103,7 +107,27 @@
 
 (define-abbrev-table 'fundamental-mode-abbrev-table '())
 
+(define-abbrev-table 'gdb-breakpoints-mode-abbrev-table '())
+
+(define-abbrev-table 'gdb-disassembly-mode-abbrev-table '())
+
+(define-abbrev-table 'gdb-frames-mode-abbrev-table '())
+
+(define-abbrev-table 'gdb-locals-mode-abbrev-table '())
+
+(define-abbrev-table 'gdb-memory-mode-abbrev-table '())
+
+(define-abbrev-table 'gdb-registers-mode-abbrev-table '())
+
 (define-abbrev-table 'gdb-script-mode-abbrev-table '())
+
+(define-abbrev-table 'gdb-threads-mode-abbrev-table '())
+
+(define-abbrev-table 'gfm-mode-abbrev-table '())
+
+(define-abbrev-table 'gfm-view-mode-abbrev-table '())
+
+(define-abbrev-table 'git-commit-elisp-text-mode-abbrev-table '())
 
 (define-abbrev-table 'global-abbrev-table
   '(
@@ -549,7 +573,6 @@
     ("hvae" "have" nil 0)
     ("hvaing" "having" nil 0)
     ("hwich" "which" nil 0)
-    ("i" "I" nil 0)
     ("idae" "idea" nil 0)
     ("idaes" "ideas" nil 0)
     ("identifiy" "identify" nil 0)
@@ -1091,15 +1114,69 @@
 
 (define-abbrev-table 'literate-haskell-mode-abbrev-table '())
 
+(define-abbrev-table 'log-edit-mode-abbrev-table '())
+
 (define-abbrev-table 'log4e-mode-abbrev-table '())
 
 (define-abbrev-table 'lua-mode-abbrev-table
   '(
    ))
 
+(define-abbrev-table 'magit-cherry-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-diff-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-log-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-log-select-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-merge-preview-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-popup-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-process-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-reflog-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-refs-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-repolist-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-revision-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-stash-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-stashes-mode-abbrev-table '())
+
+(define-abbrev-table 'magit-status-mode-abbrev-table '())
+
+(define-abbrev-table 'makefile-automake-mode-abbrev-table '())
+
+(define-abbrev-table 'makefile-bsdmake-mode-abbrev-table '())
+
+(define-abbrev-table 'makefile-gmake-mode-abbrev-table '())
+
+(define-abbrev-table 'makefile-imake-mode-abbrev-table '())
+
+(define-abbrev-table 'makefile-makepp-mode-abbrev-table '())
+
+(define-abbrev-table 'makefile-mode-abbrev-table '())
+
+(define-abbrev-table 'markdown-mode-abbrev-table '())
+
+(define-abbrev-table 'markdown-view-mode-abbrev-table '())
+
 (define-abbrev-table 'message-mode-abbrev-table '())
 
 (define-abbrev-table 'messages-buffer-mode-abbrev-table '())
+
+(define-abbrev-table 'mu4e-compose-mode-abbrev-table '())
+
+(define-abbrev-table 'mu4e-org-mode-abbrev-table '())
+
+(define-abbrev-table 'mu4e~update-mail-mode-abbrev-table '())
 
 (define-abbrev-table 'objc-mode-abbrev-table
   '(
@@ -1123,6 +1200,8 @@
   '(
    ))
 
+(define-abbrev-table 'plain-tex-mode-abbrev-table '())
+
 (define-abbrev-table 'plantuml-mode-abbrev-table '())
 
 (define-abbrev-table 'powershell-mode-abbrev-table '())
@@ -1143,6 +1222,8 @@
 
 (define-abbrev-table 'shell-mode-abbrev-table '())
 
+(define-abbrev-table 'slitex-mode-abbrev-table '())
+
 (define-abbrev-table 'snippet-mode-abbrev-table '())
 
 (define-abbrev-table 'special-mode-abbrev-table '())
@@ -1156,6 +1237,10 @@
 (define-abbrev-table 'tablist-mode-abbrev-table '())
 
 (define-abbrev-table 'tabulated-list-mode-abbrev-table '())
+
+(define-abbrev-table 'tex-mode-abbrev-table '())
+
+(define-abbrev-table 'tex-shell-abbrev-table '())
 
 (define-abbrev-table 'text-mode-abbrev-table '())
 
@@ -1176,6 +1261,8 @@
 (define-abbrev-table 'vc-mtn-log-view-mode-abbrev-table '())
 
 (define-abbrev-table 'vc-svn-log-view-mode-abbrev-table '())
+
+(define-abbrev-table 'web-mode-abbrev-table '())
 
 (define-abbrev-table 'xref--xref-buffer-mode-abbrev-table '())
 
