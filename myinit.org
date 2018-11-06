@@ -2108,6 +2108,7 @@ BEG and END default to the buffer boundaries."
       :modes (php-mode php+-mode web-mode))
 
     (define-key web-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make push")))
+    (define-key apache-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make push")))
 
 
     (progn

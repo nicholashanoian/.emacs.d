@@ -55,4 +55,5 @@
 		org-cycle
 		org-shifttab
 		text-scale-adjust
+		yank-rectangle
 		))
