@@ -15,6 +15,7 @@
 		comment-line
 		electric-pair-delete-pair
 		end-of-visual-line
+		ess-smart-S-assign
 		ess-smart-comma
 		ess-yank
 		eval-and-replace

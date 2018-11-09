@@ -1486,58 +1486,87 @@ To visualize undo history. =C-x u=
 
 
 
-  (ignore-errors
-    (require 'ansi-color)
-    (defun my-colorize-compilation-buffer ()
-      (when (eq major-mode 'compilation-mode)
-        (ansi-color-apply-on-region compilation-filter-start (point-max))))
-    (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
+    (ignore-errors
+      (require 'ansi-color)
+      (defun my-colorize-compilation-buffer ()
+        (when (eq major-mode 'compilation-mode)
+          (ansi-color-apply-on-region compilation-filter-start (point-max))))
+      (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
 
-  (defun nhh-compile-finish (buffer outstr)
-    (unless (string-match "finished" outstr)
-      (switch-to-buffer-other-window buffer))
-    t)
+    (defun nhh-compile-finish (buffer outstr)
+      (unless (string-match "finished" outstr)
+        (switch-to-buffer-other-window buffer))
+      t)
 
-  (setq compilation-finish-functions 'nhh-compile-finish)
+    (setq compilation-finish-functions 'nhh-compile-finish)
 
-  (require 'cl)
+    (require 'cl)
 
-  (defadvice compilation-start
-      (around inhibit-display
-              (command &optional mode name-function highlight-regexp)) 
-    (if (not (string-match "^\\(find\\|grep\\)" command))
-        (cl-letf (((symbol-function 'display-buffer) #'ignore)
-                  ((symbol-function 'set-window-point) #'ignore)
-                  ((symbol-function 'goto-char) #'ignore)) 
-          (save-window-excursion 
-            ad-do-it))
-      ad-do-it))
+    (defadvice compilation-start
+        (around inhibit-display
+                (command &optional mode name-function highlight-regexp)) 
+      (if (not (string-match "^\\(find\\|grep\\)" command))
+          (cl-letf (((symbol-function 'display-buffer) #'ignore)
+                    ((symbol-function 'set-window-point) #'ignore)
+                    ((symbol-function 'goto-char) #'ignore)) 
+            (save-window-excursion 
+              ad-do-it))
+        ad-do-it))
 
-  (ad-activate 'compilation-start)
+    (ad-activate 'compilation-start)
 
 
-  (defun orgmk-latex ()
+    (defun orgmk-latex ()
+      (interactive)
+      (let ((myfile (concat (file-name-base (buffer-file-name (buffer-base-buffer))) ".pdf")))
+
+        (compile (concat "orgmk " myfile))
+        (message (concat "Beginning compilation for " myfile))))
+
+
+
+
+    (defun toggle-latex-export-on-save ()
+      "Enable or disable export LATEX when saving current buffer."
+      (interactive)
+      (when (not (eq major-mode 'org-mode))
+        (error "Not an org-mode file!"))
+      (if (memq 'orgmk-latex after-save-hook)
+          (progn (remove-hook 'after-save-hook 'orgmk-latex t)
+                 (message "Disabled org latex export on save"))
+        (add-hook 'after-save-hook 'orgmk-latex nil t)
+        ;; (set-buffer-modified-p t)
+        (message "Enabled org latex export on save")))
+    (define-key org-mode-map (kbd "C-c l") 'toggle-latex-export-on-save)
+
+
+  (defun save-buffer-without-compile ()
     (interactive)
-    (let ((myfile (concat (file-name-base (buffer-file-name (buffer-base-buffer))) ".pdf")))
+    (let ((b (current-buffer)))   ; memorize the buffer
+      (with-temp-buffer ; new temp buffer to bind the global value of before-save-hook
+        (let ((after-save-hook (remove 'orgmk-latex after-save-hook))) 
+          (with-current-buffer b  ; go back to the current buffer, after-save-hook is now buffer-local
+            (let ((after-save-hook (remove 'orgmk-latex after-save-hook)))
+              (save-buffer)))))))
 
-      (compile (concat "orgmk " myfile))
-      (message (concat "Beginning compilation for " myfile))))
-
-
-
-
-  (defun toggle-latex-export-on-save ()
-    "Enable or disable export LATEX when saving current buffer."
+  ;; save the buffer, removing and readding the 'delete-trailing-whitespace function
+  ;; to 'before-save-hook if it's there
+  (defun save-buffer-no-compile ()
     (interactive)
-    (when (not (eq major-mode 'org-mode))
-      (error "Not an org-mode file!"))
-    (if (memq 'orgmk-latex after-save-hook)
-        (progn (remove-hook 'after-save-hook 'orgmk-latex t)
-               (message "Disabled org latex export on save"))
-      (add-hook 'after-save-hook 'orgmk-latex nil t)
-      ;; (set-buffer-modified-p t)
-      (message "Enabled org latex export on save")))
-  (define-key org-mode-map (kbd "C-c l") 'toggle-latex-export-on-save)
+    (let ((normally-should-delete-trailing-whitespace (memq 'orgmk-latex after-save-hook)))
+      (when normally-should-orgmk-latex
+        (remove-hook 'after-save-hook 'orgmk-latex))
+      (save-buffer)
+      (when normally-should-orgmk-latex
+        (add-hook 'after-save-hook 'orgmk-latex))))
+  ;; (global-set-key (kbd "C-c C-s") 'save-buffer-no-orgmk-latex)
+
+
+
+  (define-key org-mode-map (kbd "C-c C-s") #'save-buffer-without-compile)
+;;(define-key org-mode-map (kbd "C-x C-s") #'save-buffer)
+  ;;(global-set-key (kbd "C-x C-s") #'save-buffer)
+
 #+END_SRC
 
 *** agenda

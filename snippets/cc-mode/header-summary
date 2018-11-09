@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: header-summary
+# key: top
+# --
+/**
+ * `(file-name-nondirectory  (buffer-file-name))`
+ *
+ * $0
+ *
+ * Written by Nicholas Hanoian on `(format-time-string "%m/%d/%Y")`.
+ */
+
+
