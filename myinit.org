@@ -2020,7 +2020,13 @@ BEG and END default to the buffer boundaries."
   (use-package js2-refactor
     :ensure t)
 #+END_SRC
-
+** rjsx (react js)
+#+BEGIN_SRC emacs-lisp
+(use-package rjsx-mode
+:ensure t
+:config
+(add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode)))
+#+END_SRC
 ** meghanada
 #+BEGIN_SRC emacs-lisp
   ;; (use-package meghanada

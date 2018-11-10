@@ -42,6 +42,7 @@
 		handle-select-window
 		helm-M-x
 		ignore
+		inferior-ess-send-input
 		mouse-set-region
 		multiple-cursors-hydra/body
 		multiple-cursors-hydra/ignore
