@@ -805,7 +805,9 @@ Deletes all the whitespace when you hit backspace or delete
           (quote (("default"
                    ("Dired" (mode . dired-mode))
                    ("org" (name . "^.*org$"))
-                   ("Web" (or (mode . web-mode) (mode . js2-mode)))
+                   ("Web" (mode . web-mode))
+                   ("JS" (or (mode . js2-mode)
+                             (mode . rjsx-mode)))
                    ("C/C++" (or (mode . c++-mode)
                                 (mode . c-mode)
                                 (name . "clang")))
@@ -2013,8 +2015,9 @@ BEG and END default to the buffer boundaries."
 #+BEGIN_SRC emacs-lisp
   (use-package js2-mode
     :ensure t
-    :hook ((//.js// . js2-mode)
-           (js2-mode . js2-imenu-extras-mode))
+    :config
+ (add-to-list 'auto-mode-alist '("^(?!\\.component\\.js$).*\\.js$" . js2-mode))
+           ;; (js2-mode . js2-imenu-extras-mode))
     )
 
   (use-package js2-refactor
@@ -2025,7 +2028,9 @@ BEG and END default to the buffer boundaries."
 (use-package rjsx-mode
 :ensure t
 :config
-(add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode)))
+(add-to-list 'auto-mode-alist '("\\.js$" . rjsx-mode))
+)
+
 #+END_SRC
 ** meghanada
 #+BEGIN_SRC emacs-lisp

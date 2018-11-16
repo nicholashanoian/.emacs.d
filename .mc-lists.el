@@ -29,11 +29,13 @@
 		kill-visual-line
 		org-beginning-of-line
 		org-end-of-line
+		org-kill-line
 		org-promote-subtree
 		org-return
 		org-self-insert-command
 		org-yank
 		paredit-forward-slurp-sexp
+		rjsx-electric-gt
 		))
 
 (setq mc/cmds-to-run-once
