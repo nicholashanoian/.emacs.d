@@ -219,9 +219,13 @@
 - =M-k= copy current line
 #+BEGIN_SRC emacs-lisp
 
-    ;;open config
-    (define-key global-map (kbd "\e\ec")  (lambda () (interactive) (find-file "~/.emacs.d/myinit.org")))
-    (global-set-key (kbd "C-x C-k") #'kill-this-buffer)
+  (defun nhh-kill-this-buffer ()
+    (interactive)
+     (kill-buffer (current-buffer)))
+
+  ;;open config
+  (define-key global-map (kbd "\e\ec")  (lambda () (interactive) (find-file "~/.emacs.d/myinit.org")))
+  (global-set-key (kbd "C-x C-k") #'nhh-kill-this-buffer)
 #+END_SRC
 
 ** Puts rc files in conf-mode
@@ -2285,6 +2289,53 @@ Data source: =dbi:mysql:database=<dbname>:host=<url>=
   (setq mu4e-reply-to-address "nicholashanoian@gmail.com"
         user-mail-address "nicholashanoian@gmail.com"
         user-full-name  "Nicholas Hanoian")
+
+
+#+END_SRC
+
+* zoom
+#+BEGIN_SRC emacs-lisp
+
+  (defcustom frame-zoom-font-difference 1
+    "*Number of points to change the frame font size when zooming.
+  This applies to commands `zoom-in/out', `zoom-in', `zoom-out',
+  `zoom-frm-in', and `zoom-frm-out' when zooming a frame.
+
+  The absolute value of the value must be less than the current font
+  size for the frame, because the new font size cannot be less than one
+  point."
+    :type 'integer :group 'zoom)
+
+
+  (defun zoom-all-frames-in (&optional flip)
+      "Zoom all frames in by `frame-zoom-font-difference', making text larger.
+  If `frame-zoom-font-difference' is negative, make text smaller.
+  With prefix argument FLIP, reverse the direction:
+  if `frame-zoom-font-difference' is positive, then make text smaller.
+  This is equal but opposite to `zoom-all-frames-out'.
+  Note: This zooming is unaffected by `zoom-frm-unzoom'."
+      (interactive "P")
+      (let ((increment  (if flip (- frame-zoom-font-difference) frame-zoom-font-difference)))
+        (set-face-attribute 'default nil
+                            :height  (+ (* 10 increment)
+                                        (face-attribute 'default :height nil 'default)))))
+
+
+    (defun zoom-all-frames-out (&optional flip)
+      "Zoom all frames out by `frame-zoom-font-difference', making text smaller.
+  If `frame-zoom-font-difference' is negative, make text larger.
+  With prefix argument FLIP, reverse the direction:
+  if `frame-zoom-font-difference' is positive, then make text larger.
+  This is equal but opposite to `zoom-frm-in'.
+  Note: This zooming is unaffected by `zoom-frm-unzoom'."
+      (interactive "P")
+      (let ((increment  (if flip frame-zoom-font-difference (- frame-zoom-font-difference))))
+        (set-face-attribute 'default nil
+                            :height  (+ (* 10 increment)
+                                        (face-attribute 'default :height nil 'default)))))
+
+  ;; (global-set-key (kbd "C-x C-+") #'zoom-all-frames-in)
+  ;; (global-set-key (kbd "C-x C--") #'zoom-all-frames-out)
 
 
 #+END_SRC
