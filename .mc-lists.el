@@ -3,7 +3,6 @@
 
 (setq mc/cmds-to-run-for-all
       '(
-		LaTeX-babel-insert-hyphen
 		TeX-insert-backslash
 		beginning-of-visual-line
 		c-electric-brace
@@ -40,7 +39,6 @@
 		org-yank
 		paredit-forward-slurp-sexp
 		rjsx-electric-gt
-		rjsx-electric-lt
 		))
 
 (setq mc/cmds-to-run-once
