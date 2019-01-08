@@ -1190,7 +1190,7 @@ To visualize undo history. =C-x u=
 
 
     (defun tmp-pdf ()
-      (org-babel-temp-file "./figure-" ".png"))
+      (org-babel-temp-file "./figure-" ".pdf"))
 
     ;; (setq org-latex-pdf-process
     ;;       '("latexmk -pdf -f %f"))

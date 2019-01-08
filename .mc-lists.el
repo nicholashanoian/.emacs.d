@@ -15,6 +15,7 @@
 		c-electric-paren
 		c-electric-semi&comma
 		c-electric-slash
+		cdlatex-pbb
 		comint-interrupt-subjob
 		comment-line
 		electric-pair-delete-pair
@@ -26,6 +27,7 @@
 		eval-last-sexp
 		fix-word-capitalize
 		fix-word-downcase
+		fix-word-upcase
 		hungry-delete-backward
 		hungry-delete-forward
 		indent-for-tab-command
