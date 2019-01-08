@@ -1229,8 +1229,8 @@ To visualize undo history. =C-x u=
 
     (add-to-list 'org-latex-classes
                  '("homework"
-                   "\\ProvidesPackage{/home/nick/dropbox/config/homework}
-                    \\documentclass{/home/nick/dropbox/config/homework}"
+                   "\\ProvidesPackage{/home/nick/cloud/config/homework}
+                    \\documentclass{/home/nick/cloud/config/homework}"
                    ("\\section{%s}" . "\\section*{%s}")
                    ("\\subsection{%s}" . "\\subsection*{%s}")
                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -1239,8 +1239,8 @@ To visualize undo history. =C-x u=
 
     (add-to-list 'org-latex-classes
                  '("cheatsheet"
-                   "\\ProvidesPackage{/home/nick/dropbox/config/cheatsheet}
-                    \\documentclass{/home/nick/dropbox/config/cheatsheet}"
+                   "\\ProvidesPackage{/home/nick/cloud/config/cheatsheet}
+                    \\documentclass{/home/nick/cloud/config/cheatsheet}"
                    ("\\section{%s}" . "\\section*{%s}")
                    ("\\subsection{%s}" . "\\subsection*{%s}")
                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -1338,56 +1338,58 @@ To visualize undo history. =C-x u=
 *** auctex
 #+BEGIN_SRC emacs-lisp :results output silent 
   (use-package tex-site
-	;; AuCTeX is better than the built in tex mode; let's use it.  This
-	;; demand adds almost nothing and ensures that auctex gets to set itself
-	;; up properly. That's necessary because of how weirdly it gets loaded.
-	:ensure auctex
-	:demand t
-	:custom
-	(TeX-auto-save t)
-	;;(TeX-electric-escape t)
-	(TeX-electric-math '("\\(" . "\\)") "Smart $ behavior")
-	(TeX-electric-sub-and-superscript t)
-	(TeX-parse-self t)
-	(reftex-plug-into-AUCTeX t)
-	;;(setq font-latex-fontify-script nil) ;; stop changing position of stuff on lines
-	(TeX-source-correlate-method 'synctex)
-	(TeX-source-correlate-mode t)
-	(TeX-clean-confirm nil)
-	;; TeX-command-list by default contains a bunch of stuff I'll never
-	;; use. I use latexmk, xelatexmk, and View.  That's pretty much it.
-	;; Maybe one day I'll add "clean" back to the list.
-	;; (TeX-command-list
-	;;  '(("latexmk" "latexmk -synctex=1 -quiet -pdf %s"
-	;;     TeX-run-compile nil t :help "Process file with latexmk")
-	;;    ("View" "%V" TeX-run-discard-or-function nil t :help "Run Viewer")
-	;;    ("xelatexmk" "latexmk -synctex=1 -quiet -xelatex %s"
-	;;     TeX-run-compile nil t :help "Process file with xelatexmk")))
-	:hook
-	(LaTeX-mode . LaTeX-math-mode)
-	(LaTeX-mode . reftex-mode)
-	(LaTeX-mode . TeX-PDF-mode)
-	(LaTeX-mode . (lambda ()
-					(push
-					 '("Make" "latexmk -outdir=/tmp %t" TeX-run-TeX nil t
-					   :help "Make pdf output using latexmk.")
-					 TeX-command-list)))
-	:config
-	(setq-default TeX-command-default "latexmk")
-	;; revert pdf from file after compilation finishes
-	(use-package tex-buf
-	  :config
-	  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-	(use-package latex
-	  :bind
-	  (:map LaTeX-mode-map
-			("M-p" . outline-previous-visible-heading)
-			("M-n" . outline-next-visible-heading)
-			("<backtab>" . org-cycle))
-	  :config
-	  (push "\\.fdb_latexmk" LaTeX-clean-intermediate-suffixes)
-	  (push "\\.fls" LaTeX-clean-intermediate-suffixes)
-	  (push "\\.synctex.gz" LaTeX-clean-intermediate-suffixes)))
+    ;; AuCTeX is better than the built in tex mode; let's use it.  This
+    ;; demand adds almost nothing and ensures that auctex gets to set itself
+    ;; up properly. That's necessary because of how weirdly it gets loaded.
+    :ensure auctex
+    :demand t
+    :custom
+    (TeX-auto-save t)
+    ;;(TeX-electric-escape t)
+    (TeX-electric-math '("\\(" . "\\)") "Smart $ behavior")
+    (TeX-electric-sub-and-superscript t)
+    (TeX-parse-self t)
+    (reftex-plug-into-AUCTeX t)
+    ;;(setq font-latex-fontify-script nil) ;; stop changing position of stuff on lines
+    (TeX-source-correlate-method 'synctex)
+    (TeX-source-correlate-mode t)
+    (TeX-clean-confirm nil)
+    ;; TeX-command-list by default contains a bunch of stuff I'll never
+    ;; use. I use latexmk, xelatexmk, and View.  That's pretty much it.
+    ;; Maybe one day I'll add "clean" back to the list.
+    (TeX-command-list
+     '(("latexmk" "latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -logfilewarninglist -pdf %s"
+        TeX-run-TeX nil t :help "Process file with latexmk")
+       ("View" "%V" TeX-run-discard-or-function nil t :help "Run Viewer")
+       ("xelatexmk" "latexmk -synctex=1 -quiet -xelatex %s"
+        TeX-run-TeX nil t :help "Process file with xelatexmk")))
+    :hook
+    (LaTeX-mode . LaTeX-math-mode)
+    (LaTeX-mode . reftex-mode)
+    (LaTeX-mode . TeX-PDF-mode)
+    ;; (LaTeX-mode . (lambda ()
+    ;;                 (push
+    ;;                  '("Make" "latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -logfilewarninglist -pdf -f %s" TeX-run-TeX nil t
+    ;;                    :help "Make pdf output using latexmk.")
+    ;;                  '("XeLaTeX" "xelatex %s" TeX-run-TeX nil t
+    ;;                    :help "Make pdf output using xelatex.")
+    ;;                  TeX-command-list)))
+    :config
+    (setq-default TeX-command-default "latexmk")
+    ;; revert pdf from file after compilation finishes
+    (use-package tex-buf
+      :config
+      (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+    (use-package latex
+      :bind
+      (:map LaTeX-mode-map
+            ("M-p" . outline-previous-visible-heading)
+            ("M-n" . outline-next-visible-heading)
+            ("<backtab>" . org-cycle))
+      :config
+      (push "\\.fdb_latexmk" LaTeX-clean-intermediate-suffixes)
+      (push "\\.fls" LaTeX-clean-intermediate-suffixes)
+      (push "\\.synctex.gz" LaTeX-clean-intermediate-suffixes)))
 #+END_SRC
 
 *** Texfrag
@@ -2085,34 +2087,43 @@ BEG and END default to the buffer boundaries."
 #+END_SRC
 ** python
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package anaconda-mode
-  ;;   :ensure t
-  ;;   :hook
-  ;;   (python-mode . anaconda-mode)
-  ;;   (python-mode . anaconda-eldoc-mode))
+    ;; (use-package anaconda-mode
+    ;;   :ensure t
+    ;;   :hook
+    ;;   (python-mode . anaconda-mode)
+    ;;   (python-mode . anaconda-eldoc-mode))
 
-  ;; ;;spacing around operators
-  ;; (use-package electric-operator
-  ;;   :ensure t
-  ;;   :hook ((ess-mode python-mode) . electric-operator-mode))
+    ;; ;;spacing around operators
+    ;; (use-package electric-operator
+    ;;   :ensure t
+    ;;   :hook ((ess-mode python-mode) . electric-operator-mode))
 
-  ;; (use-package python-mode
-  ;;   :ensure t)
-
-
-  ;; ;;for autocompletion
-  ;; (use-package company-jedi
-  ;;   :ensure t)
+    ;; (use-package python-mode
+    ;;   :ensure t)
 
 
-  (use-package elpy
-    :ensure t)
-  (use-package virtualenvwrapper
+    ;; ;;for autocompletion
+    ;; (use-package company-jedi
+    ;;   :ensure t)
+
+
+    (use-package elpy
+      :ensure t)
+  (use-package pipenv
     :ensure t
     :config
-    (progn
-      ;;(venv-initialize-eshell)
-      (setq venv-location "~/.venvs")))
+    (defun nhh-pipenv-start-python ()
+      "When a Pipenv project is found, activate the virtual environment, \
+  and open a Pipenv shell and a Python interpreter."
+      (interactive)
+      ;; Always clean up, in case we were in a Python project previously.
+      (pipenv-deactivate)
+      ;; Only activate if we can verify this is a Pipenv project.
+      (when (pipenv-project?)
+        (pipenv-activate)
+        (run-python)))
+    (define-key python-mode nhh-pipenv-start-python)
+    )
 
 #+END_SRC
 

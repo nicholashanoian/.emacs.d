@@ -3,7 +3,11 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+		LaTeX-environment
+		LaTeX-insert-item
+		LaTeX-insert-left-brace
 		TeX-insert-backslash
+		TeX-newline
 		beginning-of-visual-line
 		c-electric-brace
 		c-electric-colon

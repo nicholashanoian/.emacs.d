@@ -81,8 +81,8 @@
 
 (add-to-list 'org-latex-classes
 			 '("homework"
-			   "\\ProvidesPackage{/home/nick/dropbox/config/homework}
-                \\documentclass{/home/nick/dropbox/config/homework}"
+			   "\\ProvidesPackage{/home/nick/cloud/config/homework}
+                \\documentclass{/home/nick/cloud/config/homework}"
 			   ("\\section{%s}" . "\\section*{%s}")
 			   ("\\subsection{%s}" . "\\subsection*{%s}")
 			   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -91,8 +91,8 @@
 
 (add-to-list 'org-latex-classes
              '("cheatsheet"
-               "\\ProvidesPackage{/home/nick/dropbox/config/cheatsheet}
-                \\documentclass[landscape]{/home/nick/dropbox/config/cheatsheet}"
+               "\\ProvidesPackage{/home/nick/cloud/config/cheatsheet}
+                \\documentclass[landscape]{/home/nick/cloud/config/cheatsheet}"
                ("\\section{%s}" . "\\section*{%s}")
                ("\\subsection{%s}" . "\\subsection*{%s}")
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
