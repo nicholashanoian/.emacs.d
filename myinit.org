@@ -1909,6 +1909,11 @@ BEG and END default to the buffer boundaries."
     (bash-completion-setup)
     )
 #+END_SRC
+** cmake
+#+BEGIN_SRC emacs-lisp
+(use-package cmake-mode
+:ensure t)
+#+END_SRC
 ** cpp
 - Needs cmake and clang
 #+BEGIN_SRC emacs-lisp
@@ -2087,45 +2092,54 @@ BEG and END default to the buffer boundaries."
 #+END_SRC
 ** python
 #+BEGIN_SRC emacs-lisp
-    ;; (use-package anaconda-mode
-    ;;   :ensure t
-    ;;   :hook
-    ;;   (python-mode . anaconda-mode)
-    ;;   (python-mode . anaconda-eldoc-mode))
+      ;; (use-package anaconda-mode
+      ;;   :ensure t
+      ;;   :hook
+      ;;   (python-mode . anaconda-mode)
+      ;;   (python-mode . anaconda-eldoc-mode))
 
-    ;; ;;spacing around operators
-    ;; (use-package electric-operator
-    ;;   :ensure t
-    ;;   :hook ((ess-mode python-mode) . electric-operator-mode))
+      ;; ;;spacing around operators
+      ;; (use-package electric-operator
+      ;;   :ensure t
+      ;;   :hook ((ess-mode python-mode) . electric-operator-mode))
 
-    ;; (use-package python-mode
-    ;;   :ensure t)
-
-
-    ;; ;;for autocompletion
-    ;; (use-package company-jedi
-    ;;   :ensure t)
+      ;; (use-package python-mode
+      ;;   :ensure t)
 
 
-    (use-package elpy
-      :ensure t)
-  (use-package pipenv
+      ;; ;;for autocompletion
+      ;; (use-package company-jedi
+      ;;   :ensure t)
+
+
+      (use-package elpy
+        :ensure t)
+    (use-package pipenv
+      :ensure t
+      :config
+      (defun nhh-pipenv-start-python ()
+        "When a Pipenv project is found, activate the virtual environment, \
+    and open a Pipenv shell and a Python interpreter."
+        (interactive)
+        ;; Always clean up, in case we were in a Python project previously.
+        (pipenv-deactivate)
+        ;; Only activate if we can verify this is a Pipenv project.
+        (when (pipenv-project?)
+          (pipenv-activate)
+          (run-python)))
+      (define-key python-mode nhh-pipenv-start-python)
+      )
+
+  (use-package django-mode
     :ensure t
     :config
-    (defun nhh-pipenv-start-python ()
-      "When a Pipenv project is found, activate the virtual environment, \
-  and open a Pipenv shell and a Python interpreter."
-      (interactive)
-      ;; Always clean up, in case we were in a Python project previously.
-      (pipenv-deactivate)
-      ;; Only activate if we can verify this is a Pipenv project.
-      (when (pipenv-project?)
-        (pipenv-activate)
-        (run-python)))
-    (define-key python-mode nhh-pipenv-start-python)
+    (add-to-list 'auto-mode-alist '("\\.djhtml$" . django-html-mode))
     )
 
+
 #+END_SRC
+
+
 
 ** Sage
 #+BEGIN_SRC emacs-lisp
