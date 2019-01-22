@@ -15,7 +15,9 @@
 		c-electric-paren
 		c-electric-semi&comma
 		c-electric-slash
+		c-electric-star
 		cdlatex-pbb
+		cdlatex-sub-superscript
 		comint-interrupt-subjob
 		comment-line
 		electric-pair-delete-pair
