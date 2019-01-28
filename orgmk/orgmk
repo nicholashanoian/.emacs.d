@@ -1,0 +1,21 @@
+#!/bin/sh
+
+BUILD_DIR='.build'
+
+
+filename=$(basename -- "$1") 
+extension="${filename##*.}"
+filename="${filename%.*}"
+
+if [ -e $BUILD_DIR/$filename.tex ]; then
+	# -p flag preserves timestamp so that make knows when the tex file
+	# needs to be rebuilt
+	cp -p $BUILD_DIR/$filename.tex .
+fi
+
+ln -f -s /home/nick/.emacs.d/orgmk/orgmk.mk orgmk.mk
+
+make -f orgmk.mk $filename.pdf filename=$filename extension=$extension
+
+mv $filename.tex $BUILD_DIR/
+rm orgmk.mk

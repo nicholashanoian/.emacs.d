@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# Written by Nicholas Hanoian on 1/28/19
+
+# takes a .tex file and compiles it using pdflatex,
+# looks for build files in .build dir
+
+BUILD_DIR='.build'
+
+
+filename=$(basename -- "$1") 
+extension="${filename##*.}"
+filename="${filename%.*}"
+
+# if $1 = 'after', then move any tex-junk to a .build directory
+# otherwise, try to get the tex-junk back into  the current directory
+moveBuildFiles() {
+	exts='aux bbl bcf blg fdb_latexmk fls log out run.xml'
+	if [ $1 = 'after' ]; then
+		from='.'
+		to=$BUILD_DIR
+	else
+		from=$BUILD_DIR
+		to='.'
+	fi
+	
+	# bring back old build files
+	for ext in $exts; do
+		[ -e $from/$filename.$ext ] && mv $from/$filename.$ext $to
+	done
+
+	# bring minted folder back
+	if [ -d $from/_minted-$filename ]; then
+		mv $from/_minted-$filename $to
+	fi
+}
+
+# bring build files to current dir (speeds up compilation a lot)
+moveBuildFiles 'before'
+
+# build the pdf
+# texfot hides lots of useless tex output, the full output can still be found in the log file
+# reduced output is stored in BUILDDIR/$filename.short.log
+latexmk -pdflatex='texfot pdflatex -shell-escape -interaction nonstopmode' \
+		-logfilewarninglist -pdf -f $filename.tex \
+		2>&1 | tee $BUILD_DIR/$filename.short.log
+
+# get rid of build files
+mkdir -p $BUILD_DIR
+
+moveBuildFiles 'after'
+
+echo 'Compilation completed successfully'

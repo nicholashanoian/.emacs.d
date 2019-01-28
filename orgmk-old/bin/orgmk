@@ -35,6 +35,7 @@ CleanUp ()
 filename=$(basename -- "$1") 
 extension="${filename##*.}"
 filename="${filename%.*}"
+mkdir -p .build
 # perform housekeeping on program exit or a variety of signals
 # (EXIT, HUP, INT, QUIT, TERM)
 trap CleanUp 0 1 2 3 15

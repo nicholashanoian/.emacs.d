@@ -38,6 +38,15 @@
 (setq org-latex-pdf-process
 	  '("latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -logfilewarninglist -pdf -f %f > %f.log"))
 
+
+
+;; (setq org-latex-pdf-process
+;; '("latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -logfilewarninglist -jobname='.build/%f' -pdf -f %f > %f.log"))
+
+
+
+
+
 (defun tmp-pdf ()
   "Create a temporary file name to store pdf figures."
   (org-babel-temp-file "./figure-" ".pdf"))
