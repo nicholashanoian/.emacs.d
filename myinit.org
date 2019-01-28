@@ -1827,37 +1827,42 @@ BEG and END default to the buffer boundaries."
 ** cpp
 - Needs cmake and clang
 #+BEGIN_SRC emacs-lisp
-    (use-package irony
+      (use-package irony
+        :ensure t)
+
+    (use-package cc-mode
+      :ensure t
+      :config
+      (define-key c++-mode-map (kbd "C-c C-c") #'compile)
+      (define-key c++-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make run -C ../")))
+      (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+      (setq-default c-basic-offset 4)
+      )
+
+    (use-package company-c-headers
+      :ensure t
+      :config
+      (add-to-list 'company-backends 'company-c-headers)
+      )
+
+    (use-package auto-yasnippet
       :ensure t)
 
-  (use-package cc-mode
+    (use-package function-args
+      :ensure t)
+
+   (defadvice find-tag (before c-tag-file activate)
+     "Automatically create tags file."
+     (let ((tag-file (concat default-directory "TAGS")))
+       (unless (file-exists-p tag-file)
+         (shell-command "etags *.[ch] -o TAGS 2>/dev/null"))
+       (visit-tags-table tag-file)))
+
+  (use-package flycheck-clang-tidy
     :ensure t
     :config
-    (define-key c++-mode-map (kbd "C-c C-c") #'compile)
-    (define-key c++-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make run -C ../")))
-    (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-    (setq-default c-basic-offset 4)
+    '(add-hook 'flycheck-mode-hook #'flycheck-clang-tidy-setup)
     )
-
-  (use-package company-c-headers
-    :ensure t
-    :config
-    (add-to-list 'company-backends 'company-c-headers)
-    )
-
-  (use-package auto-yasnippet
-    :ensure t)
-
-  (use-package function-args
-    :ensure t)
-
- (defadvice find-tag (before c-tag-file activate)
-   "Automatically create tags file."
-   (let ((tag-file (concat default-directory "TAGS")))
-     (unless (file-exists-p tag-file)
-       (shell-command "etags *.[ch] -o TAGS 2>/dev/null"))
-     (visit-tags-table tag-file)))
-
 
 #+END_SRC
 
