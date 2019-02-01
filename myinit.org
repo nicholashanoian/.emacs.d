@@ -1232,12 +1232,12 @@ To visualize undo history. =C-x u=
 
 *** cdlatex
 #+BEGIN_SRC emacs-lisp
-  (use-package cdlatex
-	:ensure t
-	:hook (;;(LaTeX-mode . turn-on-cdlatex)
-		   ;;(org-mode . turn-on-cdlatex)
-)
-	)
+  ;;   (use-package cdlatex
+  ;; 	:ensure t
+  ;; 	:hook (;;(LaTeX-mode . turn-on-cdlatex)
+  ;; 		   ;;(org-mode . turn-on-cdlatex)
+  ;; )
+  ;; 	)
 #+END_SRC
 
 *** auctex
@@ -2042,7 +2042,7 @@ BEG and END default to the buffer boundaries."
         (when (pipenv-project?)
           (pipenv-activate)
           (run-python)))
-      (define-key python-mode nhh-pipenv-start-python)
+      ;;(define-key python-mode nhh-pipenv-start-python)
       )
 
   (use-package django-mode
@@ -2187,19 +2187,33 @@ Data source: =dbi:mysql:database=<dbname>:host=<url>=
 #+END_SRC
 ** matlab
 #+BEGIN_SRC emacs-lisp
-  (use-package matlab-mode
-    :ensure t
-    :config
-    (define-key matlab-mode-map (kbd "M-RET") #'matlab-comment-return)
-    (define-key matlab-mode-map (kbd "C-c C-c") #'matlab-shell-run-region)
-    )
+  ;; (use-package matlab-mode
+  ;;   :ensure t
 
+  ;;   :config
+  ;;   (define-key matlab-mode-map (kbd "M-RET") #'matlab-comment-return)
+  ;;   (define-key matlab-mode-map (kbd "C-c C-c") #'matlab-shell-run-cell)
+  ;;   (define-key matlab-mode-map (kbd "M-;") #'comment-line)
+  ;;   ;;(setq mlint-programs (list "/usr/local/MATLAB/R2018b/bin/glnxa64/mlint"))
+  ;;   ;; (setq mlint-program "/usr/local/MATLAB/R2018b/bin/glnxa64/mlint")
+  ;;   ;; (add-hook 'matlab-mode-hook  #'mlint-minor-mode)
+
+  ;;   )
+
+
+
+  (setq matlab-server-executable "/usr/local/MATLAB/R2018b/bin/matlab")
+  (add-to-list 'load-path "~/.emacs.d/matlab-mode")
+  (require 'matlab-mode)
+  (matlab-mode-common-setup)
+  (define-key matlab-mode-map (kbd "M-;") #'comment-line)
 #+END_SRC
 * Last
 ** NHH Lisp
 #+BEGIN_SRC emacs-lisp
-  
+
   (load-directory "~/.emacs.d/nhh-lisp")
+
 
   (if (string-equal system-name "nick-laptop")
       (setq powerline-height 40)
