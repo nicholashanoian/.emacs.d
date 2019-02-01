@@ -2193,6 +2193,8 @@ Data source: =dbi:mysql:database=<dbname>:host=<url>=
 
 #+BEGIN_SRC emacs-lisp
   (setq matlab-server-executable "/usr/local/MATLAB/R2018b/bin/matlab")
+  (setq matlab-shell-command "matlab")
+  (setq matlab-shell-command-switches (list "-nodesktop" "-nosplash"))
   (add-to-list 'load-path "~/.emacs.d/matlab-mode")
   (require 'matlab-mode)
   (matlab-mode-common-setup)
