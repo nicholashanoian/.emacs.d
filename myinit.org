@@ -2187,21 +2187,6 @@ Data source: =dbi:mysql:database=<dbname>:host=<url>=
 #+END_SRC
 ** matlab
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package matlab-mode
-  ;;   :ensure t
-
-  ;;   :config
-  ;;   (define-key matlab-mode-map (kbd "M-RET") #'matlab-comment-return)
-  ;;   (define-key matlab-mode-map (kbd "C-c C-c") #'matlab-shell-run-cell)
-  ;;   (define-key matlab-mode-map (kbd "M-;") #'comment-line)
-  ;;   ;;(setq mlint-programs (list "/usr/local/MATLAB/R2018b/bin/glnxa64/mlint"))
-  ;;   ;; (setq mlint-program "/usr/local/MATLAB/R2018b/bin/glnxa64/mlint")
-  ;;   ;; (add-hook 'matlab-mode-hook  #'mlint-minor-mode)
-
-  ;;   )
-
-
-
   (setq matlab-server-executable "/usr/local/MATLAB/R2018b/bin/matlab")
   (add-to-list 'load-path "~/.emacs.d/matlab-mode")
   (require 'matlab-mode)
