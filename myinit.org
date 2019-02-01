@@ -2188,7 +2188,11 @@ Data source: =dbi:mysql:database=<dbname>:host=<url>=
 ** matlab
 #+BEGIN_SRC emacs-lisp
   (use-package matlab-mode
-    :ensure t)
+    :ensure t
+    :config
+    (define-key matlab-mode-map (kbd "M-RET") #'matlab-comment-return)
+    (define-key matlab-mode-map (kbd "C-c C-c") #'matlab-shell-run-region)
+    )
 
 #+END_SRC
 * Last
