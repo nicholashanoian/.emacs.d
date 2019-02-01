@@ -2186,6 +2186,11 @@ Data source: =dbi:mysql:database=<dbname>:host=<url>=
     )
 #+END_SRC
 ** matlab
+- Start server with =M-x matlab-start=
+- Stop server with =M-x matlab-server-kill=
+- Open shell with =M-x matlab-shell=
+- Run code by highlighting and pressing =C-c C-r= (=matlab-shell-run-region=)
+
 #+BEGIN_SRC emacs-lisp
   (setq matlab-server-executable "/usr/local/MATLAB/R2018b/bin/matlab")
   (add-to-list 'load-path "~/.emacs.d/matlab-mode")
