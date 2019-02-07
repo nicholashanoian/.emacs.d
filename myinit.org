@@ -1263,7 +1263,9 @@ To visualize undo history. =C-x u=
     ;; use. I use latexmk, xelatexmk, and View.  That's pretty much it.
     ;; Maybe one day I'll add "clean" back to the list.
     (TeX-command-list
-     '(("latexmk" "latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -logfilewarninglist -pdf %s"
+     '(("tex2pdf" "tex2pdf %f"
+        TeX-run-TeX nil t :help "Process file with latexmk")
+       ("latexmk" "latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -logfilewarninglist -pdf %s"
         TeX-run-TeX nil t :help "Process file with latexmk")
        ("View" "%V" TeX-run-discard-or-function nil t :help "Run Viewer")
        ("xelatexmk" "latexmk -synctex=1 -quiet -xelatex %s"
