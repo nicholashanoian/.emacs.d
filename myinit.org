@@ -154,7 +154,7 @@
   ;; set default font
   (set-face-attribute 'default nil
                       :family "DejaVu Sans Mono"
-                      :height 118
+                      :height 135
                       :weight 'normal
                       :width 'normal)
 
@@ -1827,36 +1827,41 @@ BEG and END default to the buffer boundaries."
 ** cpp
 - Needs cmake and clang
 #+BEGIN_SRC emacs-lisp
-      (use-package irony
-        :ensure t)
+  (use-package irony
+    :ensure t)
 
-    (use-package cc-mode
-      :ensure t
-      :config
-      (define-key c++-mode-map (kbd "C-c C-c") #'compile)
-      (define-key c++-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make run -C ../")))
-      (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-      (setq-default c-basic-offset 4)
-      )
+  (use-package cc-mode
+    :ensure t
+    :config
+    (define-key c++-mode-map (kbd "C-c C-c") #'compile)
+    (define-key c++-mode-map (kbd "C-c C-r") (lambda () (interactive) (compile "make run -C ../")))
+    (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+    (setq-default c-basic-offset 4)
+    (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++17")))
+    (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++17")))
+    (add-to-list 'company-c-headers-path-system "/usr/include/c++/8.2.1/")
 
-    (use-package company-c-headers
-      :ensure t
-      :config
-      (add-to-list 'company-backends 'company-c-headers)
-      )
 
-    (use-package auto-yasnippet
-      :ensure t)
+    )
 
-    (use-package function-args
-      :ensure t)
+  (use-package company-c-headers
+    :ensure t
+    :config
+    (add-to-list 'company-backends 'company-c-headers)
+    )
 
-   (defadvice find-tag (before c-tag-file activate)
-     "Automatically create tags file."
-     (let ((tag-file (concat default-directory "TAGS")))
-       (unless (file-exists-p tag-file)
-         (shell-command "etags *.[ch] -o TAGS 2>/dev/null"))
-       (visit-tags-table tag-file)))
+  (use-package auto-yasnippet
+    :ensure t)
+
+  (use-package function-args
+    :ensure t)
+
+  (defadvice find-tag (before c-tag-file activate)
+    "Automatically create tags file."
+    (let ((tag-file (concat default-directory "TAGS")))
+      (unless (file-exists-p tag-file)
+        (shell-command "etags *.[ch] -o TAGS 2>/dev/null"))
+      (visit-tags-table tag-file)))
 
   (use-package flycheck-clang-tidy
     :ensure t
