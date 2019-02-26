@@ -7,6 +7,7 @@
 		LaTeX-insert-item
 		LaTeX-insert-left-brace
 		TeX-insert-backslash
+		TeX-insert-sub-or-superscript
 		TeX-newline
 		beginning-of-visual-line
 		c-electric-brace
