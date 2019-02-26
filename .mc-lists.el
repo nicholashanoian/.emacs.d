@@ -46,6 +46,7 @@
 		org-yank
 		paredit-forward-slurp-sexp
 		rjsx-electric-gt
+		skeleton-pair-insert-maybe
 		))
 
 (setq mc/cmds-to-run-once

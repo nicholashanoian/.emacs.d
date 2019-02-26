@@ -22,14 +22,17 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(put 'narrow-to-region 'disabled nil)
+(put 'narrow-to-page 'disabled nil)
+
+(load-theme 'zenburn t)
+(put 'dired-find-alternate-file 'disabled nil)
+
+
 (org-babel-load-file (expand-file-name "~/.emacs.d/myinit.org"))
 
 
 
 
 ;;; init.el ends here
-(put 'narrow-to-region 'disabled nil)
-(put 'narrow-to-page 'disabled nil)
 
-(load-theme 'zenburn t)
-(put 'dired-find-alternate-file 'disabled nil)
