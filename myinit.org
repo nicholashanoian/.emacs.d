@@ -392,6 +392,7 @@
 #+BEGIN_SRC emacs-lisp
   (use-package captain
     :ensure t
+    :disabled
     :config
     (add-hook 'prog-mode-hook
               (lambda ()
@@ -995,6 +996,7 @@ To visualize undo history. =C-x u=
   (use-package which-key
     :ensure t
     :config
+    :diminish
     (which-key-mode))
 #+END_SRC
 
@@ -1308,6 +1310,7 @@ To visualize undo history. =C-x u=
 #+BEGIN_SRC emacs-lisp :results silent
   (use-package texfrag
 	:ensure t
+:disabled
 	:config
 	;;(texfrag-global-mode t)
 	:hook
@@ -1331,28 +1334,36 @@ To visualize undo history. =C-x u=
 ** org-mode
 *** general org stuff
 #+BEGIN_SRC emacs-lisp :results silent
-    (use-package org
-      :ensure t
-      :config
-      (setq org-directory "~/Dropbox/org"
-            org-src-window-setup 'current-window
-            )
-      (setq org-latex-caption-above nil)
-      :hook ((org-mode . company-mode)
-             (org-mode . org-indent-mode)
-             (org-mode . flyspell-mode))
-      )
+	(use-package org
+	  :ensure t
+	  :config
+	  (setq org-directory "~/Dropbox/org"
+			org-src-window-setup 'current-window
+			)
+	  (setq org-latex-caption-above nil)
+	  :hook ((org-mode . company-mode)
+			 (org-mode . org-indent-mode)
+			 (org-mode . flyspell-mode))
 
-    (use-package org-bullets
-      :ensure t
-      :hook (org-mode . (lambda () (org-bullets-mode 1))))
+  ;; (eval-after-load 'org-indent '(diminish 'org-indent-mode))
+;;(add-hook 'org-mode-hook (lambda () (diminish 'org-indent-mode)))
 
-  (setq org-confirm-babel-evaluate nil)
-    (setq org-hide-leading-stars t)
+;;(add-hook 'org-mode-hook (lambda () (org-indent-mode 1) (diminish 'org-indent-mode)))
+	  )
 
-  ;; ask to archive all complete subtrees
-    (define-key org-mode-map (kbd "C-c C-x C-a")
-    (lambda () (interactive) (org-archive-subtree '(4))))
+
+	(use-package org-bullets
+	  :ensure t
+	  :hook (org-mode . (lambda () (org-bullets-mode 1))))
+
+
+
+	(setq org-confirm-babel-evaluate nil)
+	  (setq org-hide-leading-stars t)
+
+	;; ask to archive all complete subtrees
+	  (define-key org-mode-map (kbd "C-c C-x C-a")
+	  (lambda () (interactive) (org-archive-subtree '(4))))
 #+END_SRC
 *** refile
 #+BEGIN_SRC emacs-lisp
@@ -1808,8 +1819,8 @@ BEG and END default to the buffer boundaries."
 #+END_SRC
 *** htmlize
 #+BEGIN_SRC emacs-lisp
-(use-package htmlize
-:ensure t)
+  ;; (use-package htmlize
+  ;; :ensure t)
 #+END_SRC
 * Programming
 ** Bash completion
@@ -1841,7 +1852,7 @@ BEG and END default to the buffer boundaries."
     (setq-default c-basic-offset 4)
     (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++17")))
     (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++17")))
-    (add-to-list 'company-c-headers-path-system "/usr/include/c++/8.2.1/")
+
 
 
     )
@@ -1850,6 +1861,7 @@ BEG and END default to the buffer boundaries."
     :ensure t
     :config
     (add-to-list 'company-backends 'company-c-headers)
+    (add-to-list 'company-c-headers-path-system "/usr/include/c++/8.2.1/")
     )
 
   (use-package auto-yasnippet
@@ -2323,19 +2335,28 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 ** Custom Faces
 #+BEGIN_SRC emacs-lisp
   (custom-set-faces
-   '(web-mode-html-tag-bracket-face ((t (:foreground "#DCDCCC")))))
+   '(web-mode-html-tag-bracket-face ((t (:foreground "#DCDCCC"))))
+ '(org-document-title ((t (:inherit default :foreground "#8CD0D3" :weight normal :height 1.0))))
+
+)
+
+  ;;(require 'org-faces
+  ;; (set-face-attribute 'org-document-title nil
+  ;; :height 1.0
+  ;; :weight 'bold)
+  ;;)
 
 
 
-(require 'tex-mode)
-(require 'tex-site)
-(require 'font-latex)
-    (set-face-attribute 'org-verbatim nil
-                        :foreground "#777777")
-    (set-face-attribute 'tex-verbatim nil
-                        :foreground "#777777")
-    (set-face-attribute 'font-latex-verbatim-face nil
-                        :foreground "#777777")
+  (require 'tex-mode)
+  (require 'tex-site)
+  (require 'font-latex)
+  (set-face-attribute 'org-verbatim nil
+                      :foreground "#777777")
+  (set-face-attribute 'tex-verbatim nil
+                      :foreground "#777777")
+  (set-face-attribute 'font-latex-verbatim-face nil
+                      :foreground "#777777")
 
 
 
