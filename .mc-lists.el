@@ -7,6 +7,7 @@
 		LaTeX-insert-item
 		LaTeX-insert-left-brace
 		TeX-insert-backslash
+		TeX-insert-sub-or-superscript
 		TeX-newline
 		beginning-of-visual-line
 		c-electric-brace
@@ -22,6 +23,8 @@
 		comment-line
 		electric-pair-delete-pair
 		end-of-visual-line
+		ess-indent-or-complete
+		ess-roxy-move-beginning-of-line
 		ess-smart-S-assign
 		ess-smart-comma
 		ess-yank
@@ -30,6 +33,7 @@
 		fix-word-capitalize
 		fix-word-downcase
 		fix-word-upcase
+		helm-show-kill-ring
 		hungry-delete-backward
 		hungry-delete-forward
 		indent-for-tab-command
@@ -63,6 +67,7 @@
 		multiple-cursors-hydra/mc/mark-all-like-this-and-exit
 		multiple-cursors-hydra/mc/mark-next-like-this
 		multiple-cursors-hydra/mc/mark-previous-like-this
+		multiple-cursors-hydra/mc/skip-to-previous-like-this
 		multiple-cursors-hydra/mc/unmark-next-like-this
 		multiple-cursors-hydra/mc/unmark-previous-like-this
 		multiple-cursors-hydra/nil

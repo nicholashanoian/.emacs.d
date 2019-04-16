@@ -5,6 +5,12 @@
  ;; If there is more than one, they won't work right.
  '(TeX-auto-save t)
  '(TeX-clean-confirm nil)
+ '(TeX-command-list
+   (quote
+	(("tex2pdf" "tex2pdf %f" TeX-run-TeX nil t :help "Process file with latexmk")
+	 ("latexmk" "latexmk -pdflatex='pdflatex -shell-escape -interaction nonstopmode' -logfilewarninglist -pdf %s" TeX-run-TeX nil t :help "Process file with latexmk")
+	 ("View" "%V" TeX-run-discard-or-function nil t :help "Run Viewer")
+	 ("xelatexmk" "latexmk -synctex=1 -quiet -xelatex %s" TeX-run-TeX nil t :help "Process file with xelatexmk"))))
  '(TeX-electric-math (quote ("\\(" . "\\)")))
  '(TeX-electric-sub-and-superscript t)
  '(TeX-parse-self t)
@@ -20,7 +26,7 @@
 	(org-keyword-backend company-bbdb company-eclim company-semantic company-clang company-xcode company-cmake company-capf company-files
 						 (company-dabbrev-code company-gtags company-etags company-keywords)
 						 company-oddmuse company-dabbrev)))
- '(company-idle-delay 0.5)
+ '(company-idle-delay 0.25)
  '(company-minimum-prefix-length 3)
  '(company-require-match nil)
  '(compilation-message-face (quote default))
@@ -30,7 +36,7 @@
  '(cua-read-only-cursor-color "#859900")
  '(custom-safe-themes
    (quote
-	("3f44e2d33b9deb2da947523e2169031d3707eec0426e78c7b8a646ef773a2077" "7356632cebc6a11a87bc5fcffaa49bae528026a78637acd03cae57c091afd9b9" "ab04c00a7e48ad784b52f34aa6bfa1e80d0c3fcacc50e1189af3651013eb0d58" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" "a0feb1322de9e26a4d209d1cfa236deaf64662bb604fa513cca6a057ddf0ef64" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "a24c5b3c12d147da6cef80938dca1223b7c7f70f2f382b26308eba014dc4833a" "732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3" "57fe2bf84d81baecc6d89ed97bdb19936a3052fc2551ca178667fc45feef2381" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "b85fc9f122202c71b9884c5aff428eb81b99d25d619ee6fde7f3016e08515f07" "b34636117b62837b3c0c149260dfebe12c5dad3d1177a758bb41c4b15259ed7e" "d8f76414f8f2dcb045a37eb155bfaa2e1d17b6573ed43fb1d18b936febc7bbc2" "a156fcac344bbfdc979a5adf9cecf1c2de56c4c937549ae0571b7f11ad4fe6a9" "ce3e6c12b48979ce89754884d913c7ecc8a7956543d8b09ef13abfab6af9aa35" "b01b91ba9276deb39aa892c105a8644ef281b4d1804ab7c48de96e9c5d2aaa48" "ecba61c2239fbef776a72b65295b88e5534e458dfe3e6d7d9f9cb353448a569e" "a566448baba25f48e1833d86807b77876a899fc0c3d33394094cf267c970749f" "8891c81848a6cf203c7ac816436ea1a859c34038c39e3cf9f48292d8b1c86528" "9d9fda57c476672acd8c6efeb9dc801abea906634575ad2c7688d055878e69d6" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "eecacf3fb8efc90e6f7478f6143fd168342bbfa261654a754c7d47761cec07c8" "84d2f9eeb3f82d619ca4bfffe5f157282f4779732f48a5ac1484d94d5ff5b279" "b9e9ba5aeedcc5ba8be99f1cc9301f6679912910ff92fdf7980929c2fc83ab4d" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "e3fc83cdb5f9db0d0df205f5da89af76feda8c56d79a653a5d092c82c7447e02" "4af6fad34321a1ce23d8ab3486c662de122e8c6c1de97baed3aa4c10fe55e060" "3b5ce826b9c9f455b7c4c8bff22c020779383a12f2f57bf2eb25139244bb7290" "2cfc1cab46c0f5bae8017d3603ea1197be4f4fff8b9750d026d19f0b9e606fae" "30f7c9e85d7fad93cf4b5a97c319f612754374f134f8202d1c74b0c58404b8df" "b9cbfb43711effa2e0a7fbc99d5e7522d8d8c1c151a3194a4b176ec17c9a8215" "291588d57d863d0394a0d207647d9f24d1a8083bb0c9e8808280b46996f3eb83" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bea5fd3610ed135e6ecc35bf8a9c27277d50336455dbdd2969809f7d7c1f7d79" "9a155066ec746201156bb39f7518c1828a73d67742e11271e4f24b7b178c4710" "43c1a8090ed19ab3c0b1490ce412f78f157d69a29828aa977dae941b994b4147" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "e11569fd7e31321a33358ee4b232c2d3cf05caccd90f896e1df6cab228191109" default)))
+	("d057f0430ba54f813a5d60c1d18f28cf97d271fd35a36be478e20924ea9451bd" "e03d2f414fb109f3920752b10b92323697174f49d577da9e69979edbb147a921" "3f44e2d33b9deb2da947523e2169031d3707eec0426e78c7b8a646ef773a2077" "7356632cebc6a11a87bc5fcffaa49bae528026a78637acd03cae57c091afd9b9" "ab04c00a7e48ad784b52f34aa6bfa1e80d0c3fcacc50e1189af3651013eb0d58" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" "a0feb1322de9e26a4d209d1cfa236deaf64662bb604fa513cca6a057ddf0ef64" "04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "a24c5b3c12d147da6cef80938dca1223b7c7f70f2f382b26308eba014dc4833a" "732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3" "57fe2bf84d81baecc6d89ed97bdb19936a3052fc2551ca178667fc45feef2381" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "b85fc9f122202c71b9884c5aff428eb81b99d25d619ee6fde7f3016e08515f07" "b34636117b62837b3c0c149260dfebe12c5dad3d1177a758bb41c4b15259ed7e" "d8f76414f8f2dcb045a37eb155bfaa2e1d17b6573ed43fb1d18b936febc7bbc2" "a156fcac344bbfdc979a5adf9cecf1c2de56c4c937549ae0571b7f11ad4fe6a9" "ce3e6c12b48979ce89754884d913c7ecc8a7956543d8b09ef13abfab6af9aa35" "b01b91ba9276deb39aa892c105a8644ef281b4d1804ab7c48de96e9c5d2aaa48" "ecba61c2239fbef776a72b65295b88e5534e458dfe3e6d7d9f9cb353448a569e" "a566448baba25f48e1833d86807b77876a899fc0c3d33394094cf267c970749f" "8891c81848a6cf203c7ac816436ea1a859c34038c39e3cf9f48292d8b1c86528" "9d9fda57c476672acd8c6efeb9dc801abea906634575ad2c7688d055878e69d6" "a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "6b289bab28a7e511f9c54496be647dc60f5bd8f9917c9495978762b99d8c96a0" "eecacf3fb8efc90e6f7478f6143fd168342bbfa261654a754c7d47761cec07c8" "84d2f9eeb3f82d619ca4bfffe5f157282f4779732f48a5ac1484d94d5ff5b279" "b9e9ba5aeedcc5ba8be99f1cc9301f6679912910ff92fdf7980929c2fc83ab4d" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "e3fc83cdb5f9db0d0df205f5da89af76feda8c56d79a653a5d092c82c7447e02" "4af6fad34321a1ce23d8ab3486c662de122e8c6c1de97baed3aa4c10fe55e060" "3b5ce826b9c9f455b7c4c8bff22c020779383a12f2f57bf2eb25139244bb7290" "2cfc1cab46c0f5bae8017d3603ea1197be4f4fff8b9750d026d19f0b9e606fae" "30f7c9e85d7fad93cf4b5a97c319f612754374f134f8202d1c74b0c58404b8df" "b9cbfb43711effa2e0a7fbc99d5e7522d8d8c1c151a3194a4b176ec17c9a8215" "291588d57d863d0394a0d207647d9f24d1a8083bb0c9e8808280b46996f3eb83" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bea5fd3610ed135e6ecc35bf8a9c27277d50336455dbdd2969809f7d7c1f7d79" "9a155066ec746201156bb39f7518c1828a73d67742e11271e4f24b7b178c4710" "43c1a8090ed19ab3c0b1490ce412f78f157d69a29828aa977dae941b994b4147" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "e11569fd7e31321a33358ee4b232c2d3cf05caccd90f896e1df6cab228191109" default)))
  '(elpy-syntax-check-command "/bin/flake8")
  '(ensime-sem-high-faces
    (quote
@@ -51,6 +57,21 @@
 	 (object :foreground "#5974ab" :slant italic)
 	 (package :foreground "#000000")
 	 (deprecated :strike-through "#000000"))))
+ '(ess-own-style-list
+   (quote
+	((ess-indent-offset . 4)
+	 (ess-offset-arguments . open-delim)
+	 (ess-offset-arguments-newline . prev-call)
+	 (ess-offset-block . prev-line)
+	 (ess-offset-continued . straight)
+	 (ess-align-nested-calls "ifelse")
+	 (ess-align-arguments-in-calls "function[ 	]*(")
+	 (ess-align-continuations-in-calls . t)
+	 (ess-align-blocks control-flow)
+	 (ess-indent-from-lhs arguments fun-decl-opening)
+	 (ess-indent-from-chain-start . t)
+	 (ess-indent-with-fancy-comments))))
+ '(ess-style (quote OWN))
  '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
  '(flycheck-global-modes (quote (not org-mode)))
  '(font-lock-maximum-decoration (quote ((dired-mode . 1) (t . t))))
@@ -119,7 +140,7 @@
  '(org-highlight-latex-and-related (quote (latex entities)))
  '(package-selected-packages
    (quote
-	(flx-ido helm-gtags writeroom-mode company-c-headers yasnippet-snippets ox-gfm c++-mode function-args auto-yasnippet htmlize lua-mode dracula-theme captain fix-word org-super-agenda ess ob-sagemath sage-shell-mode sage-shell rainbow-mode better-shell paredit smart-parens org-alert powershell helm-hoogle helm-ag dired+ which-key intero haskell-mode haskell bash-completion powerline material-theme delight mdi zenburn-theme solarized-theme color-theme-sanityinc-tomorrow zenburn wordnut adaptive-wrap plantuml-mode plantuml texfrag auctex helm-flyspell hydra sublimity-attractive sublimity-map sublimity-scroll spacemacs-common spaceline expand-region hungry-delete undo-tree ov ox-latex org-edit-latex org-latex yasnippit java-snippets web-mode virtualenvwrapper all-the-fonts all-the-icons neotree exec-path-from-shell python-mode electric-operator anaconda-mode company-jedi helm-projectile projectile multiple-cursors js2-refactor js2-mode groovy-mode gradle-mode meghanada eclimd helm-org helm-files tex-site helm-swoop try ace-window auto-org-md org-edna org-bullets company-emacs-eclim eclim markdown-mode magit cdlatex avy-flycheck aggressive-indent company helm flycheck diminish use-package)))
+	(poly-R matlab-mode flycheck-clang-tidy django-mode cmake-mode flx-ido helm-gtags writeroom-mode company-c-headers yasnippet-snippets ox-gfm c++-mode function-args auto-yasnippet htmlize lua-mode dracula-theme captain fix-word org-super-agenda ess ob-sagemath sage-shell-mode sage-shell rainbow-mode better-shell paredit smart-parens org-alert powershell helm-hoogle helm-ag dired+ which-key intero haskell-mode haskell bash-completion powerline material-theme delight mdi zenburn-theme solarized-theme color-theme-sanityinc-tomorrow zenburn wordnut adaptive-wrap plantuml-mode plantuml texfrag auctex helm-flyspell hydra sublimity-attractive sublimity-map sublimity-scroll spacemacs-common spaceline expand-region hungry-delete undo-tree ov ox-latex org-edit-latex org-latex yasnippit java-snippets web-mode virtualenvwrapper all-the-fonts all-the-icons neotree exec-path-from-shell python-mode electric-operator anaconda-mode company-jedi helm-projectile projectile multiple-cursors js2-refactor js2-mode groovy-mode gradle-mode meghanada eclimd helm-org helm-files tex-site helm-swoop try ace-window auto-org-md org-edna org-bullets company-emacs-eclim eclim markdown-mode magit cdlatex avy-flycheck aggressive-indent company helm flycheck diminish use-package)))
  '(pdf-sync-forward-display-pdf-key "<C-return>" t)
  '(pdf-view-display-size (quote fit-page) nil nil "Show full pages by default instead of fitting page width.")
  '(pdf-view-image-relief 4)
@@ -145,7 +166,11 @@
  '(term-default-bg-color "#fdf6e3")
  '(term-default-fg-color "#657b83")
  '(texfrag-header-default
-   "\\documentclass{homework}\n\\usepackage{amsmath,amsfonts}\n\\usepackage[utf8]{inputenc}\n\\usepackage[T1]{fontenc}\n\\begin{document}")
+   "\\documentclass{homework}
+\\usepackage{amsmath,amsfonts}
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+\\begin{document}")
  '(texfrag-subdir "build/texfrag")
  '(vc-annotate-background-mode nil)
  '(weechat-color-list
@@ -168,6 +193,14 @@
  '(custom-group-tag ((t (:inherit variable-pitch :weight normal :height 1.2))))
  '(custom-variable-tag ((t (:foreground "#DFAF8F" :weight bold))))
  '(ein:cell-input-area ((t (:background "gray39"))))
+ '(org-document-title ((t (:inherit default :foreground "#8CD0D3" :weight normal :height 1.0))))
+ '(smerge-base ((t (:background "#555555" :foreground "#DCDCCC"))))
+ '(smerge-lower ((t (:background "#3f773f" :foreground "#eeeeee"))))
+ '(smerge-markers ((t (:background "#555555" :foreground "#DCDCCC"))))
+ '(smerge-refined-added ((t (:background "#3faa3f" :foreground "#eeeeee"))))
+ '(smerge-refined-changed ((t (:background "#555555" :foreground "#DCDCCC"))))
+ '(smerge-refined-removed ((t (:background "#aa3f3f" :foreground "#eeeeee"))))
+ '(smerge-upper ((t (:background "#773f3f" :foreground "#eeeeee"))))
  '(term ((t (:inherit nil))))
  '(variable-pitch ((t nil)))
  '(web-mode-html-tag-bracket-face ((t (:foreground "#DCDCCC")))))

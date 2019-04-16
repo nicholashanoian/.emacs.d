@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: org-local-variables
+# key: lst
+# --
+#+BEGIN_EXPORT latex
+\begin{listing}[H]
+  \caption{$1}
+  \label{$2}
+\begin{verbatim}
+$3
+\end{verbatim}
+\end{listing}
+#+END_EXPORT
