@@ -2196,3 +2196,13 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 
 
 #+END_SRC
+* elpy
+#+BEGIN_SRC emacs-lisp
+  (use-package elpy
+  :ensure t
+  :init
+  (elpy-enable)
+  :config
+  (define-key elpy-mode-map (kbd "C-c C-c") #'elpy-shell-send-group-and-step)
+  )
+#+END_SRC

@@ -25,6 +25,7 @@
 		end-of-visual-line
 		ess-indent-or-complete
 		ess-roxy-move-beginning-of-line
+		ess-roxy-newline-and-indent
 		ess-smart-S-assign
 		ess-smart-comma
 		ess-yank
@@ -73,6 +74,7 @@
 		multiple-cursors-hydra/nil
 		org-cycle
 		org-shifttab
+		term-send-raw
 		text-scale-adjust
 		yank-rectangle
 		))
