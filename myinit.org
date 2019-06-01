@@ -1934,8 +1934,8 @@ BEG and END default to the buffer boundaries."
 
 ** rmarkdown
 #+BEGIN_SRC emacs-lisp
-  (use-package poly-R
-    :ensure nil)
+;;  (use-package poly-R
+  ;;  :ensure nil)
 #+END_SRC
 * Last
 ** NHH Lisp
@@ -2198,11 +2198,78 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 #+END_SRC
 * elpy
 #+BEGIN_SRC emacs-lisp
-  (use-package elpy
-  :ensure t
-  :init
-  (elpy-enable)
-  :config
-  (define-key elpy-mode-map (kbd "C-c C-c") #'elpy-shell-send-group-and-step)
-  )
+  ;;  (use-package elpy
+  ;;  :ensure t
+  ;; :init
+  ;; (elpy-enable)
+  ;; :config
+  ;; (define-key elpy-mode-map (kbd "C-c C-c") #'elpy-shell-send-group-and-step)
+  ;; )
+#+END_SRC
+
+
+* anaconda
+#+BEGIN_SRC emacs-lisp
+(use-package anaconda-mode
+:ensure t
+:config
+(add-hook 'python-mode-hook 'anaconda-mode)
+)
+#+END_SRC
+* web mode
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package add-node-modules-path
+  ;; :ensure t
+  ;; :config
+  ;; (add-hook 'flycheck-mode-hook 'add-node-modules-path)
+
+  ;; )
+
+  ;; (use-package web-mode
+  ;; :ensure t
+  ;; :config
+  ;; (add-to-list 'auto-mode-alist '("\\.jsx?$" . web-mode)) ;; auto-enable for .js/.jsx files
+  ;; (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
+  ;; (defun web-mode-init-hook ()
+  ;;   "Hooks for Web mode.  Adjust indent."
+  ;;   (setq web-mode-markup-indent-offset 4))
+
+  ;; (add-hook 'web-mode-hook  'web-mode-init-hook)
+  ;; (setq-default flycheck-disabled-checkers
+  ;;               (append flycheck-disabled-checkers
+  ;;                       '(javascript-jshint json-jsonlist)))
+  ;; ;; Enable eslint checker for web-mode
+  ;; (flycheck-add-mode 'javascript-eslint 'web-mode)
+  ;; ;; Enable flycheck globally
+  ;; (add-hook 'after-init-hook #'global-flycheck-mode)
+
+  ;; )
+#+END_SRC
+
+* rjsx mode
+#+BEGIN_SRC emacs-lisp
+(use-package rjsx-mode
+:ensure t
+)
+#+END_SRC
+* gql
+#+BEGIN_SRC emacs-lisp
+(use-package graphql-mode
+:ensure t)
+
+(use-package mmm-mode
+:ensure t
+:config
+(mmm-add-classes
+    '((js-graphql
+          :submode graphql-mode
+          :face mmm-declaration-submode-face
+          :front "[^a-zA-Z]gql`" ;; regex to find the opening tag
+          :back "`"))) ;; regex to find the closing tag
+(mmm-add-mode-ext-class 'rjsx-mode nil 'js-graphql)
+(setq mmm-global-mode 'maybe)
+;; Optional configuration that hides the background color for a highlighted block
+;; I find it useful for debugging emacs, but when actually coding I dont want so much emphasis on submodes
+(setq mmm-submode-decoration-level 0)
+)
 #+END_SRC
