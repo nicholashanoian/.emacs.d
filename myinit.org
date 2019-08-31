@@ -2273,3 +2273,8 @@ see [[file:nhh-lisp/mode-line.el][Mode Line Setup]]
 (setq mmm-submode-decoration-level 0)
 )
 #+END_SRC
+* ipython
+#+BEGIN_SRC emacs-lisp
+  (use-package ein
+    :ensure t)
+#+END_SRC
