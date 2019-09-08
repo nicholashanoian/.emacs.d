@@ -19,7 +19,7 @@
 
 ;; ;; activate debugging
 ;; (setq debug-on-error t)
-
+(setq org-latex-default-packages-alist '())
 ;; no limit when printing values
 (setq eval-expression-print-length nil)
 (setq eval-expression-print-level nil)
@@ -348,6 +348,17 @@
 			   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
 			   ("\\paragraph{%s}" . "\\paragraph*{%s}")
 			   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+			 '("bagrow"
+			   "\\ProvidesPackage{/home/nick/cloud/config/bagrow}
+                \\documentclass{/home/nick/cloud/config/bagrow}"
+			   ("\\section{%s}" . "\\section*{%s}")
+			   ("\\subsection{%s}" . "\\subsection*{%s}")
+			   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+			   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+			   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
 
 (add-to-list 'org-latex-classes
 			 '("article"
